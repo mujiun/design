@@ -1,0 +1,1573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta for Developers — WhatsApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF;
+      --page-bg: #F0F2F5;
+      --surface: #F8F9FA;
+      --ink: #1C2B33;
+      --ink2: #465A69;
+      --ink3: #465A69;
+      --accent: #1877F2;
+      --accent-light: #E7F3FF;
+      --green: #006b4e;
+      --border: #DADDE1;
+      --border-light: #E4E6EB;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--title);
+      background: var(--page-bg);
+      background-image: url('../shared/bg.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* ══ TOP NAV ══ */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .meta-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .meta-logo img { height: 14px; width: auto; }
+
+    .topnav-tabs {
+      display: flex;
+      gap: 0;
+      align-items: center;
+    }
+
+    .topnav-tab {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink2);
+      text-decoration: none;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: color 0.12s;
+      cursor: pointer;
+    }
+
+    .topnav-tab:hover { color: #0A78BE; }
+
+    .topnav-tab.active {
+      color: #0A78BE;
+      background: #E1EDF7;
+      border-radius: 4px;
+      border-bottom-color: transparent;
+    }
+
+    .topnav-tab .caret {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 6px 10px;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    .search-icon { color: var(--ink3); flex-shrink: 0; }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--ink);
+      width: 100%;
+      font-family: var(--font);
+    }
+
+    .search-box input::placeholder { color: var(--ink3); }
+
+    .nav-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-icon svg { width: 16px; height: 16px; color: var(--ink2); }
+
+    /* ══ BREADCRUMB ══ */
+    .breadcrumb {
+      padding: 14px 24px 0;
+      font-size: 13px;
+      color: var(--ink3);
+    }
+
+    .breadcrumb a { color: var(--ink2); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { margin: 0 8px; color: var(--ink3); font-size: 11px; }
+    .breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+    /* ══ PAGE TITLE ══ */
+    .page-title-area { padding: 12px 24px 16px; }
+
+    .page-title-area h1 {
+      font-family: var(--title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .page-title-area p { font-size: 13px; color: var(--ink2); }
+
+    /* ══ CONTENT LAYOUT ══ */
+    .content-layout {
+      display: flex;
+      gap: 16px;
+      padding: 0 24px 0;
+      align-items: flex-start;
+    }
+
+    /* ══ LEFT NAV ══ */
+    .left-nav {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 74px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .nav-dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin: 4px 0px 8px 0px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .nav-dropdown .dd-caret {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      display: block;
+      font-family: var(--title);
+      font-size: 15px;
+      font-weight: 450;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .nav-link:hover {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .nav-link.active {
+      color: #0A78BE;
+      font-weight: 700;
+      background: #E1EDF7;
+      border-radius: 4px;
+    }
+
+    .nav-group {
+      margin-top: 2px;
+    }
+
+    .nav-group-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      font-family: var(--title);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .nav-group-toggle:hover { background: var(--surface); }
+
+    .nav-group-toggle .chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      transform: rotate(180deg);
+    }
+
+    .nav-group.collapsed .chevron {
+      transform: rotate(0deg);
+    }
+
+    .nav-group-items {
+      overflow: hidden;
+      max-height: 300px;
+      transition: max-height 0.25s ease;
+    }
+
+    .nav-group.collapsed .nav-group-items {
+      max-height: 0;
+    }
+
+    .nav-link--sub {
+      padding-left: 22px;
+      font-size: 15px;
+      font-weight: 450;
+    }
+
+    /* ══ RIGHT CONTENT ══ */
+    .right-content {
+      flex: 1;
+      min-width: 0;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 16px 24px 36px;
+      min-height: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .right-content h2 {
+      font-family: var(--title);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .right-content .overview-desc {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.4;
+      font-weight: 450;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 16px 0;
+    }
+
+    .right-content h3 {
+      font-family: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    /* ══ TABS (segmented, solid active) ══ */
+    .tabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .tab-btn {
+      flex: 1;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      padding: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      transition: color 0.12s, background 0.12s;
+      text-align: center;
+    }
+
+    .tab-btn + .tab-btn {
+      border-left: 1px solid var(--border);
+    }
+
+    .tab-btn:hover { background: var(--surface); }
+
+    .tab-btn.active {
+      color: #fff;
+      background: #0A78BE;
+    }
+
+    /* ══ TAB EXPLAINER ══ */
+    .tab-explainer {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-top: 6px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #1C1E21;
+      line-height: 1.3;
+      font-weight: 450;
+    }
+
+    .tab-explainer strong {
+      font-weight: 700;
+    }
+
+    /* ══ STEP LIST ══ */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .step-item:has(.step-circle--green) .step-circle--green {
+      margin-left: -5px;
+    }
+
+    .step-item:has(.step-circle--green) .step-name {
+      line-height: 28px;
+    }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 18px;
+    }
+
+    .step-item:first-child .step-left {
+      padding-top: 4px;
+    }
+
+    .step-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-dotted-line {
+      width: 0;
+      flex: 1;
+      border-left: 2.5px dashed var(--border);
+      border-image: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 3px, transparent 3px, transparent 7px) 1;
+    }
+
+    .step-item:last-child .step-dotted-line { display: none; }
+
+    .step-body {
+      flex: 1;
+      padding-bottom: 24px;
+    }
+
+    .step-item:last-child .step-body { padding-bottom: 0; }
+
+    .step-name {
+      font-family: var(--title);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 20px;
+      margin-bottom: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 999px;
+      line-height: 1.4;
+    }
+
+    .pill--optional {
+      color: var(--ink3);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.5;
+    }
+
+    .step-desc .time {
+      color: var(--ink2);
+      font-weight: 400;
+    }
+
+    .sep-dot {
+      margin: 0 5px 0 2px;
+      color: var(--ink3);
+    }
+
+    /* ══ GREEN CHECK ══ */
+    .step-circle--green {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-circle--green svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--green);
+    }
+
+    .step-name--green {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ══ TAB PANES ══ */
+    .tab-pane { display: none; padding-left: 12px; }
+    .tab-pane.active { display: block; }
+
+    /* ══ ACCOUNT TREE ══ */
+    .account-tree {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-top: 6px;
+    }
+
+
+    .tree-item {
+      position: relative;
+    }
+
+    .tree-item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+    }
+
+    .tree-children {
+      margin-left: 14px; /* align with icon center */
+      padding-left: 24px;
+      position: relative;
+    }
+
+    /* Vertical line from parent icon down to last child */
+    .tree-children::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    /* Stop vertical line at last child's icon center */
+    .tree-children > .tree-item:last-child::after {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 20px;
+      bottom: 0;
+      width: 2px;
+      background: var(--surface);
+      z-index: 1;
+    }
+
+    /* Horizontal connector to child */
+    .tree-children > .tree-item > .tree-item-row::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 50%;
+      width: 20px;
+      height: 0;
+      border-top: 2px solid var(--border);
+    }
+
+    .tree-children > .tree-item > .tree-item-row {
+      position: relative;
+    }
+
+    .tree-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tree-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.6;
+    }
+
+    .tree-icon--green { background: #E8F5E9; }
+    .tree-icon--green svg { stroke: var(--green); }
+
+    .tree-icon--purple { background: #F3E8FF; }
+    .tree-icon--purple svg { stroke: #7C3AED; }
+
+    .tree-label {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 28px;
+    }
+
+    .tree-tag {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink2);
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-left: 6px;
+    }
+
+    /* ══ BOTTOM BAR ══ */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+
+    .bottom-bar-left, .bottom-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bottom-bar svg { width: 16px; height: 16px; color: var(--ink3); cursor: pointer; }
+    .bottom-bar svg:hover { color: var(--ink2); }
+    .bottom-bar-text { font-size: 11px; color: var(--ink3); }
+
+    /* ══ LEFT SYSTEM SIDEBAR ══ */
+    .sys-sidebar {
+      position: fixed;
+      left: 0;
+      top: 60px;
+      bottom: 36px;
+      width: 46px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      gap: 4px;
+      z-index: 90;
+    }
+
+    .sys-sidebar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s;
+      color: var(--ink3);
+    }
+
+    .sys-sidebar-icon:hover {
+      background: var(--surface);
+      color: var(--ink2);
+    }
+
+    .sys-sidebar-icon.active {
+      background: #E1EDF7;
+      color: #0A78BE;
+    }
+
+    .sys-sidebar-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+
+    .sys-sidebar-spacer { flex: 1; }
+
+    /* Offset page content for sidebar */
+    .breadcrumb,
+    .page-title-area,
+    .content-layout { margin-left: 46px; padding-bottom: 16px; transition: margin-right 0.25s ease; }
+
+    .topnav { transition: margin-right 0.25s ease; }
+
+    body.agent-open .breadcrumb,
+    body.agent-open .page-title-area,
+    body.agent-open .content-layout,
+    body.agent-open .topnav { margin-right: 420px; }
+
+    /* ══ AGENT PANEL ══ */
+    .agent-panel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 420px;
+      background: var(--bg);
+      border-left: 1px solid var(--border);
+      box-shadow: -2px 0 16px rgba(0,0,0,0.08);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 0.25s ease;
+    }
+
+    .agent-panel.open { transform: translateX(0); }
+
+    .agent-panel-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      flex-shrink: 0;
+    }
+
+    .agent-panel-body {
+      flex: 1;
+      padding: 0 28px 28px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .agent-hero {
+      position: relative;
+      margin-top: 150px;
+      margin-bottom: 16px;
+    }
+
+    .agent-logo {
+      width: 80px;
+      height: 80px;
+      object-fit: contain;
+    }
+
+    .agent-beta {
+      position: absolute;
+      top: 4px;
+      right: -32px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--ink2);
+      background: var(--surface);
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    .agent-title {
+      font-family: var(--title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 28px;
+      text-align: center;
+    }
+
+    .agent-input-box {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 16px 16px 12px;
+      margin-bottom: 28px;
+    }
+
+    .agent-input-text {
+      font-size: 15px;
+      color: var(--ink3);
+      margin-bottom: 16px;
+    }
+
+    .agent-input-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .agent-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink2);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      cursor: pointer;
+    }
+
+    .agent-action-btn:hover { background: var(--surface); }
+
+    .agent-send-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+      cursor: pointer;
+    }
+
+    .agent-suggestions {
+      width: 100%;
+    }
+
+    .agent-suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 8px;
+      border-bottom: 1px solid var(--border-light);
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .agent-suggestion-item:last-child { border-bottom: none; }
+    .agent-suggestion-item:hover { background: var(--surface); border-radius: 8px; }
+
+    /* ══ AGENT CHAT VIEW ══ */
+    .agent-home { display: flex; flex-direction: column; align-items: center; flex: 1; }
+    .agent-chat { display: none; flex-direction: column; flex: 1; width: 100%; }
+    .agent-panel.chatting .agent-home { display: none; }
+    .agent-panel.chatting .agent-chat { display: flex; }
+    .agent-panel.chatting .agent-panel-topbar { justify-content: flex-start; gap: 12px; }
+
+    .agent-chat-topbar-center {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .agent-chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 4px;
+    }
+
+    .agent-msg-user {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 24px;
+    }
+
+    .agent-msg-bubble {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 12px 18px;
+      font-size: 15px;
+      font-weight: 450;
+      color: var(--ink);
+      max-width: 85%;
+    }
+
+    .agent-msg-ai {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .agent-msg-ai-icon {
+      width: 28px;
+      height: 28px;
+      flex-shrink: 0;
+    }
+
+    .agent-msg-ai-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .agent-msg-ai-text {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      padding-top: 3px;
+    }
+
+    .agent-msg-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .agent-msg-action-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--ink3);
+    }
+
+    .agent-msg-action-icon:hover { color: var(--ink2); }
+    .agent-msg-action-icon svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.3; }
+
+    .agent-chat-input {
+      border-top: none;
+      padding: 12px 0;
+    }
+
+    .agent-chat-input-box {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .agent-chat-input-box span {
+      flex: 1;
+      font-size: 14px;
+      color: var(--ink3);
+    }
+
+    .agent-chat-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .agent-chat-view {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .agent-msg-ai-response {
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+      font-weight: 400;
+    }
+
+    .agent-msg-ai-response b { font-weight: 600; }
+
+    .agent-msg-ai-response ul {
+      padding-left: 20px;
+      margin: 12px 0;
+    }
+
+    .agent-msg-ai-response li {
+      margin-bottom: 12px;
+    }
+
+    .agent-input-editable {
+      font-size: 15px;
+      color: var(--ink);
+      min-height: 24px;
+      margin-bottom: 16px;
+      outline: none;
+      word-break: break-word;
+    }
+
+    .agent-input-editable:empty::before {
+      content: attr(data-placeholder);
+      color: var(--ink3);
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .agent-spinner {
+      animation: spin 1.2s linear infinite;
+    }
+  </style>
+</head>
+<body class="agent-open">
+
+  <!-- ══ TOP NAV ══ -->
+  <div class="topnav">
+    <div class="topnav-left">
+      <a class="meta-logo" href="#">
+        <img src="../shared/meta.svg" alt="Meta" />
+      </a>
+      <div class="topnav-tabs">
+        <a class="topnav-tab active">My Apps</a>
+        <a class="topnav-tab">Required actions</a>
+        <a class="topnav-tab">Docs <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Tools <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Support <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="nav-icons">
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2a4 4 0 014 4c0 2-1 3.5-1 5H5c0-1.5-1-3-1-5a4 4 0 014-4zM6 13h4"/></svg></div>
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="3"/><path d="M2.5 14.5C2.5 11.5 5 9.5 8 9.5s5.5 2 5.5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEFT SYSTEM SIDEBAR ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-sidebar-icon active">
+      <svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><path d="M7 3L3 10l4 7M13 3l4 7-4 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-spacer"></div>
+    <div class="sys-sidebar-icon active" id="agentToggle" onclick="toggleAgent()" style="cursor:pointer;">
+      <img src="../shared/metaai.png" alt="Meta AI" style="width:20px;height:20px;border-radius:50%;object-fit:cover;" />
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 7v.01" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ BREADCRUMB ══ -->
+  <div class="breadcrumb">
+    <a href="#">Use cases</a>
+    <span class="sep">›</span>
+    <span class="current">Customize</span>
+  </div>
+
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content-layout">
+
+    <!-- LEFT NAV -->
+    <div class="left-nav">
+      <div class="nav-dropdown">
+        Connect on WhatsApp
+        <svg class="dd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <a class="nav-link active">Overview</a>
+
+      <div class="nav-group" id="nav-api">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Basic setup
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub" href="developer-step1.html">Step 1. Try it out</a>
+          <a class="nav-link nav-link--sub" href="developer-step2.html">Step 2. Production setup</a>
+          <a class="nav-link nav-link--sub" href="developer-step3.html">Step 3. Business verification</a>
+          <a class="nav-link nav-link--sub" href="developer-nextsteps.html">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-partner">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Become a Partner
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Become a Tech Provider</a>
+          <a class="nav-link nav-link--sub">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-other">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Other tools
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Permissions and features</a>
+          <a class="nav-link nav-link--sub">Resources</a>
+          <a class="nav-link nav-link--sub">Documentation</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="right-content">
+      <h2>Overview</h2>
+      <p class="overview-desc">Understand what you need to do based on your goals and the integration path you choose.</p>
+
+      <div class="section-divider"></div>
+
+      <h3>Select your integration path</h3>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchPane(this, 'api')">Basic setup</button>
+        <button class="tab-btn" onclick="switchPane(this, 'partner')">Become a Partner</button>
+      </div>
+
+      <div class="tab-explainer" id="explainer-api">
+        Integrate WhatsApp API directly into your own systems. <strong>Best for</strong> businesses building in-house messaging — e.g. a retailer sending order updates, a bank handling customer support, or an airline managing booking notifications.
+      </div>
+      <div class="tab-explainer" id="explainer-partner" style="display:none;">
+        Build solutions that serve other businesses. <strong>Best for</strong> SaaS platforms and technology companies — e.g. Twilio, MessageBird, or engagement tools offering WhatsApp as part of their product.
+      </div>
+
+      <!-- Tab: Basic Setup -->
+      <div class="tab-pane active" id="pane-api">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 1. Try it out <span class="pill pill--optional">Optional</span></p>
+              <p class="step-desc"><span class="time">5 min</span> <span class="sep-dot">·</span>Learn about WhatsApp API by sending a test message from your test number.</p>
+            </div>
+          </div>
+
+          <a class="step-item" href="developer-step2.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 2. Production setup</p>
+              <p class="step-desc"><span class="time">15 min</span> <span class="sep-dot">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</p>
+            </div>
+          </a>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 3. Business verification</p>
+              <p class="step-desc"><span class="time">1–3 days</span> <span class="sep-dot">·</span>Verify your business to unlock higher messaging limits and access to additional API features.</p>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle step-circle--green">
+                <svg viewBox="0 0 20 20"><path d="M14.527 6.722a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+              </div>
+            </div>
+            <div class="step-body">
+              <p class="step-name step-name--green">Ready to message your customers at scale</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Become a Partner -->
+      <div class="tab-pane" id="pane-partner">
+        <div class="step-list">
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 1. Try it out <span class="pill pill--optional">Optional</span></p>
+              <p class="step-desc"><span class="time">5 min</span> <span class="sep-dot">·</span>Learn about WhatsApp API by sending a test message from your test number.</p>
+            </div>
+          </div>
+
+          <a class="step-item" href="developer-step2.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 2. Production setup</p>
+              <p class="step-desc"><span class="time">15 min</span> <span class="sep-dot">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</p>
+            </div>
+          </a>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 3. Business verification</p>
+              <p class="step-desc"><span class="time">1–3 days</span> <span class="sep-dot">·</span>Verify your business to unlock higher messaging limits and access to additional API features.</p>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Become a Tech Provider</p>
+              <p class="step-desc"><span class="time">1–2 weeks</span> <span class="sep-dot">·</span>Apply and complete your technical integration using the partner API, including embedded signup and client management.</p>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle step-circle--green">
+                <svg viewBox="0 0 20 20"><path d="M14.527 6.722a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+              </div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name step-name--green">Ready to provide solutions to other businesses</p>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle step-circle--green">
+                <svg viewBox="0 0 20 20"><path d="M14.527 6.722a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+              </div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name step-name--green">Upgrade partner tier or integrate more APIs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ BOTTOM BAR ══ -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-left">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 8h8M8 4v8"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M2 6h12"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3.5l2 1.5"/></svg>
+    </div>
+    <div class="bottom-bar-right">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM7 7.5h2v4.5H7z"/></svg>
+      <span class="bottom-bar-text">Meta © 2025</span>
+    </div>
+  </div>
+
+  <!-- ══ AGENT PANEL ══ -->
+  <div class="agent-panel open" id="agentPanel">
+    <!-- HOME TOP BAR -->
+    <div class="agent-panel-topbar" id="agentTopbarHome">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink3)" stroke-width="1.5"><path d="M3 5h12M3 9h12M3 13h12" stroke-linecap="round"/></svg>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="var(--ink3)"><circle cx="4" cy="9" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="14" cy="9" r="1.5"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="1.8" style="cursor:pointer;" onclick="resetAgent()"><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" stroke-linecap="round" stroke-linejoin="round"/><polyline points="23 4 23 10 17 10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink3)" stroke-width="1.5" style="cursor:pointer;" onclick="toggleAgent()"><path d="M4 4l10 10M14 4L4 14" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <!-- CHAT TOP BAR -->
+    <div class="agent-panel-topbar agent-chat-topbar" id="agentTopbarChat" style="display:none;">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink3)" stroke-width="1.5"><path d="M3 5h12M3 9h12M3 13h12" stroke-linecap="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink3)" stroke-width="1.5"><rect x="3" y="3" width="12" height="12" rx="2"/><path d="M7 3v4M3 7h4" stroke-linecap="round"/></svg>
+      <div style="display:flex;align-items:center;gap:6px;flex:1;justify-content:center;">
+        <img src="../shared/metaai.png" alt="Meta AI" style="width:22px;height:22px;object-fit:contain;" />
+        <span style="font-size:13px;font-weight:600;color:var(--ink2);">Beta</span>
+      </div>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="var(--ink3)"><circle cx="4" cy="9" r="1.5"/><circle cx="9" cy="9" r="1.5"/><circle cx="14" cy="9" r="1.5"/></svg>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink3)" stroke-width="1.8" style="cursor:pointer;" onclick="resetAgent()"><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" stroke-linecap="round" stroke-linejoin="round"/><polyline points="23 4 23 10 17 10" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="var(--ink3)" stroke-width="1.5" style="cursor:pointer;" onclick="toggleAgent()"><path d="M4 4l10 10M14 4L4 14" stroke-linecap="round"/></svg>
+    </div>
+
+    <!-- HOME VIEW -->
+    <div class="agent-panel-body agent-home" id="agentHome">
+      <div class="agent-hero">
+        <img src="../shared/metaai.png" alt="Meta AI" class="agent-logo" />
+      </div>
+      <h2 class="agent-title">Meta AI assistant</h2>
+      <div class="agent-input-box">
+        <div class="agent-input-editable" contenteditable="true" id="agentHomeInput" data-placeholder="Ask a question..."></div>
+        <div class="agent-input-actions">
+          <button class="agent-action-btn">
+            Add image
+          </button>
+          <div class="agent-send-btn" onclick="submitHomeInput()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8"><path d="M7 11V3M4 6l3-3 3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>
+      </div>
+      <div class="agent-suggestions">
+        <div class="agent-suggestion-item" onclick="askQuestion(this)">
+          <span>Help me start integrating with the API</span>
+        </div>
+        <div class="agent-suggestion-item" onclick="askQuestion(this)">
+          <span>Help me become a partner</span>
+        </div>
+        <div class="agent-suggestion-item" onclick="askQuestion(this)">
+          <span>Which path should I choose?</span>
+        </div>
+        <div class="agent-suggestion-item" onclick="askQuestion(this)">
+          <span>What can I do with the WhatsApp API?</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHAT VIEW -->
+    <div class="agent-panel-body agent-chat-view" id="agentChat" style="display:none;align-items:stretch;">
+      <div class="agent-chat-messages" id="agentMessages"></div>
+      <div class="agent-chat-input">
+        <div class="agent-input-box" style="margin-bottom:0;">
+          <div class="agent-input-editable" contenteditable="true" id="agentChatInput" data-placeholder="Add a reply..."></div>
+          <div class="agent-input-actions">
+            <button class="agent-action-btn">
+              Add image
+            </button>
+            <div class="agent-send-btn" onclick="submitChatInput()">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8"><path d="M7 11V3M4 6l3-3 3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        if (document.activeElement.id === 'agentHomeInput') { e.preventDefault(); submitHomeInput(); }
+        if (document.activeElement.id === 'agentChatInput') { e.preventDefault(); submitChatInput(); }
+      }
+    });
+
+    function submitHomeInput() {
+      const input = document.getElementById('agentHomeInput');
+      const text = input.textContent.trim();
+      if (!text) return;
+      askQuestion({ querySelector: () => ({ textContent: text }) });
+    }
+
+    function submitChatInput() {
+      const input = document.getElementById('agentChatInput');
+      const text = input.textContent.trim();
+      if (!text) return;
+      input.textContent = '';
+      const messages = document.getElementById('agentMessages');
+      messages.innerHTML += `
+        <div class="agent-msg-user"><div class="agent-msg-bubble">${text}</div></div>
+        <div class="agent-msg-ai">
+          <img src="../shared/metaai.png" class="agent-spinner" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;" />
+          <span class="agent-msg-ai-text">Gathering information...</span>
+        </div>
+      `;
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function resetAgent() {
+      document.getElementById('agentHome').style.display = '';
+      document.getElementById('agentChat').style.display = 'none';
+      document.getElementById('agentTopbarHome').style.display = '';
+      document.getElementById('agentTopbarChat').style.display = 'none';
+    }
+
+    function toggleAgent() {
+      const panel = document.getElementById('agentPanel');
+      const btn = document.getElementById('agentToggle');
+      const isOpen = panel.classList.toggle('open');
+      btn.classList.toggle('active');
+      document.body.classList.toggle('agent-open');
+      if (!isOpen) {
+        // Reset to home view when closing
+        document.getElementById('agentHome').style.display = '';
+        document.getElementById('agentChat').style.display = 'none';
+        document.getElementById('agentTopbarHome').style.display = '';
+        document.getElementById('agentTopbarChat').style.display = 'none';
+      }
+    }
+
+    const aiResponses = {
+      'Help me start integrating with the API': `
+        <p>Integrate WhatsApp API directly into your own systems. Best for businesses building in-house messaging — e.g. a retailer sending order updates, a bank handling customer support, or an airline managing booking notifications.</p>
+        <div class="step-list" style="margin-top:20px">
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Step 1. Try it out <span class="pill pill--optional">Optional</span></div>
+              <div class="step-desc"><span class="time">5 min</span><span class="sep-dot">·</span>Learn about WhatsApp API by sending a test message from your test number.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Step 2. Production setup</div>
+              <div class="step-desc"><span class="time">15 min</span><span class="sep-dot">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Step 3. Business verification</div>
+              <div class="step-desc"><span class="time">1–3 days</span><span class="sep-dot">·</span>Verify your business to unlock higher messaging limits and access to additional API features.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div style="width:18px;height:18px;flex-shrink:0;margin-top:2px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--green)"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.5 14.5L6 12l1.4-1.4 3.1 3.1 6.1-6.1L18 9l-7.5 7.5z"/></svg></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name step-name--green">Ready to message your customers at scale</div>
+            </div>
+          </div>
+        </div>`,
+      'Help me become a partner': `
+        <p>Build solutions that serve other businesses. Best for SaaS platforms and technology companies — e.g. Twilio, MessageBird, or engagement tools offering WhatsApp as part of their product.</p>
+        <div class="step-list" style="margin-top:20px">
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Step 1. Try it out <span class="pill pill--optional">Optional</span></div>
+              <div class="step-desc"><span class="time">5 min</span><span class="sep-dot">·</span>Learn about WhatsApp API by sending a test message from your test number.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Step 2. Production setup</div>
+              <div class="step-desc"><span class="time">15 min</span><span class="sep-dot">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Step 3. Business verification</div>
+              <div class="step-desc"><span class="time">1–3 days</span><span class="sep-dot">·</span>Verify your business to unlock higher messaging limits and access to additional API features.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle"></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name">Become a Tech Provider</div>
+              <div class="step-desc"><span class="time">1–2 weeks</span><span class="sep-dot">·</span>Apply and complete your technical integration using the partner API, including embedded signup and client management.</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div style="width:18px;height:18px;flex-shrink:0;margin-top:2px"><svg viewBox="0 0 24 24" style="width:18px;height:18px;fill:var(--green)"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1.5 14.5L6 12l1.4-1.4 3.1 3.1 6.1-6.1L18 9l-7.5 7.5z"/></svg></div><div class="step-dotted-line"></div></div>
+            <div class="step-body">
+              <div class="step-name step-name--green">Ready to provide solutions to other businesses</div>
+            </div>
+          </div>
+          <div class="step-item">
+            <div class="step-left"><div class="step-circle" style="border-style:dashed"></div></div>
+            <div class="step-body">
+              <div class="step-name" style="color:var(--ink3)">Upgrade partner tier or integrate more APIs</div>
+            </div>
+          </div>
+        </div>`
+    };
+
+    aiResponses['Which path should I choose?'] = `
+        <p style="margin-bottom:16px">There are two paths depending on how you plan to use WhatsApp:</p>
+        <div style="border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:12px">
+          <div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px">Basic Setup</div>
+          <div style="font-size:14px;color:var(--ink2);line-height:1.5">Integrate WhatsApp API directly into your own systems. Best for businesses building in-house messaging — e.g. a retailer sending order updates, a bank handling customer support, or an airline managing booking notifications.</div>
+        </div>
+        <div style="border:1px solid var(--border);border-radius:8px;padding:16px 20px">
+          <div style="font-weight:700;font-size:15px;color:var(--ink);margin-bottom:4px">Become a partner</div>
+          <div style="font-size:14px;color:var(--ink2);line-height:1.5">Build solutions that serve other businesses. Best for SaaS platforms and technology companies — e.g. Twilio, MessageBird, or engagement tools offering WhatsApp as part of their product.</div>
+        </div>`;
+
+    aiResponses['What can I do with the WhatsApp API?'] = `
+        <p style="margin-bottom:16px">WhatsApp Cloud API enables you to programmatically message and call on WhatsApp. You can use Cloud API to send users a variety of messages, from simple text messages to rich media and interactive messages.</p>
+        <p style="font-weight:600;margin-bottom:8px">WhatsApp Cloud API includes:</p>
+        <ul style="padding-left:20px;margin-bottom:16px">
+          <li style="margin-bottom:6px"><b>Messaging:</b> Send text messages, rich media, and interactive messages</li>
+          <li style="margin-bottom:6px"><b>Calling:</b> Make and receive calls to customers</li>
+          <li style="margin-bottom:6px"><b>Groups:</b> Create, manage, and message WhatsApp group conversations</li>
+        </ul>
+        <p style="margin-bottom:8px">WhatsApp messaging provides a powerful and private way to engage with customers. Use Cloud API to:</p>
+        <ul style="padding-left:20px;margin-bottom:16px">
+          <li style="margin-bottom:6px">Send order confirmations and shipping updates</li>
+          <li style="margin-bottom:6px">Share appointment availability and other reminders</li>
+          <li style="margin-bottom:6px">Drive upsell and cross-sell opportunities</li>
+          <li style="margin-bottom:6px">Facilitate end-to-end transactions, from product discovery to payment</li>
+          <li style="margin-bottom:6px">Enable multi-factor authentication or one-time passwords to verify accounts and users</li>
+          <li style="margin-bottom:6px">Deliver custom interactive conversational experiences</li>
+        </ul>
+        <a href="https://developers.facebook.com/documentation/business-messaging/whatsapp/about-the-platform" target="_blank" style="color:var(--accent);font-weight:500;text-decoration:none">Learn more about the platform →</a>`;
+
+    const defaultResponse = `I can help you with that! Could you tell me more about what you're looking for so I can provide the most relevant guidance?`;
+
+    function askQuestion(el) {
+      const question = el.querySelector('span').textContent;
+      const response = aiResponses[question] || defaultResponse;
+      // Switch to chat view
+      document.getElementById('agentHome').style.display = 'none';
+      document.getElementById('agentChat').style.display = 'flex';
+      document.getElementById('agentTopbarHome').style.display = 'none';
+      document.getElementById('agentTopbarChat').style.display = 'flex';
+
+      const messages = document.getElementById('agentMessages');
+      // User message
+      messages.innerHTML = `
+        <div class="agent-msg-user"><div class="agent-msg-bubble">${question}</div></div>
+        <div class="agent-msg-ai" id="aiResponse">
+          <img src="../shared/metaai.png" class="agent-spinner" style="width:28px;height:28px;object-fit:contain;flex-shrink:0;" />
+          <span class="agent-msg-ai-text">Gathering information...</span>
+        </div>
+      `;
+
+      // After 2s, show full response
+      setTimeout(() => {
+        document.getElementById('aiResponse').innerHTML = `
+          <div class="agent-msg-ai-response">${response}</div>
+        `;
+      }, 2000);
+    }
+
+    function switchPane(btn, id) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('pane-' + id).classList.add('active');
+      btn.classList.add('active');
+      document.getElementById('explainer-api').style.display = id === 'api' ? '' : 'none';
+      document.getElementById('explainer-partner').style.display = id === 'partner' ? '' : 'none';
+
+      // Open matching nav group in left nav
+      const navMap = { api: 'nav-api', partner: 'nav-partner' };
+      const targetNav = navMap[id];
+      if (targetNav) {
+        const group = document.getElementById(targetNav);
+        if (group) group.classList.remove('collapsed');
+      }
+    }
+
+    function toggleGroup(toggle) {
+      toggle.closest('.nav-group').classList.toggle('collapsed');
+    }
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

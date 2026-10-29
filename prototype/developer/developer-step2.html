@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta for Developers — Step 2. Production Setup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet" />
+  <style>
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root) { animation: 0.4s ease both vt-fade-out; }
+    ::view-transition-new(root) { animation: 0.4s ease both vt-fade-in; }
+    @keyframes vt-fade-out { to { opacity: 0; } }
+    @keyframes vt-fade-in { from { opacity: 0; } }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF;
+      --page-bg: #F0F2F5;
+      --surface: #F8F9FA;
+      --ink: #1C2B33;
+      --ink2: #465A69;
+      --ink3: #465A69;
+      --accent: #1877F2;
+      --accent-light: #E7F3FF;
+      --green: #006b4e;
+      --border: #DADDE1;
+      --border-light: #E4E6EB;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--title);
+      background: var(--page-bg);
+      background-image: url('../shared/bg.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* ══ TOP NAV ══ */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .meta-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .meta-logo img { height: 14px; width: auto; }
+
+    .topnav-tabs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .topnav-tab {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: color 0.12s;
+      cursor: pointer;
+    }
+
+    .topnav-tab:hover { color: #0A78BE; }
+
+    .topnav-tab.active {
+      color: #0A78BE;
+      font-weight: 600;
+      background: #E1EDF7;
+      border-radius: 4px;
+      border-bottom-color: transparent;
+    }
+
+    .topnav-tab .caret {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 6px 10px;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    .search-icon { color: var(--ink3); flex-shrink: 0; }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--ink);
+      width: 100%;
+      font-family: var(--title);
+    }
+
+    .search-box input::placeholder { color: var(--ink3); }
+
+    .nav-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-icon svg { width: 16px; height: 16px; color: var(--ink2); }
+
+    /* ══ BREADCRUMB ══ */
+    .breadcrumb {
+      padding: 14px 24px 16px;
+      font-size: 13px;
+      color: var(--ink3);
+    }
+
+    .breadcrumb a { color: var(--ink2); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { margin: 0 8px; color: var(--ink3); font-size: 11px; }
+    .breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+    /* ══ PAGE TITLE ══ */
+    .page-title-area { padding: 12px 24px 16px; }
+
+    .page-title-area h1 {
+      font-family: var(--title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .page-title-area p { font-size: 13px; color: var(--ink2); }
+
+    /* ══ CONTENT LAYOUT ══ */
+    .content-layout {
+      display: flex;
+      gap: 16px;
+      padding: 0 24px 0;
+      align-items: flex-start;
+    }
+
+    /* ══ LEFT NAV ══ */
+    .left-nav {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 74px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .nav-dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin: 4px 0px 8px 0px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .nav-dropdown .dd-caret {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      display: block;
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .nav-link:hover {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .nav-link.active {
+      color: #0A78BE;
+      font-weight: 700;
+      background: #E1EDF7;
+      border-radius: 4px;
+    }
+
+    .nav-group {
+      margin-top: 2px;
+    }
+
+    .nav-group-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .nav-group-toggle:hover { background: var(--surface); }
+
+    .nav-group-toggle .chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      transform: rotate(180deg);
+    }
+
+    .nav-group.collapsed .chevron {
+      transform: rotate(0deg);
+    }
+
+    .nav-group-items {
+      overflow: hidden;
+      max-height: 300px;
+      transition: max-height 0.25s ease;
+    }
+
+    .nav-group.collapsed .nav-group-items {
+      max-height: 0;
+    }
+
+    .nav-link--sub {
+      padding-left: 22px;
+      font-size: 14px;
+      font-weight: 450;
+    }
+
+    /* ══ RIGHT CONTENT ══ */
+    .right-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-content {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 16px 24px;
+      min-height: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .right-content h2 {
+      font-family: var(--title);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .right-content .overview-desc {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.4;
+      font-weight: 450;
+    }
+    .overview-desc .dot-sep { margin: 0 7px; color: var(--ink3); }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 16px 0;
+    }
+
+    .right-content h3 {
+      font-family: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    /* ══ TASK ACCORDION ══ */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .task-item {
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .task-item:last-child {
+      border-bottom: none;
+    }
+
+    .task-item:first-child .task-header {
+      padding-top: 0;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .task-header:hover {
+      /* no color/opacity change on hover */
+    }
+
+    .task-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task-check--done {
+      border: none;
+      background: transparent;
+    }
+
+    .task-check--done svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--green);
+    }
+
+    .task-title {
+      font-family: var(--title);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .task-title--done {
+      color: var(--ink);
+    }
+
+    .task-info {
+      flex: 1;
+    }
+
+    .task-subtitle {
+      font-size: 12.6px;
+      font-weight: 400;
+      color: var(--ink3);
+      margin-top: 0;
+      line-height: 1.3;
+    }
+
+
+    .task-chevron {
+      width: 16px;
+      height: 16px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.4;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .task-item:not(.collapsed) .task-chevron {
+      transform: rotate(-180deg);
+    }
+
+    .task-body {
+      overflow: hidden;
+      max-height: 2000px;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 0 16px 34px;
+    }
+
+    .task-item.collapsed .task-body {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .task-item.locked .task-title { color: var(--ink3); }
+    .task-item.locked .task-check { opacity: 0.5; }
+    .task-item.locked .task-header { position: relative; }
+    .task-item.locked .task-header::after {
+      content: "You need to register your number before configuring this step.";
+      position: absolute; left: 34px; top: calc(100% - 6px);
+      background: #fff; color: var(--ink); border: 1px solid var(--border); font-size: 12px; font-weight: 400; line-height: 1.35;
+      padding: 8px 11px; border-radius: 6px; max-width: 320px; white-space: normal;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
+      opacity: 0; visibility: hidden; transform: translateY(4px);
+      transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s; z-index: 50; pointer-events: none;
+    }
+    .task-item.locked .task-header:hover::after { opacity: 1; visibility: visible; transform: translateY(0); }
+
+    .task-item:not(.collapsed) .task-body { overflow: visible; }
+
+    .task-desc {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .task-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .task-action:hover {
+      background: #D4E8FF;
+    }
+
+    .task-done-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--green);
+    }
+
+    /* ══ TASK 1-3 DETAIL ELEMENTS ══ */
+    .link-blue { color: #1461cc; text-decoration: none; }
+    .link-blue:hover { text-decoration: underline; }
+
+    .warn-banner {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #FCEFD7;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+    .warn-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    .info-icon { width: 13px; height: 13px; vertical-align: -2px; margin-left: 4px; }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .toggle {
+      width: 34px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: none;
+      padding: 0;
+      transition: background 0.15s;
+    }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+      transition: transform 0.15s;
+    }
+    .toggle.on { background: #1877F2; }
+    .toggle.on::after { transform: translateX(14px); }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink2);
+      margin: 4px 0 16px;
+    }
+
+    .biz-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .biz-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .biz-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .biz-sub { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+    .biz-sub-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink2);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .phone-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .phone-icon { width: 20px; height: 20px; color: var(--ink2); flex-shrink: 0; }
+    .phone-info { flex: 1; min-width: 0; }
+    .phone-number {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .phone-id { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+
+    .badge { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
+    .badge--unverified { background: #B0173A; color: #fff; }
+    .badge--verified { background: #E4F5EE; color: var(--green); }
+
+    .note-text { font-size: 13px; color: var(--ink2); margin: 4px 0 12px; }
+
+    /* ══ TASK SUB-STEPS ══ */
+    .sub-step {
+      margin-bottom: 24px;
+    }
+
+    .sub-step:last-child { margin-bottom: 0; }
+
+    .sub-step-label {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 550;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .placeholder-box {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--ink3);
+      margin-bottom: 8px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: #0A78BE;
+      border: 1px solid #0A78BE;
+      border-radius: 6px;
+      padding: 8px 16px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: #096A9E; border-color: #096A9E; }
+
+    .btn-primary:disabled {
+      background: var(--border-light);
+      border-color: var(--border-light);
+      color: #A0AAB4;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover { background: var(--surface); }
+    /* Locked tasks (3 & 4): action buttons disabled — same look as .btn-primary:disabled */
+    .task-item.locked .btn-primary,
+    .task-item.locked .btn-secondary {
+      background: var(--border-light);
+      border-color: var(--border-light);
+      color: #A0AAB4;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+    .success-banner { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 10px 14px; background: #E6F4EA; border: none; border-radius: 8px; font-size: 13px; color: var(--ink); font-weight: 500; }
+    .success-banner-ic { width: 18px; height: 18px; flex-shrink: 0; color: var(--green); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; z-index: 1000; padding: 16px; }
+    .modal { background: var(--bg); border-radius: 12px; width: 420px; max-width: 100%; padding: 20px 22px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+    .modal-close { background: none; border: none; font-size: 24px; line-height: 1; color: var(--ink3); cursor: pointer; padding: 0; }
+    .modal-desc { font-size: 13px; color: var(--ink2); margin-bottom: 14px; line-height: 1.4; }
+    .modal .form-label { display: block; margin-bottom: 6px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    /* Custom radio dropdown (matches other dropdowns) */
+    .msg-select { position: relative; }
+    .select-display { display: flex; align-items: center; gap: 8px; border: 1px solid var(--border); border-radius: 6px; height: 40px; padding: 0 10px; background: var(--bg); font-size: 13px; color: var(--ink); cursor: pointer; }
+    .select-display .sd-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .select-display .sd-caret { width: 12px; height: 12px; stroke: var(--ink3); fill: none; stroke-width: 1.5; flex-shrink: 0; transition: transform .2s ease; }
+    .msg-select.open .select-display { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .msg-select.open .sd-caret { transform: rotate(180deg); }
+    .sd-menu { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--bg); border: 1px solid var(--border-light); border-radius: 10px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 6px; z-index: 30; }
+    .msg-select.open .sd-menu { display: block; }
+    .sd-option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 14px; color: var(--ink); border-radius: 8px; cursor: pointer; }
+    .sd-option:hover { background: var(--surface); }
+    .sd-option.selected { background: var(--accent-light); }
+    .sd-radio { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid var(--border); background: var(--bg); position: relative; }
+    .sd-option.selected .sd-radio { border-color: var(--accent); }
+    .sd-option.selected .sd-radio::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
+    .sd-optText { flex: 1; min-width: 0; }
+
+    .token-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .token-field {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--ink2);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 0 12px;
+      height: 36px;
+    }
+    .token-field .token-val { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .token-field .copy-ic { width: 15px; height: 15px; color: var(--ink3); cursor: pointer; flex-shrink: 0; }
+    .token-field .copy-ic:hover { color: var(--ink); }
+
+    .sub-steps-container {
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      overflow: visible;
+    }
+
+    .sub-step-bordered {
+      padding: 20px;
+    }
+
+    .sub-step-bordered + .sub-step-bordered {
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* ══ TAB EXPLAINER ══ */
+    .tab-explainer {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 14px;
+      color: #1C1E21;
+      line-height: 1.3;
+      font-weight: 450;
+    }
+
+    /* ══ MINI TABS ══ */
+    .mini-tabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .mini-tab {
+      flex: 1;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 550;
+      color: var(--ink);
+      padding: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.12s;
+    }
+
+    .mini-tab + .mini-tab { border-left: 1px solid var(--border); }
+    .mini-tab:hover { background: var(--surface); }
+    .mini-tab.active { color: #fff; background: #0A78BE; }
+
+    .mini-pane { display: none; }
+    .mini-pane.active { display: block; }
+
+    /* ══ TEST LAYOUT ══ */
+    .test-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .test-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .test-panel-title {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .field-select,
+    .field-input {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 10px;
+      height: 36px;
+      background: var(--bg);
+      outline: none;
+      width: 100%;
+    }
+
+    .field-select {
+      padding-right: 28px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%234B4F56' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .field-select:focus,
+    .field-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
+
+    .field-textarea {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      background: var(--bg);
+      outline: none;
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .field-textarea:focus { border-color: var(--accent); }
+
+    /* Preview panel */
+    .preview-panel {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 200px;
+      height: 100%;
+    }
+
+    .preview-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .preview-tab {
+      font-family: var(--title);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink3);
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.12s;
+    }
+
+    .preview-tab:hover { color: var(--ink2); }
+    .preview-tab.active { color: #0A78BE; border-bottom-color: #0A78BE; }
+
+    .preview-pane { display: none !important; }
+    .preview-pane.active { display: block !important; }
+    .preview-pane.active[style*="justify-content"] { display: flex !important; }
+
+    .preview-message {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.5;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .preview-code {
+      background: #1E1E1E;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: #D4D4D4;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .preview-code .key { color: #9CDCFE; }
+    .preview-code .str { color: #CE9178; }
+    .preview-code .punct { color: #D4D4D4; }
+
+    /* ══ CONTINUE BANNER ══ */
+    .continue-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      margin-bottom: 0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-top: 16px;
+
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .continue-banner-text {
+      font-family: var(--title);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .continue-btn {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .continue-btn:hover {
+      background: var(--surface);
+    }
+
+    /* ══ BOTTOM BAR ══ */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+
+    .bottom-bar-left, .bottom-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bottom-bar svg { width: 16px; height: 16px; color: var(--ink3); cursor: pointer; }
+    .bottom-bar svg:hover { color: var(--ink2); }
+    .bottom-bar-text { font-size: 11px; color: var(--ink3); }
+
+    /* ══ LEFT SYSTEM SIDEBAR ══ */
+    .sys-sidebar {
+      position: fixed;
+      left: 0;
+      top: 48px;
+      bottom: 0;
+      width: 46px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      gap: 4px;
+      z-index: 90;
+    }
+
+    .sys-sidebar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s;
+      color: var(--ink3);
+    }
+
+    .sys-sidebar-icon:hover {
+      background: var(--surface);
+      color: var(--ink2);
+    }
+
+    .sys-sidebar-icon.active {
+      background: #E1EDF7;
+      color: #0A78BE;
+    }
+
+    .sys-sidebar-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+
+    .sys-sidebar-spacer { flex: 1; }
+
+    /* Offset page content for sidebar */
+    .breadcrumb { margin-left: 46px; }
+    .page-title-area { margin-left: 46px; }
+    .content-layout { margin-left: 46px; padding-bottom: 0; }
+    .wf-title { font-size: 14px; font-weight: 600; color: var(--ink); display: block; margin: 16px 0 10px; }
+    .wh-card { border: 1px solid var(--border-light); border-radius: 8px; }
+    .wh-table thead th:first-child { border-top-left-radius: 8px; }
+    .wh-table thead th:last-child { border-top-right-radius: 8px; }
+    .wh-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .wh-table th { text-align: left; font-weight: 600; color: var(--ink3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .wh-table th:last-child, .wh-table td:last-child { text-align: center; width: 90px; }
+    .wh-table th:nth-child(2), .wh-table td:nth-child(2) { width: 120px; }
+    .wh-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); color: var(--ink); vertical-align: middle; }
+    .wh-table tr:last-child td { border-bottom: none; }
+    .wf-all-row td { font-weight: 550; background: var(--surface); }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOP NAV ══ -->
+  <div class="topnav">
+    <div class="topnav-left">
+      <a class="meta-logo" href="#">
+        <img src="../shared/meta.svg" alt="Meta" />
+      </a>
+      <div class="topnav-tabs">
+        <a class="topnav-tab active">My Apps</a>
+        <a class="topnav-tab">Required actions</a>
+        <a class="topnav-tab">Docs <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Tools <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Support <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="nav-icons">
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="3"/><path d="M2.5 14.5C2.5 11.5 5 9.5 8 9.5s5.5 2 5.5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEFT SYSTEM SIDEBAR ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-sidebar-icon active">
+      <svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><path d="M7 3L3 10l4 7M13 3l4 7-4 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-spacer"></div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 7v.01" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ BREADCRUMB ══ -->
+  <div class="breadcrumb">
+    <a href="#">Use cases</a>
+    <span class="sep">›</span>
+    <span class="current">Customize</span>
+  </div>
+
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content-layout">
+
+    <!-- LEFT NAV -->
+    <div class="left-nav">
+      <div class="nav-dropdown">
+        <span style="display:flex;align-items:center;gap:8px;"><img src="images/waicon.svg" alt="" style="width:16px;height:16px;flex-shrink:0;">Connect on WhatsApp</span>
+        <svg class="dd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <a class="nav-link" href="index.html">Overview</a>
+
+      <div class="nav-group" id="nav-api">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Basic setup
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub" href="developer-step1.html">Step 1. Try it out</a>
+          <a class="nav-link nav-link--sub active" href="developer-step2.html">Step 2. Production setup</a>
+          <a class="nav-link nav-link--sub" href="developer-step3.html">Step 3. Business verification</a>
+          <a class="nav-link nav-link--sub" href="developer-nextsteps.html">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-partner">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Become a Partner
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Become a Tech Provider</a>
+          <a class="nav-link nav-link--sub">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-other">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Other tools
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Permissions and features</a>
+          <a class="nav-link nav-link--sub">Resources</a>
+          <a class="nav-link nav-link--sub">Documentation</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+    <div class="right-content">
+      <h2>Step 2. Production setup</h2>
+      <p class="overview-desc">15 min<span class="dot-sep">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</p>
+
+      <div class="section-divider"></div>
+
+      <!-- TASK LIST -->
+      <div class="task-list">
+
+        <!-- Task 1: Configure Webhooks (open) -->
+        <div class="task-item" id="webhookSetupTask">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-info"><span class="task-title">Set up your webhooks</span><div class="task-subtitle">About 3 minutes to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <p class="task-desc">Set up a Webhooks endpoint to get notified about incoming messages and status updates. <a class="link-blue" href="#">How to configure Webhooks</a></p>
+
+            <div style="margin-bottom: 16px;">
+              <label class="form-label">Callback URL <svg class="info-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#1C2B33"/><rect x="7.2" y="6.9" width="1.6" height="5" fill="#fff" rx="0.8"/><rect x="7.2" y="4.2" width="1.6" height="1.9" fill="#fff" rx="0.8"/></svg></label>
+              <input class="field-input" id="cbUrl" type="text" oninput="toggleVerify()" onclick="if(this.value===''){if(this.dataset.primed){this.value='https://www.callbacktest.com/89000';this.dataset.primed='';toggleVerify();}else{this.dataset.primed='1';}}" />
+            </div>
+
+            <div style="margin-bottom: 12px;">
+              <label class="form-label">Verify token <svg class="info-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7.5" fill="#1C2B33"/><rect x="7.2" y="6.9" width="1.6" height="5" fill="#fff" rx="0.8"/><rect x="7.2" y="4.2" width="1.6" height="1.9" fill="#fff" rx="0.8"/></svg></label>
+              <input class="field-input" id="verifyToken" type="password" oninput="toggleVerify()" onclick="if(this.value===''){if(this.dataset.primed){this.value='88990';this.dataset.primed='';toggleVerify();}else{this.dataset.primed='1';}}" />
+            </div>
+
+            <div class="toggle-row">
+              <button class="toggle" onclick="this.classList.toggle('on')"></button>
+              <span>Attach a client certificate to Webhook requests. <a class="link-blue" href="#">Learn more</a>.</span>
+            </div>
+
+            <div class="btn-row" style="margin-bottom: 14px;">
+              <button class="btn-secondary">Remove subscription</button>
+              <button class="btn-primary" id="verifyBtn" onclick="verifyWebhook()" disabled>Verify and save</button>
+            </div>
+
+            <div class="success-banner" id="verifySuccess" style="display:none;">
+              <svg class="success-banner-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="8"/><path d="M6.4 10.3l2.4 2.4 4.8-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Webhook verified and saved successfully.</span>
+            </div>
+            <div id="webhookFields" style="display:none;">
+              <span class="wf-title">Webhook fields</span>
+              <div class="wh-card">
+              <table class="wh-table">
+                <thead><tr><th>Field</th><th>Version</th><th>Subscribe</th></tr></thead>
+                <tbody><tr class="wf-all-row"><td>All fields (6)</td><td></td><td><button class="toggle on wf-all-toggle" onclick="toggleAllWebhookFields(this)"></button></td></tr><tr><td>Account update</td><td><div class="msg-select" id="ver1"><div class="select-display" onclick="toggleDD('ver1')"><span class="sd-text">v23.0</span><svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sd-menu"><div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v23.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v22.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v21.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v20.0</span></div></div></div></td><td><button class="toggle on wf-toggle" onclick="onFieldToggle(this)"></button></td></tr><tr><td>Message send</td><td><div class="msg-select" id="ver2"><div class="select-display" onclick="toggleDD('ver2')"><span class="sd-text">v23.0</span><svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sd-menu"><div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v23.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v22.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v21.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v20.0</span></div></div></div></td><td><button class="toggle on wf-toggle" onclick="onFieldToggle(this)"></button></td></tr><tr><td>Message receive</td><td><div class="msg-select" id="ver3"><div class="select-display" onclick="toggleDD('ver3')"><span class="sd-text">v23.0</span><svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sd-menu"><div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v23.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v22.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v21.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v20.0</span></div></div></div></td><td><button class="toggle on wf-toggle" onclick="onFieldToggle(this)"></button></td></tr><tr><td>Message status</td><td><div class="msg-select" id="ver4"><div class="select-display" onclick="toggleDD('ver4')"><span class="sd-text">v23.0</span><svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sd-menu"><div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v23.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v22.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v21.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v20.0</span></div></div></div></td><td><button class="toggle on wf-toggle" onclick="onFieldToggle(this)"></button></td></tr><tr><td>Message template status update</td><td><div class="msg-select" id="ver5"><div class="select-display" onclick="toggleDD('ver5')"><span class="sd-text">v23.0</span><svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sd-menu"><div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v23.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v22.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v21.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v20.0</span></div></div></div></td><td><button class="toggle on wf-toggle" onclick="onFieldToggle(this)"></button></td></tr><tr><td>Phone number quality update</td><td><div class="msg-select" id="ver6"><div class="select-display" onclick="toggleDD('ver6')"><span class="sd-text">v23.0</span><svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="sd-menu"><div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v23.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v22.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v21.0</span></div><div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">v20.0</span></div></div></div></td><td><button class="toggle on wf-toggle" onclick="onFieldToggle(this)"></button></td></tr></tbody>
+              </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 2: Register your WhatsApp number (open) -->
+        <div class="task-item collapsed" id="registerNumberTask">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-info"><span class="task-title">Add and register your WhatsApp phone number</span><div class="task-subtitle">About 1 minute to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <p class="task-desc">Add and verify your business phone number. Manage your numbers anytime in <a class="link-blue" href="#">WhatsApp Manager</a>. You can add up to 2 phone numbers per business. Once you complete business verification, you can add up to 20 numbers.</p>
+            <div id="numbersList"></div>
+            <button class="btn-secondary" onclick="openAddNumber()">Add new number</button>
+          </div>
+        </div>
+
+        <!-- Task 3: Add payment (open) -->
+        <div class="task-item collapsed locked" id="paymentTask">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-info"><span class="task-title">Add your payment</span><div class="task-subtitle">About 1 minute to complete task</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <p class="task-desc">Add a payment method to send business-initiated messages (marketing, utility and authentication messages). For service messages where you reply to customer messages, you get 1,000 free user-initiated conversations each month. This doesn't apply to AI phone numbers. Manage your payment method anytime in <a class="link-blue" href="#">Billing Hub</a>.</p>
+
+            <div class="biz-card">
+              <div class="biz-card-top" style="margin-bottom: 0; align-items: center;">
+                <div>
+                  <div class="biz-name">Goofy Shop <span class="badge badge--verified" id="payTag" style="display:none;margin-left:8px;position:relative;top:-2px;">Added payment</span></div>
+                  <div class="biz-sub">WhatsApp Business Account ID: 1344750903435766</div>
+                </div>
+                <button class="btn-secondary" id="payMethodBtn" onclick="openPayment()">Add payment method</button>
+              </div>
+            </div>
+
+            <div class="success-banner" id="paymentSuccess" style="display:none;">
+              <svg class="success-banner-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="8"/><path d="M6.4 10.3l2.4 2.4 4.8-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Payment method added — card ending in <b id="payLast4"></b>.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 4: Test your production number (open) -->
+        <div class="task-item collapsed locked" id="testTask">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-info"><span class="task-title">Test your production number</span><div class="task-subtitle">About 5 minutes</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+
+            <div class="sub-steps-container">
+
+            <!-- Sub-step 1: Create token -->
+            <div class="sub-step-bordered">
+              <div class="sub-step-label">Step 1. Create a permanent access token</div>
+              <div class="sub-step-subtitle" style="font-size: 13px; color: var(--ink3); margin-bottom: 8px;">Generate a long-lived token to authenticate your API requests.</div>
+              <div class="token-row" id="tokenRow">
+                <div class="token-field" id="tokenField">N/A</div>
+                <button class="btn-primary" id="tokenBtn" onclick="generateToken()">Generate token</button>
+              </div>
+            </div>
+
+            <!-- Sub-step 2: Test your number -->
+            <div class="sub-step-bordered">
+              <div class="sub-step-label">Step 2. Test your number</div>
+              <div class="sub-step-subtitle" style="font-size: 13px; color: var(--ink3); margin-bottom: 8px;">Send a test message to verify your production number is working correctly.</div>
+
+              <div class="mini-tabs" id="testTabs">
+                <button class="mini-tab active" onclick="switchTestTab(this, 'reply')">Reply to customer-initiated messages</button>
+                <button class="mini-tab" onclick="switchTestTab(this, 'send')">Send business-initiated messages</button>
+              </div>
+
+              <div class="tab-explainer" id="tabExplainerReply" style="margin-top: 6px; margin-bottom: 16px;">
+                Reply to messages your customers send first. This type of message is free and must be sent within 24 hours of the customer's last message.
+              </div>
+              <div class="tab-explainer" id="tabExplainerSend" style="margin-top: 6px; margin-bottom: 16px; display: none;">
+                Send messages at scale using approved message templates. Templates require Meta approval and can be created in <a href="#" style="color: #0A78BE; text-decoration: none;">WhatsApp Manager</a>.
+              </div>
+
+              <div class="test-layout">
+                <!-- Left: Inputs -->
+                <div class="test-panel">
+                  <div class="field-group">
+                    <label class="field-label">Your number</label>
+                    <select class="field-select">
+                      <option>+1 (555) 123-4567</option>
+                      <option>+1 (555) 987-6543</option>
+                      <option>+1 (555) 000-0000 (Test)</option>
+                    </select>
+                  </div>
+                  <div class="field-group">
+                    <label class="field-label">Recipient</label>
+                    <input class="field-input" id="recipientInput" type="text" placeholder="e.g. (408) 789-2000" oninput="formatRecipient()" onclick="if(this.value===''){if(this.dataset.primed){this.value='(412) 456-9000';this.dataset.primed='';checkSendReady();}else{this.dataset.primed='1';}}" />
+                  </div>
+
+                  <!-- Tab 1: Composer -->
+                  <div class="mini-pane active" id="pane-reply">
+                    <div class="field-group">
+                      <label class="field-label">Message</label>
+                      <textarea class="field-textarea" id="replyMessage">Hello! Welcome to Jasper's Market. How can we help you today?</textarea>
+                    </div>
+                  </div>
+
+                  <!-- Tab 2: Integration test -->
+                  <div class="mini-pane" id="pane-send">
+                    <div class="field-group">
+                      <label class="field-label">Approved message template</label>
+                      <div class="msg-select" id="tplSelect">
+                        <div class="select-display" onclick="toggleDD('tplSelect')">
+                          <span class="sd-text">Test template #1 (Marketing)</span>
+                          <svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="sd-menu">
+                          <div class="sd-option selected" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">Test template #1 (Marketing)</span></div>
+                          <div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">order_confirmation (en)</span></div>
+                          <div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">appointment_reminder (en)</span></div>
+                          <div class="sd-option" onclick="selectDD(this)"><span class="sd-radio"></span><span class="sd-optText">shipping_update (en)</span></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="btn-row" style="margin-top: 4px;">
+                    <button class="btn-primary" id="sendBtn" onclick="sendMessage()" disabled>Send message</button>
+                  </div>
+                </div>
+
+                <!-- Right: Preview -->
+                <div class="test-panel">
+                  <div class="preview-panel" id="previewPanel">
+                    <div class="preview-tabs" id="previewTabs">
+                      <button class="preview-tab active" onclick="switchPreview(this, 'msg')">Message</button>
+                      <button class="preview-tab" onclick="switchPreview(this, 'code')">Code</button>
+                    </div>
+
+                    <div class="preview-pane active" id="preview-msg" style="display: flex; justify-content: center; align-items: center; min-height: 160px;">
+                      <div style="background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); overflow: hidden; max-width: 260px;">
+                        <div style="padding: 8px 10px;">
+                          <p style="font-size: 13px; color: var(--ink); line-height: 1.4; margin: 0;">Hello! Welcome to Jasper's Market. How can we help you today?</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="preview-pane" id="preview-code">
+                      <div class="preview-code"><span class="punct">{</span>
+  <span class="key">"messaging_product"</span><span class="punct">:</span> <span class="str">"whatsapp"</span><span class="punct">,</span>
+  <span class="key">"to"</span><span class="punct">:</span> <span class="str">"12345678900"</span><span class="punct">,</span>
+  <span class="key">"type"</span><span class="punct">:</span> <span class="str">"text"</span><span class="punct">,</span>
+  <span class="key">"text"</span><span class="punct">:</span> <span class="punct">{</span>
+    <span class="key">"body"</span><span class="punct">:</span> <span class="str">"Hello! Welcome to Jasper's Market."</span>
+  <span class="punct">}</span>
+<span class="punct">}</span></div>
+                    </div>
+
+                    <!-- Send tab: template message preview -->
+                    <div class="preview-pane" id="preview-send-msg" style="display: flex; justify-content: center; align-items: center; min-height: 160px;">
+                      <div style="background: #fff; border-radius: 8px; box-shadow: 0 1px 2px rgba(0,0,0,0.08); overflow: hidden; max-width: 260px;">
+                        <div style="padding: 8px 10px;">
+                          <p style="font-size: 13px; color: var(--ink); line-height: 1.4; margin: 0;">Hello! Welcome to Jasper's Market. We have great deals waiting for you. This is the testing template for marketing message.</p>
+                        </div>
+                        <div style="border-top: 1px solid var(--border-light); text-align: center; padding: 8px;">
+                          <a href="#" style="font-size: 13px; font-weight: 600; color: #0A78BE; text-decoration: none;">Shop now</a>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="preview-pane" id="preview-send-code">
+                      <div class="preview-code"><span class="punct">{</span>
+  <span class="key">"messaging_product"</span><span class="punct">:</span> <span class="str">"whatsapp"</span><span class="punct">,</span>
+  <span class="key">"to"</span><span class="punct">:</span> <span class="str">"12345678900"</span><span class="punct">,</span>
+  <span class="key">"type"</span><span class="punct">:</span> <span class="str">"template"</span><span class="punct">,</span>
+  <span class="key">"template"</span><span class="punct">:</span> <span class="punct">{</span>
+    <span class="key">"name"</span><span class="punct">:</span> <span class="str">"test_template_1"</span><span class="punct">,</span>
+    <span class="key">"language"</span><span class="punct">:</span> <span class="punct">{</span>
+      <span class="key">"code"</span><span class="punct">:</span> <span class="str">"en"</span>
+    <span class="punct">}</span>
+  <span class="punct">}</span>
+<span class="punct">}</span></div>
+                    </div>
+                  </div>
+                </div>
+                <div id="sendSuccess" style="display:none;grid-column:1 / -1;align-items:center;gap:8px;margin-top:4px;padding:10px 14px;background:#E6F4EA;border-radius:8px;font-size:13px;color:var(--ink);font-weight:500;">
+                  <svg style="width:18px;height:18px;fill:var(--green);flex-shrink:0;" viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+                  <span>Message sent to <span id="sentToStep2"></span></span>
+                </div>
+              </div>
+            </div>
+
+            </div><!-- /sub-steps-container -->
+
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ══ CONTINUE BANNER ══ -->
+    <div class="continue-banner">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="images/next.png" alt="" style="width:36px;height:36px;flex-shrink:0;">
+        <span class="continue-banner-text">Continue to Step 3. Business verification</span>
+      </div>
+      <button class="continue-btn" onclick="location.href='developer-step3.html'">Continue</button>
+    </div>
+    <div style="height: 36px;"></div>
+    </div><!-- /right-col -->
+
+  </div>
+
+  <!-- Add phone number modal -->
+  <div class="modal-overlay" id="addModal" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Add phone number</span>
+        <button class="modal-close" onclick="closeAddNumber()" aria-label="Close">&times;</button>
+      </div>
+
+      <div id="modalStep1">
+        <p class="modal-desc">Enter the business phone number you want to register. We'll send a verification code by SMS.</p>
+        <label class="form-label">Phone number</label>
+        <div style="display:flex; gap:8px;">
+          <select class="field-select" id="modalCC" style="width:96px; flex-shrink:0; height:40px;"><option>US +1</option><option>UK +44</option><option>SG +65</option></select>
+          <input class="field-input" id="modalPhone" type="text" placeholder="Phone number" style="flex:1; height:40px;" oninput="modalPhoneCheck()" onclick="if(this.value===''){if(this.dataset.primed){this.value='4087892000';this.dataset.primed='';modalPhoneCheck();}else{this.dataset.primed='1';}}" />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="closeAddNumber()">Cancel</button>
+          <button class="btn-primary" id="modalSendCodeBtn" onclick="modalSendCode()" disabled>Send code</button>
+        </div>
+      </div>
+
+      <div id="modalStep2" style="display:none;">
+        <p class="modal-desc">Enter the 6-digit verification code sent to <b id="modalNumDisplay"></b>.</p>
+        <label class="form-label">Verification code</label>
+        <input class="field-input" id="modalCode" type="text" inputmode="numeric" maxlength="6" placeholder="6-digit code" style="height:40px; letter-spacing:3px;" oninput="modalCodeCheck()" onclick="if(this.value===''){if(this.dataset.primed){this.value='182090';this.dataset.primed='';modalCodeCheck();}else{this.dataset.primed='1';}}" />
+        <div class="modal-actions">
+          <button class="btn-secondary" onclick="modalBack()">Back</button>
+          <button class="btn-primary" id="modalVerifyBtn" onclick="modalVerify()" disabled>Verify &amp; add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add payment method modal -->
+  <div class="modal-overlay" id="payModal" style="display:none;">
+    <div class="modal">
+      <div class="modal-header">
+        <span class="modal-title">Add payment method</span>
+        <button class="modal-close" onclick="closePayment()" aria-label="Close">&times;</button>
+      </div>
+      <p class="modal-desc">Enter your credit card details. Your card is used to bill for business-initiated conversations.</p>
+      <label class="form-label">Cardholder name</label>
+      <input class="field-input" id="payName" type="text" placeholder="Name on card" style="height:40px; width:100%;" oninput="payCheck()" onclick="if(this.value===''){if(this.dataset.primed){this.value='Goo Lee';this.dataset.primed='';payCheck();}else{this.dataset.primed='1';}}" />
+      <label class="form-label" style="margin-top:12px;">Card number</label>
+      <input class="field-input" id="payCard" type="text" inputmode="numeric" maxlength="19" placeholder="1234 5678 9012 3456" style="height:40px; width:100%;" oninput="payFormatCard()" onclick="if(this.value===''){if(this.dataset.primed){this.value='3567 1234 5678 9900';this.dataset.primed='';payCheck();}else{this.dataset.primed='1';}}" />
+      <div style="display:flex; gap:12px; margin-top:12px;">
+        <div style="flex:1;">
+          <label class="form-label">Expiry</label>
+          <input class="field-input" id="payExp" type="text" maxlength="5" placeholder="MM/YY" style="height:40px; width:100%;" oninput="payFormatExp()" onclick="if(this.value===''){if(this.dataset.primed){this.value='12/29';this.dataset.primed='';payCheck();}else{this.dataset.primed='1';}}" />
+        </div>
+        <div style="flex:1;">
+          <label class="form-label">CVC</label>
+          <input class="field-input" id="payCvc" type="text" inputmode="numeric" maxlength="4" placeholder="CVC" style="height:40px; width:100%;" oninput="payCheck()" onclick="if(this.value===''){if(this.dataset.primed){this.value='789';this.dataset.primed='';payCheck();}else{this.dataset.primed='1';}}" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="closePayment()">Cancel</button>
+        <button class="btn-primary" id="payBtn" onclick="submitPayment()" disabled>Add payment method</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleGroup(toggle) {
+      toggle.closest('.nav-group').classList.toggle('collapsed');
+    }
+
+    function toggleTask(header) {
+      header.closest('.task-item').classList.toggle('collapsed');
+    }
+
+    function toggleVerify() {
+      var u = document.getElementById('cbUrl').value.trim();
+      var t = document.getElementById('verifyToken').value.trim();
+      document.getElementById('verifyBtn').disabled = !(u && t);
+    }
+
+    var CHECK_SVG = '<svg viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>';
+    function markTaskDone(taskId) {
+      var t = document.getElementById(taskId);
+      if (!t) return;
+      var c = t.querySelector('.task-check');
+      c.classList.add('task-check--done');
+      c.innerHTML = CHECK_SVG;
+      var sub = t.querySelector('.task-subtitle');
+      if (sub) sub.textContent = 'Completed';
+      if (taskId === 'registerNumberTask') {
+        ['paymentTask', 'testTask'].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.remove('locked');
+        });
+      }
+    }
+
+    function sendMessage() {
+      var btn = document.getElementById('sendBtn');
+      btn.disabled = true;
+      setTimeout(function () {
+        var r = document.getElementById('recipientInput').value.trim();
+        var st = document.getElementById('sentToStep2');
+        if (st) st.textContent = r;
+        document.getElementById('sendSuccess').style.display = 'flex';
+        markTaskDone('testTask');
+        btn.disabled = false;
+      }, 1000);
+    }
+
+    function toggleAllWebhookFields(btn) {
+      btn.classList.toggle('on');
+      var on = btn.classList.contains('on');
+      document.querySelectorAll('.wf-toggle').forEach(function (t) { t.classList.toggle('on', on); });
+    }
+    function onFieldToggle(t) {
+      t.classList.toggle('on');
+      var all = Array.prototype.every.call(document.querySelectorAll('.wf-toggle'), function (x) { return x.classList.contains('on'); });
+      var m = document.querySelector('.wf-all-toggle');
+      if (m) m.classList.toggle('on', all);
+    }
+    function verifyWebhook() {
+      var btn = document.getElementById('verifyBtn');
+      btn.disabled = true;
+      setTimeout(function () {
+        document.getElementById('verifySuccess').style.display = 'flex';
+        document.getElementById('webhookFields').style.display = 'block';
+        btn.disabled = false;
+        markTaskDone('webhookSetupTask');
+      }, 1000);
+    }
+
+    // ── Custom dropdown (radio style) ──
+    function syncDDOverflow(el) {
+      var body = el.closest('.task-body');
+      if (body) body.style.overflow = el.classList.contains('open') ? 'visible' : '';
+    }
+    function toggleDD(id) {
+      var el = document.getElementById(id);
+      el.classList.toggle('open');
+      syncDDOverflow(el);
+    }
+    function selectDD(opt) {
+      var menu = opt.parentElement, wrap = menu.parentElement;
+      menu.querySelectorAll('.sd-option').forEach(function (o) { o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      wrap.querySelector('.sd-text').textContent = opt.querySelector('.sd-optText').textContent;
+      wrap.classList.remove('open');
+      syncDDOverflow(wrap);
+    }
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.msg-select.open').forEach(function (el) {
+        if (!el.contains(e.target)) { el.classList.remove('open'); syncDDOverflow(el); }
+      });
+    });
+
+    // ── Add phone number modal flow ──
+    var pendingNumber = '';
+    function formatPhone(cc, num) {
+      var d = num.replace(/\D/g, '');
+      var f = d.length === 10 ? '(' + d.slice(0,3) + ') ' + d.slice(3,6) + '-' + d.slice(6) : num;
+      return (cc ? cc + ' ' : '') + f;
+    }
+    function openAddNumber() {
+      document.getElementById('addModal').style.display = 'flex';
+      document.getElementById('modalStep1').style.display = 'block';
+      document.getElementById('modalStep2').style.display = 'none';
+      document.getElementById('modalPhone').value = '';
+      document.getElementById('modalCode').value = '';
+      document.getElementById('modalSendCodeBtn').disabled = true;
+      document.getElementById('modalVerifyBtn').disabled = true;
+    }
+    function closeAddNumber() { document.getElementById('addModal').style.display = 'none'; }
+    function modalPhoneCheck() {
+      var d = document.getElementById('modalPhone').value.replace(/\D/g, '');
+      document.getElementById('modalSendCodeBtn').disabled = d.length !== 10;
+    }
+    function modalCodeCheck() {
+      var d = document.getElementById('modalCode').value.replace(/\D/g, '');
+      document.getElementById('modalVerifyBtn').disabled = d.length !== 6;
+    }
+    function modalSendCode() {
+      var cc = document.getElementById('modalCC').value.replace(/[^+\d]/g, '');
+      var num = document.getElementById('modalPhone').value.trim();
+      pendingNumber = formatPhone(cc, num);
+      document.getElementById('modalNumDisplay').textContent = pendingNumber;
+      document.getElementById('modalStep1').style.display = 'none';
+      document.getElementById('modalStep2').style.display = 'block';
+    }
+    function modalBack() {
+      document.getElementById('modalStep2').style.display = 'none';
+      document.getElementById('modalStep1').style.display = 'block';
+    }
+    function modalVerify() {
+      addNumberCard(pendingNumber);
+      closeAddNumber();
+      markTaskDone('registerNumberTask');
+    }
+    function addNumberCard(number) {
+      var card = document.createElement('div');
+      card.className = 'biz-card';
+      card.innerHTML = '<div class="biz-card-top"><div><div class="biz-name">Goofy Shop</div><div class="biz-sub">WhatsApp Business Account ID: 1336886377589107</div></div><div class="biz-sub-toggle">Subscribe webhooks <button class="toggle on" onclick="this.classList.toggle(\'on\')"></button></div></div><div class="phone-row"><svg class="phone-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M5.5 2.5c.5 0 .93.32 1.1.78l.86 2.2c.18.47.06 1-.32 1.35l-1.02.94a10.3 10.3 0 0 0 4.1 4.1l.94-1.02c.35-.38.88-.5 1.35-.32l2.2.86c.46.17.78.6.78 1.1v2.26c0 .84-.7 1.5-1.53 1.42C8.93 16.98 3.02 11.07 2.34 4.03 2.26 3.2 2.92 2.5 3.76 2.5H5.5z"/></svg><div class="phone-info"><div class="phone-number">' + number + ' <span class="badge badge--verified">Verified</span></div><div class="phone-id">Phone Number ID: 561785873698214</div></div></div>';
+      document.getElementById('numbersList').appendChild(card);
+    }
+
+    // ── Add payment method modal flow ──
+    function openPayment() {
+      document.getElementById('payModal').style.display = 'flex';
+      ['payName','payCard','payExp','payCvc'].forEach(function(id){ document.getElementById(id).value = ''; });
+      document.getElementById('payBtn').disabled = true;
+    }
+    function closePayment() { document.getElementById('payModal').style.display = 'none'; }
+    function payFormatCard() {
+      var el = document.getElementById('payCard');
+      var d = el.value.replace(/\D/g, '').slice(0, 16);
+      el.value = d.replace(/(.{4})(?=.)/g, '$1 ');
+      payCheck();
+    }
+    function payFormatExp() {
+      var el = document.getElementById('payExp');
+      var d = el.value.replace(/\D/g, '').slice(0, 4);
+      if (d.length >= 3) d = d.slice(0, 2) + '/' + d.slice(2);
+      el.value = d;
+      payCheck();
+    }
+    function payCheck() {
+      var name = document.getElementById('payName').value.trim();
+      var card = document.getElementById('payCard').value.replace(/\D/g, '');
+      var exp = document.getElementById('payExp').value.replace(/\D/g, '');
+      var cvc = document.getElementById('payCvc').value.replace(/\D/g, '');
+      document.getElementById('payBtn').disabled = !(name && card.length === 16 && exp.length === 4 && cvc.length >= 3);
+    }
+    function submitPayment() {
+      var card = document.getElementById('payCard').value.replace(/\D/g, '');
+      document.getElementById('payLast4').textContent = card.slice(-4);
+      closePayment();
+      document.getElementById('payTag').style.display = 'inline-block';
+      document.getElementById('payMethodBtn').textContent = 'Manage';
+      markTaskDone('paymentTask');
+    }
+
+    var currentTab = 'reply';
+    function switchTestTab(btn, id) {
+      currentTab = id;
+      document.querySelectorAll('#testTabs .mini-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('pane-reply').classList.toggle('active', id === 'reply');
+      document.getElementById('pane-send').classList.toggle('active', id === 'send');
+      document.getElementById('tabExplainerReply').style.display = id === 'reply' ? 'block' : 'none';
+      document.getElementById('tabExplainerSend').style.display = id === 'send' ? 'block' : 'none';
+      updatePreview();
+    }
+
+    function updatePreview() {
+      var activePreviewTab = document.querySelector('#previewTabs .preview-tab.active');
+      var isCode = activePreviewTab && activePreviewTab.textContent === 'Code';
+      document.getElementById('preview-msg').classList.remove('active');
+      document.getElementById('preview-code').classList.remove('active');
+      document.getElementById('preview-send-msg').classList.remove('active');
+      document.getElementById('preview-send-code').classList.remove('active');
+      if (currentTab === 'reply') {
+        document.getElementById(isCode ? 'preview-code' : 'preview-msg').classList.add('active');
+      } else {
+        document.getElementById(isCode ? 'preview-send-code' : 'preview-send-msg').classList.add('active');
+      }
+    }
+
+    var tokenGenerated = false;
+
+    function generateToken() {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let token = 'EAAJz' + Array.from({length: 120}, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+      document.getElementById('tokenField').textContent = token;
+      document.getElementById('tokenRow').innerHTML = `
+        <div class="token-field" id="tokenField" style="background:#fff;"><span class="token-val">${token}</span><svg class="copy-ic" onclick="copyToken()" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H4a1.5 1.5 0 00-1.5 1.5V11A1.5 1.5 0 004 12.5"/></svg></div>
+        <button class="btn-secondary" onclick="generateToken()">Generate new</button>
+      `;
+      tokenGenerated = true;
+      checkSendReady();
+    }
+
+    function formatRecipient() {
+      var el = document.getElementById('recipientInput');
+      var d = el.value.replace(/\D/g, '').slice(0, 10);
+      if (d.length > 6) el.value = '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+      else if (d.length > 3) el.value = '(' + d.slice(0, 3) + ') ' + d.slice(3);
+      else if (d.length > 0) el.value = '(' + d;
+      else el.value = '';
+      checkSendReady();
+    }
+    function checkSendReady() {
+      var recipient = document.getElementById('recipientInput').value.trim();
+      document.getElementById('sendBtn').disabled = !(tokenGenerated && recipient.length > 0);
+    }
+
+    function copyToken() {
+      const f = document.getElementById('tokenField');
+      const val = f.querySelector('.token-val') ? f.querySelector('.token-val').textContent : f.textContent;
+      if (navigator.clipboard) navigator.clipboard.writeText(val);
+    }
+
+    function switchPreview(btn, id) {
+      document.querySelectorAll('#previewTabs .preview-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updatePreview();
+    }
+
+    // Live preview: update message bubble as user types
+    document.getElementById('replyMessage').addEventListener('input', function() {
+      document.getElementById('preview-msg').querySelector('p').textContent = this.value || 'Your message will appear here...';
+    });
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

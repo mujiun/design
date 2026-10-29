@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="../portfolio/projects/favicons/mu.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Business API — Direct Integrator Overview</title>
+  <style>
+    :root {
+      --blue:       #0866FF;
+      --blue-light: #e7f0ff;
+      --green:      #1877F2;
+      --text:       #1c1e21;
+      --text-2:     #444950;
+      --text-3:     #737373;
+      --border:     #dadde1;
+      --bg:         #f0f2f5;
+      --surface:    #ffffff;
+      --code-bg:    #1b1f23;
+      --code-text:  #e6edf3;
+      --sidebar-w:  256px;
+      --content-w:  740px;
+      --radius:     8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      overflow-y: auto;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 20px 16px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-product {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 6px;
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .sidebar-nav { padding: 8px 0 24px; }
+
+    .nav-group { margin-top: 4px; }
+
+    .nav-group-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      padding: 12px 16px 4px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 6px 16px;
+      font-size: 13.5px;
+      color: var(--text-2);
+      text-decoration: none;
+      border-left: 2px solid transparent;
+      transition: background .1s, color .1s;
+    }
+
+    .nav-item:hover { background: var(--bg); color: var(--text); }
+
+    .nav-item.active {
+      color: var(--blue);
+      border-left-color: var(--blue);
+      background: var(--blue-light);
+      font-weight: 600;
+    }
+
+    /* ── MAIN SHELL ── */
+    .main {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      padding: 0 24px 80px;
+    }
+
+    /* ── PAGE ── */
+    .page {
+      width: 100%;
+      max-width: var(--content-w);
+      padding-top: 48px;
+    }
+
+    /* ── BREADCRUMB ── */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      color: var(--text-3);
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb a { color: var(--text-3); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--blue); }
+    .breadcrumb .sep { color: var(--border); }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom: 36px; }
+
+    .page-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      margin-bottom: 8px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -.4px;
+      line-height: 1.25;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+
+    .page-header .lead {
+      font-size: 16px;
+      color: var(--text-2);
+      line-height: 1.65;
+      max-width: 620px;
+    }
+
+    .page-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 36px 0;
+    }
+
+    /* ── STAT ROW ── */
+    .stat-row {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+      margin-bottom: 36px;
+    }
+
+    .stat {
+      flex: 1;
+      padding: 20px 24px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child { border-right: none; }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.3px;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-3);
+      margin-top: 2px;
+    }
+
+    /* ── SECTIONS ── */
+    .section { margin-bottom: 48px; }
+
+    .section h2 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .section .section-desc {
+      font-size: 14px;
+      color: var(--text-3);
+      margin-bottom: 20px;
+    }
+
+    .section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 24px 0 8px;
+    }
+
+    .section p {
+      font-size: 14.5px;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    /* ── CARDS ── */
+    .card-row {
+      display: grid;
+      gap: 12px;
+    }
+
+    .card-row-2 { grid-template-columns: 1fr 1fr; }
+    .card-row-3 { grid-template-columns: repeat(3, 1fr); }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .card h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0 0 6px;
+    }
+
+    .card p {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── STEPS ── */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 16px;
+      position: relative;
+      padding-bottom: 24px;
+    }
+
+    .step:last-child { padding-bottom: 0; }
+
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 13px; top: 32px; bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .step-num {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      position: relative; z-index: 1;
+    }
+
+    .step-content h3 {
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 4px 0 6px;
+    }
+
+    .step-content p {
+      font-size: 13.5px;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin: 0 0 8px;
+    }
+
+    /* ── BADGES ── */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: .2px;
+    }
+
+    .badge-req   { background: #fff0f0; color: #c0392b; border: 1px solid #fcc; }
+    .badge-info  { background: #e7f0ff; color: #0866FF; border: 1px solid #c3d8ff; }
+    .badge-warn  { background: #fffbeb; color: #7d4d00; border: 1px solid #fde68a; }
+    .badge-muted { background: #f5f5f5; color: #555; border: 1px solid #ddd; }
+
+    /* ── TABLE ── */
+    .doc-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .doc-table th {
+      background: #f7f8fa;
+      padding: 10px 16px;
+      text-align: left;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .doc-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-2);
+      vertical-align: top;
+    }
+
+    .doc-table tr:last-child td { border-bottom: none; }
+
+    /* ── CALLOUTS ── */
+    .callout {
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin: 16px 0;
+    }
+
+    .callout-icon { flex-shrink: 0; font-size: 16px; margin-top: 1px; }
+    .callout strong { font-weight: 700; }
+
+    .callout-note    { background: #f0f4ff; border: 1px solid #c3d4f5; color: #1a3a6b; }
+    .callout-warn    { background: #fffbeb; border: 1px solid #fde68a; color: #7d4d00; }
+    .callout-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #14532d; }
+    .callout-tip     { background: #fdf4ff; border: 1px solid #e9d5ff; color: #581c87; }
+
+    /* ── INLINE CODE ── */
+    code {
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: .88em;
+      background: #f0f2f5;
+      padding: 1px 5px;
+      border-radius: 4px;
+      color: #c0392b;
+    }
+
+    /* ── CODE BLOCKS ── */
+    .code-block {
+      background: var(--code-bg);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 16px 0;
+      font-size: 0;
+    }
+
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+
+    .code-lang {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,.45);
+      font-family: 'SF Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    .code-copy {
+      font-size: 11px;
+      color: rgba(255,255,255,.4);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 2px 8px;
+      border-radius: 4px;
+      transition: background .15s, color .15s;
+    }
+
+    .code-copy:hover { background: rgba(255,255,255,.1); color: #fff; }
+
+    .code-block pre {
+      margin: 0;
+      padding: 16px 20px;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--code-text);
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    /* syntax colors */
+    .t-comment { color: #8b949e; }
+    .t-string  { color: #a5d6ff; }
+    .t-key     { color: #79c0ff; }
+    .t-kw      { color: #ff7b72; }
+    .t-fn      { color: #d2a8ff; }
+    .t-var     { color: #e6edf3; }
+    .t-num     { color: #ffa657; }
+    .t-op      { color: #cdd9e5; }
+
+    /* ── TABS ── */
+    .tabs { margin: 16px 0; }
+
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 0;
+    }
+
+    .tab-btn {
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-3);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: color .15s, border-color .15s;
+    }
+
+    .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+    .tab-btn:hover { color: var(--text); }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── CRED LIST ── */
+    .cred-list { display: flex; flex-direction: column; gap: 10px; margin: 16px 0; }
+
+    .cred-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .cred-name {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--blue);
+      background: var(--blue-light);
+      padding: 3px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .cred-desc { font-size: 13.5px; color: var(--text-2); line-height: 1.55; }
+    .cred-desc strong { color: var(--text); font-weight: 600; }
+
+    /* ── TIER ROW ── */
+    .tier-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .tier-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .tier-card .tier-num {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.5px;
+    }
+
+    .tier-card .tier-label {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 4px;
+    }
+
+    /* ── CHECKLIST ── */
+    .check-list { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+
+    .check-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13.5px;
+      color: var(--text-2);
+    }
+
+    .check-list li::before {
+      content: '';
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: #fff;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      display: flex;
+      gap: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .tl-item {
+      flex: 1;
+      padding: 16px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .tl-item:last-child { border-right: none; }
+
+    .tl-range {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -.3px;
+    }
+
+    .tl-label {
+      font-size: 11px;
+      color: var(--text-3);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    /* ── RESOURCE LINKS ── */
+    .resource-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .resource-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 500;
+      transition: border-color .15s;
+    }
+
+    .resource-link:hover { border-color: var(--blue); color: var(--blue); }
+    .resource-link .rl-icon { font-size: 16px; }
+    .resource-link .rl-desc { font-size: 12px; color: var(--text-3); font-weight: 400; margin-top: 1px; }
+    .resource-link .rl-body { flex: 1; }
+    .resource-link .rl-arrow { color: var(--text-3); font-size: 14px; }
+
+    /* ── TOOL LIST ── */
+    .tool-list { display: flex; flex-direction: column; gap: 0; }
+
+    .tool-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tool-item:last-child { border-bottom: none; }
+
+    .tool-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .tool-item h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tool-item p {
+      font-size: 13px;
+      color: var(--text-2);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      :root { --sidebar-w: 0px; }
+      .sidebar { display: none; }
+      .main { margin-left: 0; padding: 0 16px 60px; }
+      .card-row-2, .card-row-3 { grid-template-columns: 1fr; }
+      .tier-row { grid-template-columns: repeat(2, 1fr); }
+      .timeline { flex-direction: column; }
+      .tl-item { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ SIDEBAR ══ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-product">WhatsApp Business Platform</div>
+    <div class="sidebar-title">Direct Integrator Guide</div>
+  </div>
+  <nav class="sidebar-nav">
+
+    <div class="nav-group">
+      <div class="nav-group-label">Overview</div>
+      <a class="nav-item active" href="#intro">Introduction</a>
+      <a class="nav-item" href="#who">Who is this for?</a>
+      <a class="nav-item" href="#benchmark">Onboarding vs. Competitors</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Setup</div>
+      <a class="nav-item" href="#account">Account Setup</a>
+      <a class="nav-item" href="#tooling">Tooling</a>
+      <a class="nav-item" href="#local-env">Local Environment</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Concepts</div>
+      <a class="nav-item" href="#templates">Message Templates</a>
+      <a class="nav-item" href="#webhooks">Webhooks</a>
+      <a class="nav-item" href="#limits">Limits & Quality</a>
+      <a class="nav-item" href="#pricing">Pricing</a>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Going Live</div>
+      <a class="nav-item" href="#timeline">Timeline</a>
+      <a class="nav-item" href="#checklist">Pre-Launch Checklist</a>
+      <a class="nav-item" href="#resources">Resources</a>
+    </div>
+
+  </nav>
+</aside>
+
+<!-- ══ MAIN ══ -->
+<main class="main">
+<div class="page">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">Docs</a>
+    <span class="sep">/</span>
+    <a href="#">WhatsApp Business Platform</a>
+    <span class="sep">/</span>
+    <span>Direct Integrator Overview</span>
+  </div>
+
+  <!-- Page header -->
+  <div class="page-header" id="intro">
+    <span class="page-tag">Overview</span>
+    <h1>WhatsApp Business API<br>Direct Integrator Guide</h1>
+    <p class="lead">
+      This guide walks your team through everything needed to integrate WhatsApp messaging
+      directly with Meta — from account provisioning to sending your first message in code.
+      No middleman. Full control.
+    </p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stat-row">
+    <div class="stat">
+      <div class="stat-value">2B+</div>
+      <div class="stat-label">WhatsApp users worldwide</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">98%</div>
+      <div class="stat-label">Avg. message open rate</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">Cloud API</div>
+      <div class="stat-label">Recommended integration path</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">~2–4 wk</div>
+      <div class="stat-label">Typical onboarding time</div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="section">
+    <p>
+      The <strong>WhatsApp Business Platform</strong> gives companies programmatic access to send and
+      receive WhatsApp messages at scale via REST APIs. As a <strong>direct integrator</strong>, you
+      integrate directly with Meta — no Business Solution Provider (BSP) needed — giving you full
+      ownership of your WhatsApp Business Account, data, and costs.
+    </p>
+
+    <div class="card-row card-row-3">
+      <div class="card">
+        <h3>☁️ Cloud API</h3>
+        <p>Meta hosts the infrastructure. You call REST endpoints and receive events via webhooks. No servers to manage.</p>
+      </div>
+      <div class="card">
+        <h3>🏢 Direct Access</h3>
+        <p>Own your WhatsApp Business Account directly with Meta. Skip BSP markup costs and retain full data control.</p>
+      </div>
+      <div class="card">
+        <h3>📬 At Scale</h3>
+        <p>Send transactional alerts, OTPs, and notifications to millions of users — with delivery receipts and quality tracking.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- WHO IS THIS FOR -->
+  <div class="section" id="who">
+    <h2>Who is this for?</h2>
+    <p class="section-desc">Typical profiles and use cases for direct API integration</p>
+
+    <div class="card-row card-row-2">
+      <div class="card">
+        <h3>Great fit if you are...</h3>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:10px">
+          <li style="font-size:13.5px;color:var(--text-2);display:flex;gap:8px;align-items:baseline"><span>→</span> A company with dedicated engineering resources</li>
+          <li style="font-size:13.5px;color:var(--text-2);display:flex;gap:8px;align-items:baseline"><span>→</span> Sending high volumes of transactional messages</li>
+          <li style="font-size:13.5px;color:var(--text-2);display:flex;gap:8px;align-items:baseline"><span>→</span> Requiring full data ownership and audit control</li>
+          <li style="font-size:13.5px;color:var(--text-2);display:flex;gap:8px;align-items:baseline"><span>→</span> Integrating into an internal ops or logistics tool</li>
+          <li style="font-size:13.5px;color:var(--text-2);display:flex;gap:8px;align-items:baseline"><span>→</span> Wanting to avoid BSP cost markups</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Common use cases</h3>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:10px">
+          <li style="font-size:13.5px;color:var(--text-2)">🚗 Ride status & driver arrival alerts</li>
+          <li style="font-size:13.5px;color:var(--text-2)">📦 Order tracking & delivery notifications</li>
+          <li style="font-size:13.5px;color:var(--text-2)">🔑 OTP & two-factor authentication</li>
+          <li style="font-size:13.5px;color:var(--text-2)">📋 Appointment reminders & confirmations</li>
+          <li style="font-size:13.5px;color:var(--text-2)">💳 Payment receipts and fraud alerts</li>
+          <li style="font-size:13.5px;color:var(--text-2)">🎧 Customer support escalation flows</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- BENCHMARK: ONBOARDING VS COMPETITORS -->
+  <div class="section" id="benchmark">
+    <span class="page-tag">Competitive research</span>
+    <h2>How WhatsApp API onboarding compares</h2>
+    <p class="section-desc">Developer onboarding benchmarked against Stripe, Google, Apple, and TikTok</p>
+
+    <p>Every major platform asks developers to cross the same three hurdles: <strong>create an account, get credentials, and prove who you are</strong>. Where they differ is <em>how much you can build before verification</em> and <em>how many moving parts you have to connect first</em>. WhatsApp's biggest friction isn't the code — it's the number of linked entities and the verification gate in front of production.</p>
+
+    <table class="doc-table" style="margin:16px 0">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Time to first API call</th>
+          <th>Test before verification</th>
+          <th>Entities to link</th>
+          <th>Main onboarding friction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>WhatsApp&nbsp;API</strong> <span style="color:var(--text-3)">(Meta)</span></td>
+          <td>Minutes <span style="color:var(--text-3)">(test number)</span></td>
+          <td><span class="badge badge-warn">Partial</span></td>
+          <td><span class="badge badge-warn">4+</span> <span style="color:var(--text-3)">app · WABA · portfolio · number · payment</span></td>
+          <td>Business verification &amp; template review gate production</td>
+        </tr>
+        <tr>
+          <td><strong>Stripe</strong></td>
+          <td>Minutes</td>
+          <td><span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">Full</span></td>
+          <td><span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">1</span></td>
+          <td>Almost none — business details collected only when activating live mode</td>
+        </tr>
+        <tr>
+          <td><strong>Google</strong> <span style="color:var(--text-3)">(Cloud APIs)</span></td>
+          <td>Minutes <span style="color:var(--text-3)">(API key)</span></td>
+          <td><span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">Full</span></td>
+          <td><span class="badge badge-muted">2–3</span> <span style="color:var(--text-3)">project · billing · consent</span></td>
+          <td>OAuth consent-screen review for sensitive scopes</td>
+        </tr>
+        <tr>
+          <td><strong>Apple</strong></td>
+          <td>Hours–days</td>
+          <td><span class="badge badge-req">Gated</span></td>
+          <td><span class="badge badge-warn">3+</span> <span style="color:var(--text-3)">dev account · certs · keys</span></td>
+          <td>$99/yr membership up front + certificate/provisioning complexity</td>
+        </tr>
+        <tr>
+          <td><strong>TikTok</strong></td>
+          <td>Hours</td>
+          <td><span class="badge badge-muted">Sandbox</span></td>
+          <td><span class="badge badge-muted">2</span> <span style="color:var(--text-3)">dev app · scopes</span></td>
+          <td>App review &amp; scope approval before production access</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:12.5px;color:var(--text-3)">Directional comparison based on public developer docs; exact steps change over time and vary by product and region.</p>
+
+    <h3 style="font-size:15px;font-weight:700;margin:28px 0 4px">Onboarding outcomes</h3>
+    <p class="section-desc" style="margin-bottom:12px">Time, completion, and how developers rate the setup guidance</p>
+
+    <table class="doc-table" style="margin:0 0 12px">
+      <thead>
+        <tr>
+          <th>Platform</th>
+          <th>Avg. onboarding time</th>
+          <th>Setup completion rate</th>
+          <th>Guidance satisfaction</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>WhatsApp&nbsp;API</strong> <span style="color:var(--text-3)">(Meta)</span></td>
+          <td>2–4 weeks</td>
+          <td><span class="badge badge-req">3.5%</span> <span style="color:var(--text-3)">measured</span></td>
+          <td><span class="badge badge-req">Low</span></td>
+        </tr>
+        <tr>
+          <td><strong>Stripe</strong></td>
+          <td>Hours</td>
+          <td><span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">High</span> <span style="color:var(--text-3)">est.</span></td>
+          <td><span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">High</span></td>
+        </tr>
+        <tr>
+          <td><strong>Google</strong> <span style="color:var(--text-3)">(Cloud APIs)</span></td>
+          <td>Hours–days</td>
+          <td><span class="badge badge-muted">Medium</span> <span style="color:var(--text-3)">est.</span></td>
+          <td><span class="badge badge-muted">Medium</span></td>
+        </tr>
+        <tr>
+          <td><strong>Apple</strong></td>
+          <td>1–2 weeks</td>
+          <td><span class="badge badge-muted">Low–Med</span> <span style="color:var(--text-3)">est.</span></td>
+          <td><span class="badge badge-warn">Low–Med</span></td>
+        </tr>
+        <tr>
+          <td><strong>TikTok</strong></td>
+          <td>Days</td>
+          <td><span class="badge badge-muted">Medium</span> <span style="color:var(--text-3)">est.</span></td>
+          <td><span class="badge badge-muted">Medium</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn" style="margin:0 0 8px">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Data honesty:</strong> only WhatsApp's <strong>3.5%</strong> setup-completion rate is a measured internal figure. Competitors don't publish completion or CSAT, so their columns are directional reads from developer sentiment (docs, forums, DX reputation) — Stripe consistently rated best-in-class, Apple's cert/provisioning flow the most complained-about.</div>
+    </div>
+
+    <div class="card-row card-row-3" style="margin-top:20px">
+      <div class="card">
+        <h3>🏆 Stripe sets the bar</h3>
+        <p>One account, instant test keys, and a fully functional sandbox before any identity check. Developers ship the entire integration first and verify only to flip on live mode.</p>
+      </div>
+      <div class="card">
+        <h3>🧩 WhatsApp's real cost</h3>
+        <p>The code is easy; the account model isn't. Linking a Meta app, WABA, business portfolio, phone number, and payment is where new integrators stall — not the first API call.</p>
+      </div>
+      <div class="card">
+        <h3>🔓 Verification as a gate</h3>
+        <p>Like Apple and TikTok, WhatsApp puts a review in front of production. Unlike Stripe, that gate blocks progress instead of running in parallel with the build.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-success" style="margin-top:16px">
+      <span class="callout-icon">💡</span>
+      <div><strong>Takeaway for WhatsApp:</strong> the win isn't faster docs — it's decoupling "try it" from "go live." Let developers build the full integration on a test number, and run business verification and template review <em>in parallel</em> so the approval gate never blocks the build.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- ACCOUNT SETUP -->
+  <div class="section" id="account">
+    <h2>Account Setup</h2>
+    <p class="section-desc">Four things you need before your first API call</p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Create a Meta Business Account</h3>
+          <p>Go to <strong>business.facebook.com</strong> and create or claim your company account using a company email. Then submit for <strong>Business Verification</strong> — upload your business registration or tax ID. Verification takes 1–5 business days and unlocks higher sending tiers.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="badge badge-req">Required</span>
+            <span class="badge badge-warn">Verification: 1–5 days</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Create a WhatsApp Business Account + Phone Number</h3>
+          <p>Inside Meta Business Suite, create a <strong>WhatsApp Business Account (WABA)</strong>. Then add a dedicated phone number — it must not be active on any WhatsApp account. Verify via OTP. This is the sender number your customers will see.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="badge badge-req">Required</span>
+            <span class="badge badge-muted">Fresh number only</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Create a Meta App + Generate a System Access Token</h3>
+          <p>In the <strong>Meta Developers Portal</strong>, create a business-type app and add the WhatsApp product. Create a System User and generate a long-lived access token with the <code>whatsapp_business_messaging</code> permission. This token is your API key — store it securely.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="badge badge-req">Required</span>
+            <span class="badge badge-info">developers.facebook.com</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Set Up a Webhook Endpoint</h3>
+          <p>Deploy a public HTTPS endpoint to receive delivery receipts, inbound messages, and account alerts. During setup Meta sends a one-time verification challenge your endpoint must echo back. Use <strong>ngrok</strong> for local testing.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <span class="badge badge-req">Required</span>
+            <span class="badge badge-muted">Must be HTTPS</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Display Name Review:</strong> The sender name shown to customers must match your legal business name and goes through a Meta review. Submit it early — rejections require a full resubmission and add days to your timeline.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- TOOLING -->
+  <div class="section" id="tooling">
+    <h2>Tooling</h2>
+    <p class="section-desc">Key platforms and APIs your team will work with</p>
+
+    <div class="tool-list">
+
+      <div class="tool-item">
+        <div class="tool-icon">📊</div>
+        <div>
+          <h4>Meta Business Suite <span class="badge badge-req">Required</span></h4>
+          <p>Admin dashboard for managing business accounts, phone numbers, display names, and business verification. Non-technical stakeholders (ops, compliance, finance) will use this most.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">🛠️</div>
+        <div>
+          <h4>Meta Developers Portal <span class="badge badge-req">Required</span></h4>
+          <p>Where engineers create apps, add the WhatsApp product, generate access tokens, and configure webhooks. All technical setup starts here.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">📡</div>
+        <div>
+          <h4>WhatsApp Cloud API <span class="badge badge-info">Core API</span></h4>
+          <p>The main REST API for sending messages, managing templates, and handling media. Base URL: <code>https://graph.facebook.com/v19.0/</code>. JSON in, JSON out.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">📋</div>
+        <div>
+          <h4>WhatsApp Manager <span class="badge badge-req">Required</span></h4>
+          <p>A section within Meta Business Suite for managing WABAs, phone numbers, message templates, and quality ratings. You'll use this regularly to submit and monitor templates.</p>
+        </div>
+      </div>
+
+      <div class="tool-item">
+        <div class="tool-icon">🧪</div>
+        <div>
+          <h4>Test Sandbox <span class="badge badge-muted">Optional</span></h4>
+          <p>Meta provides a sandbox number in the Developer Portal. Use it to test the hello_world template before your real number is set up. Has restrictions on recipients.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="callout callout-tip">
+      <span class="callout-icon">💡</span>
+      <div><strong>Use a System User token, not a personal token.</strong> Personal tokens expire and will break your integration. Generate a long-lived System User token in Meta Business Suite → System Users.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- LOCAL ENV -->
+  <div class="section" id="local-env">
+    <h2>Local Environment Setup</h2>
+    <p class="section-desc">Get your machine ready and send your first message in minutes</p>
+
+    <!-- 1. Credentials -->
+    <h3>1. Gather your credentials</h3>
+    <p>You need three values from the Meta Developer Portal. Find them under <strong>App → WhatsApp → API Setup</strong>.</p>
+
+    <div class="cred-list">
+      <div class="cred-item">
+        <span class="cred-name">PHONE_NUMBER_ID</span>
+        <div class="cred-desc">The numeric ID of your <strong>registered sender number</strong> (not the phone number itself). Found in the API Setup panel next to your number.</div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-name">WABA_ID</span>
+        <div class="cred-desc">Your <strong>WhatsApp Business Account ID</strong>. Found in WhatsApp Manager or in the API Setup panel. Used for account-level operations like creating templates.</div>
+      </div>
+      <div class="cred-item">
+        <span class="cred-name">ACCESS_TOKEN</span>
+        <div class="cred-desc">Your <strong>System User long-lived access token</strong>. Generate in Meta Business Suite → System Users with the <code>whatsapp_business_messaging</code> scope. Never commit this to source control.</div>
+      </div>
+    </div>
+
+    <!-- 2. .env -->
+    <h3>2. Create your <code>.env</code> file</h3>
+    <p>Store credentials as environment variables. Add <code>.env</code> to your <code>.gitignore</code>.</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <span class="code-lang">.env</span>
+        <button class="code-copy" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="t-comment"># .env — never commit this file</span>
+<span class="t-key">WHATSAPP_PHONE_NUMBER_ID</span>=<span class="t-string">1234567890123456</span>
+<span class="t-key">WHATSAPP_WABA_ID</span>=<span class="t-string">9876543210987654</span>
+<span class="t-key">WHATSAPP_ACCESS_TOKEN</span>=<span class="t-string">EAAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</span>
+<span class="t-key">WHATSAPP_API_VERSION</span>=<span class="t-string">v19.0</span></pre>
+    </div>
+
+    <!-- 3. Send first message -->
+    <h3>3. Send your first message</h3>
+    <p>
+      Use Meta's built-in <strong>hello_world</strong> template to verify your setup end-to-end.
+      Replace <code>+1415XXXXXXX</code> with your personal number (must be a WhatsApp-registered number).
+    </p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'t-curl-1')">cURL</button>
+        <button class="tab-btn" onclick="switchTab(this,'t-node-1')">Node.js</button>
+        <button class="tab-btn" onclick="switchTab(this,'t-python-1')">Python</button>
+      </div>
+
+      <div class="tab-panel active" id="t-curl-1">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">bash</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-kw">curl</span> -X POST \
+  <span class="t-string">"https://graph.facebook.com/v19.0/$WHATSAPP_PHONE_NUMBER_ID/messages"</span> \
+  -H <span class="t-string">"Authorization: Bearer $WHATSAPP_ACCESS_TOKEN"</span> \
+  -H <span class="t-string">"Content-Type: application/json"</span> \
+  -d <span class="t-string">'{
+    "messaging_product": "whatsapp",
+    "to": "+1415XXXXXXX",
+    "type": "template",
+    "template": {
+      "name": "hello_world",
+      "language": { "code": "en_US" }
+    }
+  }'</span></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t-node-1">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">javascript</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-comment">// npm install dotenv  (fetch built-in in Node 18+)</span>
+<span class="t-kw">import</span> <span class="t-var">dotenv</span> <span class="t-kw">from</span> <span class="t-string">'dotenv'</span>;
+<span class="t-var">dotenv</span>.<span class="t-fn">config</span>();
+
+<span class="t-kw">const</span> { <span class="t-var">WHATSAPP_PHONE_NUMBER_ID</span>, <span class="t-var">WHATSAPP_ACCESS_TOKEN</span>, <span class="t-var">WHATSAPP_API_VERSION</span> } = <span class="t-var">process</span>.env;
+
+<span class="t-kw">const</span> <span class="t-var">res</span> = <span class="t-kw">await</span> <span class="t-fn">fetch</span>(
+  <span class="t-string">`https://graph.facebook.com/${WHATSAPP_API_VERSION}/${WHATSAPP_PHONE_NUMBER_ID}/messages`</span>,
+  {
+    method:  <span class="t-string">'POST'</span>,
+    headers: {
+      <span class="t-string">'Authorization'</span>: <span class="t-string">`Bearer ${WHATSAPP_ACCESS_TOKEN}`</span>,
+      <span class="t-string">'Content-Type'</span>:  <span class="t-string">'application/json'</span>,
+    },
+    body: <span class="t-var">JSON</span>.<span class="t-fn">stringify</span>({
+      messaging_product: <span class="t-string">'whatsapp'</span>,
+      to:       <span class="t-string">'+1415XXXXXXX'</span>,
+      type:     <span class="t-string">'template'</span>,
+      template: { name: <span class="t-string">'hello_world'</span>, language: { code: <span class="t-string">'en_US'</span> } },
+    }),
+  }
+);
+
+<span class="t-var">console</span>.<span class="t-fn">log</span>(<span class="t-kw">await</span> <span class="t-var">res</span>.<span class="t-fn">json</span>());
+<span class="t-comment">// → { messages: [{ id: 'wamid.HBgL...' }] }</span></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t-python-1">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">python</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-comment"># pip install requests python-dotenv</span>
+<span class="t-kw">import</span> <span class="t-var">os</span>, <span class="t-var">requests</span>
+<span class="t-kw">from</span> <span class="t-var">dotenv</span> <span class="t-kw">import</span> <span class="t-fn">load_dotenv</span>
+
+<span class="t-fn">load_dotenv</span>()
+
+<span class="t-var">resp</span> = <span class="t-var">requests</span>.<span class="t-fn">post</span>(
+    <span class="t-string">f"https://graph.facebook.com/{os.environ['WHATSAPP_API_VERSION']}"</span>
+    <span class="t-string">f"/{os.environ['WHATSAPP_PHONE_NUMBER_ID']}/messages"</span>,
+    <span class="t-var">json</span>={
+        <span class="t-string">"messaging_product"</span>: <span class="t-string">"whatsapp"</span>,
+        <span class="t-string">"to"</span>:       <span class="t-string">"+1415XXXXXXX"</span>,
+        <span class="t-string">"type"</span>:     <span class="t-string">"template"</span>,
+        <span class="t-string">"template"</span>: {<span class="t-string">"name"</span>: <span class="t-string">"hello_world"</span>, <span class="t-string">"language"</span>: {<span class="t-string">"code"</span>: <span class="t-string">"en_US"</span>}},
+    },
+    <span class="t-var">headers</span>={<span class="t-string">"Authorization"</span>: <span class="t-string">f"Bearer {os.environ['WHATSAPP_ACCESS_TOKEN']}"</span>},
+)
+<span class="t-var">resp</span>.<span class="t-fn">raise_for_status</span>()
+<span class="t-fn">print</span>(<span class="t-var">resp</span>.<span class="t-fn">json</span>())  <span class="t-comment"># {"messages": [{"id": "wamid.xxx"}]}</span></pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-success">
+      <span class="callout-icon">✅</span>
+      <div><strong>Success:</strong> A <code>200 OK</code> with <code>{"messages":[{"id":"wamid.xxx"}]}</code> means Meta accepted the message. Check your phone — it should arrive within seconds.</div>
+    </div>
+
+    <!-- 4. Freeform text -->
+    <h3>4. Send freeform text (within the 24h service window)</h3>
+    <p>Once a user replies to you, a 24-hour window opens where you can respond with plain text — no template required.</p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'t-curl-2')">cURL</button>
+        <button class="tab-btn" onclick="switchTab(this,'t-node-2')">Node.js</button>
+        <button class="tab-btn" onclick="switchTab(this,'t-python-2')">Python</button>
+      </div>
+
+      <div class="tab-panel active" id="t-curl-2">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">bash</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-kw">curl</span> -X POST \
+  <span class="t-string">"https://graph.facebook.com/v19.0/$WHATSAPP_PHONE_NUMBER_ID/messages"</span> \
+  -H <span class="t-string">"Authorization: Bearer $WHATSAPP_ACCESS_TOKEN"</span> \
+  -H <span class="t-string">"Content-Type: application/json"</span> \
+  -d <span class="t-string">'{
+    "messaging_product": "whatsapp",
+    "to": "+1415XXXXXXX",
+    "type": "text",
+    "text": { "body": "Your driver is 2 minutes away!" }
+  }'</span></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t-node-2">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">javascript</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-kw">await</span> <span class="t-fn">fetch</span>(<span class="t-string">`https://graph.facebook.com/${WHATSAPP_API_VERSION}/${WHATSAPP_PHONE_NUMBER_ID}/messages`</span>, {
+  method:  <span class="t-string">'POST'</span>,
+  headers: {
+    <span class="t-string">'Authorization'</span>: <span class="t-string">`Bearer ${WHATSAPP_ACCESS_TOKEN}`</span>,
+    <span class="t-string">'Content-Type'</span>:  <span class="t-string">'application/json'</span>,
+  },
+  body: <span class="t-var">JSON</span>.<span class="t-fn">stringify</span>({
+    messaging_product: <span class="t-string">'whatsapp'</span>,
+    to:   <span class="t-string">'+1415XXXXXXX'</span>,
+    type: <span class="t-string">'text'</span>,
+    text: { body: <span class="t-string">'Your driver is 2 minutes away!'</span> },
+  }),
+});</pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t-python-2">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">python</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-var">requests</span>.<span class="t-fn">post</span>(
+    <span class="t-string">f"https://graph.facebook.com/{os.environ['WHATSAPP_API_VERSION']}"</span>
+    <span class="t-string">f"/{os.environ['WHATSAPP_PHONE_NUMBER_ID']}/messages"</span>,
+    <span class="t-var">json</span>={
+        <span class="t-string">"messaging_product"</span>: <span class="t-string">"whatsapp"</span>,
+        <span class="t-string">"to"</span>:   <span class="t-string">"+1415XXXXXXX"</span>,
+        <span class="t-string">"type"</span>: <span class="t-string">"text"</span>,
+        <span class="t-string">"text"</span>: {<span class="t-string">"body"</span>: <span class="t-string">"Your driver is 2 minutes away!"</span>},
+    },
+    <span class="t-var">headers</span>={<span class="t-string">"Authorization"</span>: <span class="t-string">f"Bearer {os.environ['WHATSAPP_ACCESS_TOKEN']}"</span>},
+).<span class="t-fn">raise_for_status</span>()</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Webhooks locally -->
+    <h3>5. Test webhooks locally with ngrok</h3>
+    <p>Meta needs a public HTTPS URL to push events to. During local development, use <strong>ngrok</strong> to tunnel your local port.</p>
+
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab(this,'t-ngrok')">Terminal</button>
+        <button class="tab-btn" onclick="switchTab(this,'t-handler')">Express handler</button>
+      </div>
+
+      <div class="tab-panel active" id="t-ngrok">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">bash</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-comment"># Install ngrok: https://ngrok.com/download</span>
+<span class="t-comment"># Start your local server first (e.g. port 3000), then:</span>
+<span class="t-kw">ngrok http</span> <span class="t-num">3000</span>
+
+<span class="t-comment"># ngrok outputs a public URL, e.g.:
+#   https://abc123.ngrok-free.app
+#
+# In Meta Developer Portal → App → WhatsApp → Configuration:
+#   Webhook URL:   https://abc123.ngrok-free.app/webhook
+#   Verify Token:  any string you choose (must match your handler)</span></pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="t-handler">
+        <div class="code-block" style="margin-top:0;border-radius:0 0 8px 8px">
+          <div class="code-block-header">
+            <span class="code-lang">javascript</span>
+            <button class="code-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="t-comment">// npm install express</span>
+<span class="t-kw">import</span> <span class="t-var">express</span> <span class="t-kw">from</span> <span class="t-string">'express'</span>;
+<span class="t-kw">const</span> <span class="t-var">app</span> = <span class="t-fn">express</span>();
+<span class="t-var">app</span>.<span class="t-fn">use</span>(<span class="t-var">express</span>.<span class="t-fn">json</span>());
+
+<span class="t-kw">const</span> <span class="t-var">VERIFY_TOKEN</span> = <span class="t-string">'my-secret-verify-token'</span>; <span class="t-comment">// match in Meta portal</span>
+
+<span class="t-comment">// Meta calls GET to verify the endpoint</span>
+<span class="t-var">app</span>.<span class="t-fn">get</span>(<span class="t-string">'/webhook'</span>, (<span class="t-var">req</span>, <span class="t-var">res</span>) => {
+  <span class="t-kw">const</span> { <span class="t-string">'hub.mode'</span>: mode, <span class="t-string">'hub.verify_token'</span>: token, <span class="t-string">'hub.challenge'</span>: challenge } = <span class="t-var">req</span>.query;
+  <span class="t-kw">if</span> (mode === <span class="t-string">'subscribe'</span> && token === <span class="t-var">VERIFY_TOKEN</span>) {
+    <span class="t-var">res</span>.<span class="t-fn">send</span>(<span class="t-var">challenge</span>); <span class="t-comment">// echo back the challenge to verify</span>
+  } <span class="t-kw">else</span> {
+    <span class="t-var">res</span>.<span class="t-fn">sendStatus</span>(<span class="t-num">403</span>);
+  }
+});
+
+<span class="t-comment">// Meta sends POST for all events</span>
+<span class="t-var">app</span>.<span class="t-fn">post</span>(<span class="t-string">'/webhook'</span>, (<span class="t-var">req</span>, <span class="t-var">res</span>) => {
+  <span class="t-var">res</span>.<span class="t-fn">sendStatus</span>(<span class="t-num">200</span>); <span class="t-comment">// always ack first (within 20s)</span>
+  <span class="t-kw">const</span> <span class="t-var">value</span> = <span class="t-var">req</span>.body?.entry?.[<span class="t-num">0</span>]?.changes?.[<span class="t-num">0</span>]?.value;
+  <span class="t-kw">if</span> (<span class="t-var">value</span>?.messages) {
+    <span class="t-kw">const</span> <span class="t-var">msg</span> = <span class="t-var">value</span>.messages[<span class="t-num">0</span>];
+    <span class="t-var">console</span>.<span class="t-fn">log</span>(<span class="t-string">'Inbound:'</span>, <span class="t-var">msg</span>.from, <span class="t-var">msg</span>.text?.body);
+  }
+  <span class="t-kw">if</span> (<span class="t-var">value</span>?.statuses) {
+    <span class="t-kw">const</span> <span class="t-var">s</span> = <span class="t-var">value</span>.statuses[<span class="t-num">0</span>];
+    <span class="t-var">console</span>.<span class="t-fn">log</span>(<span class="t-string">'Status:'</span>, <span class="t-var">s</span>.id, <span class="t-var">s</span>.status); <span class="t-comment">// sent | delivered | read</span>
+  }
+});
+
+<span class="t-var">app</span>.<span class="t-fn">listen</span>(<span class="t-num">3000</span>);</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout callout-note">
+      <span class="callout-icon">💡</span>
+      <div><strong>Sandbox shortcut:</strong> The Meta Developer Portal has a built-in "Send message" button under <strong>WhatsApp → API Setup</strong> that triggers the hello_world template using Meta's test number — useful to confirm your account is active before writing any code.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- MESSAGE TEMPLATES -->
+  <div class="section" id="templates">
+    <h2>Message Templates</h2>
+    <p class="section-desc">Required for all business-initiated conversations outside the 24h service window</p>
+
+    <p>When you initiate a conversation (not replying to a user message), you must use a <strong>pre-approved template</strong>. Templates are submitted via WhatsApp Manager and reviewed by Meta.</p>
+
+    <table class="doc-table" style="margin:16px 0">
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Examples</th>
+          <th>Approval</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Authentication</strong></td>
+          <td>OTPs, login codes</td>
+          <td><span class="badge badge-info">Minutes (automated)</span></td>
+        </tr>
+        <tr>
+          <td><strong>Utility</strong></td>
+          <td>Order confirmations, ride status, shipping updates</td>
+          <td><span class="badge badge-muted">Minutes–hours</span></td>
+        </tr>
+        <tr>
+          <td><strong>Marketing</strong></td>
+          <td>Promotions, offers, re-engagement</td>
+          <td><span class="badge badge-warn">Hours–2 days</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card-row card-row-2" style="margin-top:16px">
+      <div class="card">
+        <h3>Template structure</h3>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:13px;color:var(--text-2)">
+          <li><strong style="color:var(--text)">Header</strong> — Optional text, image, video, or document</li>
+          <li><strong style="color:var(--text)">Body</strong> — Main text with variables: <code>{{1}}</code>, <code>{{2}}</code></li>
+          <li><strong style="color:var(--text)">Footer</strong> — Optional small text</li>
+          <li><strong style="color:var(--text)">Buttons</strong> — CTA or Quick Reply (optional)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Common rejection reasons</h3>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:8px;font-size:13px;color:var(--text-2)">
+          <li>Promotional content in a Utility template</li>
+          <li>Vague or misleading variable placeholders</li>
+          <li>Missing opt-out language on Marketing templates</li>
+          <li>Unclear business purpose or off-brand naming</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- WEBHOOKS -->
+  <div class="section" id="webhooks">
+    <h2>Webhooks & Inbound Handling</h2>
+    <p class="section-desc">How Meta delivers real-time events to your system</p>
+
+    <p>Meta sends all events as HTTP POST requests to your configured webhook URL. Always respond with <code>200 OK</code> immediately, then process asynchronously.</p>
+
+    <table class="doc-table" style="margin:16px 0">
+      <thead>
+        <tr>
+          <th>Event</th>
+          <th>Fires when</th>
+          <th>What to do</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>messages</code></td>
+          <td>User sends you a message</td>
+          <td>Route to support system or autoresponder</td>
+        </tr>
+        <tr>
+          <td><code>statuses</code></td>
+          <td>Message sent / delivered / read / failed</td>
+          <td>Update delivery state in your database</td>
+        </tr>
+        <tr>
+          <td><code>errors</code></td>
+          <td>Delivery failure</td>
+          <td>Log, alert, retry or mark as failed</td>
+        </tr>
+        <tr>
+          <td><code>account_alerts</code></td>
+          <td>Quality rating or limit changes</td>
+          <td>Notify your ops team</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-warn">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Idempotency:</strong> Meta may deliver the same event more than once. Always deduplicate by message ID before processing.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- LIMITS -->
+  <div class="section" id="limits">
+    <h2>Messaging Limits & Quality Rating</h2>
+    <p class="section-desc">How Meta controls how many users you can reach per day</p>
+
+    <p>Limits apply to <strong>unique users</strong> messaged per rolling 24 hours. You start at Tier 1 and scale up automatically based on volume and quality.</p>
+
+    <div class="tier-row">
+      <div class="tier-card">
+        <div class="tier-num">1K</div>
+        <div class="tier-label">Tier 1 — Starter</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-num">10K</div>
+        <div class="tier-label">Tier 2 — Growing</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-num">100K</div>
+        <div class="tier-label">Tier 3 — Scaling</div>
+      </div>
+      <div class="tier-card">
+        <div class="tier-num">∞</div>
+        <div class="tier-label">Tier 4 — Unlimited</div>
+      </div>
+    </div>
+
+    <div class="card-row card-row-2" style="margin-top:16px">
+      <div class="card">
+        <h3>Quality Rating</h3>
+        <p style="font-size:13px;margin-top:6px">Based on user reports and blocks. High = grow freely. Medium = monitor. Low = risk of restriction.</p>
+        <div style="display:flex;gap:6px;margin-top:10px;flex-wrap:wrap">
+          <span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">High</span>
+          <span class="badge badge-warn">Medium</span>
+          <span class="badge badge-req">Low</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Protecting Your Rating</h3>
+        <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:8px;font-size:13px;color:var(--text-2)">
+          <li>→ Only message opted-in users</li>
+          <li>→ Include clear opt-out instructions</li>
+          <li>→ Respect opt-outs immediately</li>
+          <li>→ Keep messages timely and relevant</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- PRICING -->
+  <div class="section" id="pricing">
+    <h2>Pricing Model</h2>
+    <p class="section-desc">Billed per conversation window, not per message</p>
+
+    <p>A <strong>conversation</strong> is a 24-hour messaging window. Once open, you can send unlimited messages within it at no extra cost.</p>
+
+    <table class="doc-table" style="margin:16px 0">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Initiated by</th>
+          <th>Cost</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Marketing</strong></td>
+          <td>Business</td>
+          <td><span class="badge badge-warn">Higher</span></td>
+          <td>Promos, re-engagement</td>
+        </tr>
+        <tr>
+          <td><strong>Utility</strong></td>
+          <td>Business</td>
+          <td><span class="badge badge-muted">Medium</span></td>
+          <td>Transactional notifications</td>
+        </tr>
+        <tr>
+          <td><strong>Authentication</strong></td>
+          <td>Business</td>
+          <td><span class="badge badge-muted">Medium-low</span></td>
+          <td>OTPs, verification</td>
+        </tr>
+        <tr>
+          <td><strong>Service</strong></td>
+          <td>User</td>
+          <td><span class="badge" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0">Free*</span></td>
+          <td>Reply within 24h user-initiated window</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="font-size:12.5px;color:var(--text-3)">* First 1,000 service conversations per month are free. Pricing varies by country — check Meta's pricing page for your markets.</p>
+
+    <div class="callout callout-success">
+      <span class="callout-icon">💡</span>
+      <div><strong>Cost tip:</strong> When a user messages you first, a free 24-hour service window opens. Use it to resolve issues or send follow-ups without paying for a business-initiated conversation.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- TIMELINE -->
+  <div class="section" id="timeline">
+    <h2>What to Expect: Timeline</h2>
+    <p class="section-desc">Realistic milestones from zero to production</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-range">Day 1–2</div>
+        <div class="tl-label">Account & app setup</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-range">Day 2–7</div>
+        <div class="tl-label">Business verification</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-range">Day 5–10</div>
+        <div class="tl-label">Template approvals</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-range">Day 7–14</div>
+        <div class="tl-label">Dev & integration</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-range">Day 14–21</div>
+        <div class="tl-label">Testing & launch</div>
+      </div>
+    </div>
+
+    <div class="callout callout-warn" style="margin-top:16px">
+      <span class="callout-icon">⚠️</span>
+      <div><strong>Common delay:</strong> Business verification and display name review are the biggest bottlenecks. Submit both early — don't wait until your code is ready.</div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- CHECKLIST -->
+  <div class="section" id="checklist">
+    <h2>Pre-Launch Checklist</h2>
+    <p class="section-desc">Confirm all of these before going live</p>
+
+    <div class="card-row card-row-2">
+      <div class="card">
+        <h3>Account & Identity</h3>
+        <ul class="check-list" style="margin-top:12px">
+          <li>Meta Business Account created</li>
+          <li>Business Verification approved</li>
+          <li>WhatsApp Business Account (WABA) created</li>
+          <li>Display Name reviewed and approved</li>
+          <li>Dedicated phone number registered</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Technical</h3>
+        <ul class="check-list" style="margin-top:12px">
+          <li>Meta App created with WhatsApp product</li>
+          <li>System User long-lived token generated</li>
+          <li>Webhook endpoint deployed and verified</li>
+          <li>Webhook deduplication implemented</li>
+          <li>Message templates approved</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Compliance</h3>
+        <ul class="check-list" style="margin-top:12px">
+          <li>Opt-in mechanism in place for all recipients</li>
+          <li>Opt-out flow implemented and tested</li>
+          <li>Privacy policy updated</li>
+          <li>Message log retention policy defined</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Operations</h3>
+        <ul class="check-list" style="margin-top:12px">
+          <li>Quality rating monitoring configured</li>
+          <li>Runbook for failed / blocked messages</li>
+          <li>On-call process if account gets limited</li>
+          <li>Load test within allowed tier limits</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-divider"></div>
+
+  <!-- RESOURCES -->
+  <div class="section" id="resources">
+    <h2>Resources</h2>
+    <p class="section-desc">Official Meta documentation to go deeper</p>
+
+    <div class="resource-list">
+      <a class="resource-link" href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started" target="_blank">
+        <span class="rl-icon">🚀</span>
+        <div class="rl-body">
+          Cloud API — Get Started Guide
+          <div class="rl-desc">Step-by-step quickstart for your first API call</div>
+        </div>
+        <span class="rl-arrow">↗</span>
+      </a>
+      <a class="resource-link" href="https://developers.facebook.com/docs/whatsapp/message-templates" target="_blank">
+        <span class="rl-icon">📋</span>
+        <div class="rl-body">
+          Message Templates Reference
+          <div class="rl-desc">Template categories, structure, variables, and approval flow</div>
+        </div>
+        <span class="rl-arrow">↗</span>
+      </a>
+      <a class="resource-link" href="https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks" target="_blank">
+        <span class="rl-icon">🔗</span>
+        <div class="rl-body">
+          Webhooks Documentation
+          <div class="rl-desc">All event types, payload schemas, and verification flow</div>
+        </div>
+        <span class="rl-arrow">↗</span>
+      </a>
+      <a class="resource-link" href="https://developers.facebook.com/docs/whatsapp/pricing" target="_blank">
+        <span class="rl-icon">💰</span>
+        <div class="rl-body">
+          Conversation Pricing
+          <div class="rl-desc">Country-by-country rate cards and billing details</div>
+        </div>
+        <span class="rl-arrow">↗</span>
+      </a>
+      <a class="resource-link" href="https://developers.facebook.com/docs/whatsapp/overview/phone-number-best-practices" target="_blank">
+        <span class="rl-icon">📱</span>
+        <div class="rl-body">
+          Phone Number Best Practices
+          <div class="rl-desc">Choosing and maintaining your sender number</div>
+        </div>
+        <span class="rl-arrow">↗</span>
+      </a>
+    </div>
+  </div>
+
+</div><!-- /page -->
+</main>
+
+<script>
+  // Tab switching
+  function switchTab(btn, panelId) {
+    const tabsEl = btn.closest('.tabs');
+    tabsEl.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    tabsEl.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    tabsEl.querySelector('#' + panelId).classList.add('active');
+  }
+
+  // Copy code
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 1800);
+    });
+  }
+
+  // Active nav on scroll
+  const sections = document.querySelectorAll('[id]');
+  const navItems = document.querySelectorAll('.nav-item');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navItems.forEach(n => n.classList.remove('active'));
+        const a = document.querySelector(`.nav-item[href="#${entry.target.id}"]`);
+        if (a) a.classList.add('active');
+      }
+    });
+  }, { threshold: 0.25, rootMargin: '-60px 0px -65% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+
+  // Smooth scroll
+  navItems.forEach(item => {
+    item.addEventListener('click', e => {
+      const href = item.getAttribute('href');
+      if (href?.startsWith('#')) {
+        e.preventDefault();
+        document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>

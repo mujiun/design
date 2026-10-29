@@ -1,1 +1,9 @@
 .DS_Store
+*.bak-*
+backups/
+# unused large source recordings — matched by NAME (macOS git ignore is case-insensitive,
+# so extension globs like *.MP4 would also catch the used *.mp4 files)
+assets/fun/Screeny-Mockup*
+assets/fun/Screen Recording*
+assets/fun/gc.mov
+assets/fun/_*.html

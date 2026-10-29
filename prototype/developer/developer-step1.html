@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta for Developers — Step 1. Try it out</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet" />
+  <style>
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root) { animation: 0.4s ease both vt-fade-out; }
+    ::view-transition-new(root) { animation: 0.4s ease both vt-fade-in; }
+    @keyframes vt-fade-out { to { opacity: 0; } }
+    @keyframes vt-fade-in { from { opacity: 0; } }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF;
+      --page-bg: #F0F2F5;
+      --surface: #F8F9FA;
+      --ink: #1C2B33;
+      --ink2: #465A69;
+      --ink3: #465A69;
+      --accent: #1877F2;
+      --accent-light: #E7F3FF;
+      --green: #006b4e;
+      --border: #DADDE1;
+      --border-light: #E4E6EB;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--title);
+      background: var(--page-bg);
+      background-image: url('../shared/bg.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* ══ TOP NAV ══ */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .meta-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .meta-logo img { height: 14px; width: auto; }
+
+    .topnav-tabs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .topnav-tab {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: color 0.12s;
+      cursor: pointer;
+    }
+
+    .topnav-tab:hover { color: #0A78BE; }
+
+    .topnav-tab.active {
+      color: #0A78BE;
+      font-weight: 600;
+      background: #E1EDF7;
+      border-radius: 4px;
+      border-bottom-color: transparent;
+    }
+
+    .topnav-tab .caret {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 6px 10px;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    .search-icon { color: var(--ink3); flex-shrink: 0; }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--ink);
+      width: 100%;
+      font-family: var(--title);
+    }
+
+    .search-box input::placeholder { color: var(--ink3); }
+
+    .nav-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-icon svg { width: 16px; height: 16px; color: var(--ink2); }
+
+    /* ══ BREADCRUMB ══ */
+    .breadcrumb {
+      padding: 14px 24px 16px;
+      font-size: 13px;
+      color: var(--ink3);
+    }
+
+    .breadcrumb a { color: var(--ink2); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { margin: 0 8px; color: var(--ink3); font-size: 11px; }
+    .breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+    /* ══ PAGE TITLE ══ */
+    .page-title-area { padding: 12px 24px 16px; }
+
+    .page-title-area h1 {
+      font-family: var(--title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .page-title-area p { font-size: 13px; color: var(--ink2); }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 999px;
+      line-height: 1.4;
+      vertical-align: middle;
+      margin-left: 6px;
+      position: relative;
+      top: -1px;
+    }
+    .pill--optional {
+      color: var(--ink3);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+    }
+
+
+    /* ══ CONTENT LAYOUT ══ */
+    .content-layout {
+      display: flex;
+      gap: 16px;
+      padding: 0 24px 0;
+      align-items: flex-start;
+    }
+
+    /* ══ LEFT NAV ══ */
+    .left-nav {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 74px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .nav-dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin: 4px 0px 8px 0px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .nav-dropdown .dd-caret {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      display: block;
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .nav-link:hover {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .nav-link.active {
+      color: #0A78BE;
+      font-weight: 700;
+      background: #E1EDF7;
+      border-radius: 4px;
+    }
+
+    .nav-group {
+      margin-top: 2px;
+    }
+
+    .nav-group-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .nav-group-toggle:hover { background: var(--surface); }
+
+    .nav-group-toggle .chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      transform: rotate(180deg);
+    }
+
+    .nav-group.collapsed .chevron {
+      transform: rotate(0deg);
+    }
+
+    .nav-group-items {
+      overflow: hidden;
+      max-height: 300px;
+      transition: max-height 0.25s ease;
+    }
+
+    .nav-group.collapsed .nav-group-items {
+      max-height: 0;
+    }
+
+    .nav-link--sub {
+      padding-left: 22px;
+      font-size: 14px;
+      font-weight: 450;
+    }
+
+    /* ══ RIGHT CONTENT ══ */
+    .right-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-content {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 16px 24px;
+      min-height: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .right-content h2 {
+      font-family: var(--title);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .right-content .overview-desc {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.4;
+      font-weight: 450;
+    }
+    .overview-desc .dot-sep { margin: 0 7px; color: var(--ink3); }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 16px 0;
+    }
+
+    .right-content h3 {
+      font-family: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    /* ══ TASK ACCORDION ══ */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .task-item {
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .task-item:last-child {
+      border-bottom: none;
+    }
+
+    .task-item:first-child .task-header {
+      padding-top: 0;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .task-header:hover {
+      /* no color/opacity change on hover */
+    }
+
+    .task-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task-check--done {
+      border: none;
+      background: transparent;
+    }
+
+    .task-check--done svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--green);
+    }
+
+    .task-title {
+      font-family: var(--title);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .task-title--done {
+      color: var(--ink);
+    }
+
+    .task-info {
+      flex: 1;
+    }
+
+    .task-subtitle {
+      font-size: 12.6px;
+      font-weight: 400;
+      color: var(--ink3);
+      margin-top: 0;
+      line-height: 1.3;
+    }
+
+
+    .task-chevron {
+      width: 16px;
+      height: 16px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.4;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .task-item:not(.collapsed) .task-chevron {
+      transform: rotate(-180deg);
+    }
+
+    .task-body {
+      overflow: hidden;
+      max-height: 2000px;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 0 16px 34px;
+    }
+
+    .task-item.collapsed .task-body {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .task-desc {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .task-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .task-action:hover {
+      background: #D4E8FF;
+    }
+
+    .task-done-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--green);
+    }
+
+    /* ══ TASK 1-3 DETAIL ELEMENTS ══ */
+    .link-blue { color: #1461cc; text-decoration: none; }
+    .link-blue:hover { text-decoration: underline; }
+
+    .warn-banner {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #FCEFD7;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+    .warn-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    .info-icon { width: 13px; height: 13px; vertical-align: -2px; margin-left: 4px; }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+
+    .toggle {
+      width: 34px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: none;
+      padding: 0;
+      transition: background 0.15s;
+    }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+      transition: transform 0.15s;
+    }
+    .toggle.on { background: #1877F2; }
+    .toggle.on::after { transform: translateX(14px); }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink2);
+      margin: 4px 0 16px;
+    }
+
+    .biz-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .biz-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .biz-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .biz-sub { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+    .biz-sub-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink2);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .phone-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .phone-icon { width: 20px; height: 20px; color: var(--ink2); flex-shrink: 0; }
+    .phone-info { flex: 1; min-width: 0; }
+    .phone-number {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .phone-id { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+
+    .badge { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
+    .badge--unverified { background: #B0173A; color: #fff; }
+    .badge--verified { background: #E4F5EE; color: var(--green); }
+
+    /* Webhook signals table */
+    .wh-card { border: 1px solid var(--border-light); border-radius: 8px; overflow: hidden; margin-top: 10px; }
+    .wh-table { width: 100%; border-collapse: collapse; font-family: var(--font); font-size: 13px; }
+    .wh-table th { text-align: left; font-weight: 600; color: var(--ink3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; padding: 8px 12px; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .wh-table td { padding: 10px 12px; border-bottom: 1px solid var(--border-light); color: var(--ink); vertical-align: middle; }
+    .wh-table tr:last-child td { border-bottom: none; }
+    .wh-mono { font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; color: var(--ink2); }
+    .wh-pill { display: inline-block; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+    .wh-pill--sent { background: var(--surface); color: var(--ink2); }
+    .wh-pill--delivered { background: #E7F3FF; color: #0A78BE; }
+    .wh-pill--read { background: #E4F5EE; color: var(--green); }
+
+    /* Claim test number result */
+    .claim-result { margin-top: 14px; border: 1px solid var(--border-light); border-radius: 10px; padding: 16px 18px; }
+    .claim-block-label { font-size: 14px; font-weight: 700; color: var(--ink); margin: 0 0 8px; }
+    .cred-panel { display: flex; align-items: center; gap: 24px; flex-wrap: nowrap; background: var(--surface); border-radius: 8px; padding: 16px 18px; }
+    .cred-number { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--ink); }
+    .cred-number .wa-ic { width: 16px; height: 16px; flex-shrink: 0; object-fit: contain; display: block; }
+    .cred-id { font-size: 13px; color: var(--ink); display: flex; align-items: center; gap: 6px; font-weight: 600; white-space: nowrap; }
+    .cred-number { white-space: nowrap; }
+    .cred-id .cred-val { color: var(--ink); font-weight: 400; }
+    .copy-ic { width: 15px; height: 15px; color: var(--ink3); cursor: pointer; flex-shrink: 0; }
+    .copy-ic:hover { color: var(--ink); }
+    .token-row { display: flex; gap: 12px; align-items: center; width: 100%; }
+    .token-input .copy-ic { margin-left: auto; }
+    .token-input { flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--ink3); font-size: 13px; }
+    .token-row .btn-primary { flex-shrink: 0; }
+    .token-input svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .token-text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .token-input.filled { color: var(--ink); font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 12px; }
+    .token-help { font-size: 12.6px; color: var(--ink3); margin: 8px 0 0; line-height: 1.4; }
+    .success-banner { display: flex; align-items: center; gap: 8px; margin-top: 12px; padding: 10px 14px; background: #E6F4EA; border: none; border-radius: 8px; font-size: 13px; color: var(--ink); font-weight: 500; }
+    .success-banner-ic { width: 18px; height: 18px; flex-shrink: 0; color: var(--green); }
+    .token-regen { color: #1461cc; cursor: pointer; }
+    .token-regen:hover { text-decoration: underline; }
+    .claim-loading { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--ink2); padding: 2px 0; }
+    .spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .note-text { font-size: 13px; color: var(--ink2); margin: 4px 0 12px; }
+
+    /* ══ TASK SUB-STEPS ══ */
+    .sub-step {
+      margin-bottom: 24px;
+    }
+
+    .sub-step:last-child { margin-bottom: 0; }
+
+    .sub-step-label {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 550;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .placeholder-box {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--ink3);
+      margin-bottom: 8px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: #0A78BE;
+      border: 1px solid #0A78BE;
+      border-radius: 6px;
+      padding: 8px 16px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: #096A9E; border-color: #096A9E; }
+
+    .btn-primary:disabled {
+      background: var(--border-light);
+      border-color: var(--border-light);
+      color: #A0AAB4;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover { background: var(--surface); }
+
+    .token-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .token-field {
+      flex: 1;
+      min-width: 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--ink2);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 0 12px;
+      height: 36px;
+      line-height: 36px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sub-steps-container {
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .sub-step-bordered {
+      padding: 20px;
+    }
+
+    .sub-step-bordered + .sub-step-bordered {
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* ══ TAB EXPLAINER ══ */
+    .tab-explainer {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 14px;
+      color: #1C1E21;
+      line-height: 1.3;
+      font-weight: 450;
+    }
+
+    /* ══ MINI TABS ══ */
+    .mini-tabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .mini-tab {
+      flex: 1;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 550;
+      color: var(--ink);
+      padding: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.12s;
+    }
+
+    .mini-tab + .mini-tab { border-left: 1px solid var(--border); }
+    .mini-tab:hover { background: var(--surface); }
+    .mini-tab.active { color: #fff; background: #0A78BE; }
+
+    .mini-pane { display: none; }
+    .mini-pane.active { display: block; }
+
+    /* ══ TEST LAYOUT ══ */
+    .test-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .test-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .test-panel-title {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .field-select,
+    .field-input {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 10px;
+      height: 36px;
+      background: var(--bg);
+      outline: none;
+      width: 100%;
+    }
+
+    .field-select {
+      padding-right: 28px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%234B4F56' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .field-select:focus,
+    .field-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
+
+    .field-textarea {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      background: var(--bg);
+      outline: none;
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .field-textarea:focus { border-color: var(--accent); }
+
+    /* Preview panel */
+    .preview-panel {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 200px;
+      height: 100%;
+    }
+
+    .preview-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .preview-tab {
+      font-family: var(--title);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink3);
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.12s;
+    }
+
+    .preview-tab:hover { color: var(--ink2); }
+    .preview-tab.active { color: #0A78BE; border-bottom-color: #0A78BE; }
+
+    .preview-pane { display: none !important; }
+    .preview-pane.active { display: block !important; }
+    .preview-pane.active[style*="justify-content"] { display: flex !important; }
+
+    .preview-message {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.5;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .preview-code {
+      background: #1E1E1E;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: #D4D4D4;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .preview-code .key { color: #9CDCFE; }
+    .preview-code .str { color: #CE9178; }
+    .preview-code .punct { color: #D4D4D4; }
+
+    /* ══ CONTINUE BANNER ══ */
+    .continue-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      margin-bottom: 0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-top: 16px;
+
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .continue-banner-text {
+      font-family: var(--title);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .continue-btn {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .continue-btn:hover {
+      background: var(--surface);
+    }
+
+    /* ══ BOTTOM BAR ══ */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+
+    .bottom-bar-left, .bottom-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bottom-bar svg { width: 16px; height: 16px; color: var(--ink3); cursor: pointer; }
+    .bottom-bar svg:hover { color: var(--ink2); }
+    .bottom-bar-text { font-size: 11px; color: var(--ink3); }
+
+    /* ══ LEFT SYSTEM SIDEBAR ══ */
+    .sys-sidebar {
+      position: fixed;
+      left: 0;
+      top: 48px;
+      bottom: 0;
+      width: 46px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      gap: 4px;
+      z-index: 90;
+    }
+
+    .sys-sidebar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s;
+      color: var(--ink3);
+    }
+
+    .sys-sidebar-icon:hover {
+      background: var(--surface);
+      color: var(--ink2);
+    }
+
+    .sys-sidebar-icon.active {
+      background: #E1EDF7;
+      color: #0A78BE;
+    }
+
+    .sys-sidebar-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+
+    .sys-sidebar-spacer { flex: 1; }
+
+    /* Offset page content for sidebar */
+    .breadcrumb { margin-left: 46px; }
+    .page-title-area { margin-left: 46px; }
+    .content-layout { margin-left: 46px; padding-bottom: 0; }
+
+    /* ══ STEP 1 ELEMENTS ══ */
+    .ask-ai {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--title); font-size: 13px; font-weight: 700; color: var(--ink);
+      border: 1.5px solid transparent; border-radius: 8px; padding: 7px 14px;
+      cursor: pointer; flex-shrink: 0;
+      background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#0A78BE,#8B5CF6,#EC4899) border-box;
+    }
+    .ask-ai svg { width: 15px; height: 15px; }
+    .info-banner {
+      display: flex; align-items: center; gap: 8px;
+      background: #EBEDF0; border-radius: 6px; padding: 10px 12px;
+      font-size: 13px; color: var(--ink2); margin-bottom: 16px;
+    }
+    .info-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .select-display {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); border-radius: 6px;
+      height: 40px; padding: 0 10px; background: var(--bg);
+      font-size: 13px; color: var(--ink); cursor: pointer;
+    }
+    .select-display .sd-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .select-display .sd-text { flex: 1; min-width: 0; }
+    .select-display .sd-text.placeholder { color: var(--ink3); }
+    .select-display .sd-caret { width: 12px; height: 12px; stroke: var(--ink3); fill: none; stroke-width: 1.5; flex-shrink: 0; transition: transform .2s ease; }
+    .select-display .sd-icon { color: var(--ink); }
+    .msg-select { position: relative; }
+    .msg-select.open .select-display { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .msg-select.open .sd-caret { transform: rotate(180deg); }
+    .sd-menu {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: var(--bg); border: 1px solid var(--border-light); border-radius: 10px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 6px; z-index: 30;
+    }
+    .msg-select.open .sd-menu { display: block; }
+    .sd-option { display: flex; align-items: center; gap: 10px; padding: 10px 12px; font-size: 14px; color: var(--ink); border-radius: 8px; cursor: pointer; }
+    .sd-option:hover { background: var(--surface); }
+    .sd-option.selected { background: var(--accent-light); }
+    .sd-radio { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; border: 1.5px solid var(--border); background: var(--bg); position: relative; }
+    .sd-option.selected .sd-radio { border-color: var(--accent); }
+    .sd-option.selected .sd-radio::after { content:''; position:absolute; inset:3px; border-radius:50%; background: var(--accent); }
+    .sd-optIcon { width: 18px; height: 18px; flex-shrink: 0; color: var(--ink); }
+    .sd-optText { flex: 1; min-width: 0; }
+    .recipient-row { display: flex; gap: 8px; }
+    .recipient-row .cc-select { width: 96px; flex-shrink: 0; height: 40px; }
+    .recipient-row .field-input { flex: 1; height: 40px; }
+    .sendtest-card { border: 1px solid var(--border-light); border-radius: 8px; padding: 16px; margin-top: 4px; }
+    .code-block { position: relative; background: #F8F9FA; border-radius: 8px; padding: 16px; height: 100%; overflow: hidden; }
+    .code-copy {
+      position: absolute; top: 10px; right: 10px;
+      width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .code-copy svg { width: 15px; height: 15px; stroke: var(--ink3); fill: none; stroke-width: 1.4; }
+    .code-text {
+      font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; line-height: 1.7;
+      color: #1C2B33; white-space: pre; overflow-x: auto; margin-top: 20px;
+    }
+    .code-text .m { color: #C0341D; }
+    .code-text .u { text-decoration: underline; }
+    .code-text .n { color: #1877F2; }
+    .run-postman { display: inline-flex; align-items: center; gap: 6px; }
+    .run-postman svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOP NAV ══ -->
+  <div class="topnav">
+    <div class="topnav-left">
+      <a class="meta-logo" href="#">
+        <img src="../shared/meta.svg" alt="Meta" />
+      </a>
+      <div class="topnav-tabs">
+        <a class="topnav-tab active">My Apps</a>
+        <a class="topnav-tab">Required actions</a>
+        <a class="topnav-tab">Docs <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Tools <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Support <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="nav-icons">
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="3"/><path d="M2.5 14.5C2.5 11.5 5 9.5 8 9.5s5.5 2 5.5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEFT SYSTEM SIDEBAR ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-sidebar-icon active">
+      <svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><path d="M7 3L3 10l4 7M13 3l4 7-4 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-spacer"></div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 7v.01" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ BREADCRUMB ══ -->
+  <div class="breadcrumb">
+    <a href="#">Use cases</a>
+    <span class="sep">›</span>
+    <span class="current">Customize</span>
+  </div>
+
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content-layout">
+
+    <!-- LEFT NAV -->
+    <div class="left-nav">
+      <div class="nav-dropdown">
+        <span style="display:flex;align-items:center;gap:8px;"><img src="images/waicon.svg" alt="" style="width:16px;height:16px;flex-shrink:0;">Connect on WhatsApp</span>
+        <svg class="dd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <a class="nav-link" href="index.html">Overview</a>
+
+      <div class="nav-group" id="nav-api">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Basic setup
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub active" href="developer-step1.html">Step 1. Try it out</a>
+          <a class="nav-link nav-link--sub" href="developer-step2.html">Step 2. Production setup</a>
+          <a class="nav-link nav-link--sub" href="developer-step3.html">Step 3. Business verification</a>
+          <a class="nav-link nav-link--sub" href="developer-nextsteps.html">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-partner">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Become a Partner
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Become a Tech Provider</a>
+          <a class="nav-link nav-link--sub">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-other">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Other tools
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Permissions and features</a>
+          <a class="nav-link nav-link--sub">Resources</a>
+          <a class="nav-link nav-link--sub">Documentation</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+    <div class="right-content">
+      <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:16px;">
+        <div>
+          <h2>Step 1. Try it out <span class="pill pill--optional">Optional</span></h2>
+          <p class="overview-desc">5 min<span class="dot-sep">·</span>Send a message from your test number to understand how WhatsApp API works.</p>
+        </div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- TASK LIST -->
+      <div class="task-list">
+
+        <!-- Task 1: Claim a test number -->
+        <div class="task-item">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check" id="claimCheck"></div>
+            <div class="task-info"><span class="task-title">Claim a WhatsApp test number</span><div class="task-subtitle" id="claimSubtitle">About 1 minute to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <p class="task-desc">Claim a free test number to try the WhatsApp API. This will generate a phone number and access token for testing.</p>
+            <button class="btn-primary" id="claimBtn" onclick="claimNumber()">Claim test number</button>
+            <div class="claim-result" id="claimResult" style="display:none;">
+              <div class="claim-loading" id="claimLoading"><span class="spinner"></span>Claiming your test number…</div>
+              <div class="claim-content" id="claimContent" style="display:none;">
+                <div class="claim-block-label">Test number</div>
+                <div class="cred-panel">
+                  <div class="cred-number">
+                    <img class="wa-ic" src="images/waicon.svg" alt="WhatsApp">
+                    +1 (555) 878-8991
+                  </div>
+                  <div class="cred-id">Phone Number ID: <span class="cred-val">1232111643325291</span><svg class="copy-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H4a1.5 1.5 0 00-1.5 1.5V11A1.5 1.5 0 004 12.5"/></svg></div>
+                  <div class="cred-id">WhatsApp Business Account ID: <span class="cred-val">1752907172567241</span><svg class="copy-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H4a1.5 1.5 0 00-1.5 1.5V11A1.5 1.5 0 004 12.5"/></svg></div>
+                </div>
+                <div class="claim-block-label" style="margin-top:16px;">Access token</div>
+                <div class="token-row">
+                  <div class="token-input" id="tokenField"><span class="token-text">Not generated yet</span><svg class="copy-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H4a1.5 1.5 0 00-1.5 1.5V11A1.5 1.5 0 004 12.5"/></svg></div>
+                </div>
+                <p class="token-help">This token is valid for 30 days. Once it expires, you can <a class="token-regen" onclick="generateToken()">generate new token</a>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 2: Send a message from your test number -->
+        <div class="task-item collapsed">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check" id="sendCheck"></div>
+            <div class="task-info"><span class="task-title">Send a message from your test number</span><div class="task-subtitle" id="sendSubtitle">About 2 minutes to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <p class="task-desc">Try out your test number here. You'll be able to set up and test your own number in <a class="link-blue" href="developer-step2.html">Step 2. Production setup</a>.</p>
+
+            <div class="sendtest-card">
+              <div class="test-layout">
+
+                <!-- Left: form -->
+                <div class="test-panel">
+                  <div class="field-group">
+                    <label class="field-label" style="font-weight:700;">Your test number</label>
+                    <div class="select-display" style="background:var(--surface);cursor:default;">
+                      <img class="sd-icon" src="images/waicon.svg" alt="WhatsApp" style="object-fit:contain;" />
+                      <span class="sd-text" id="testNumberDisplay">—</span>
+                      <svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label class="field-label" style="font-weight:700;">Recipient</label>
+                    <div class="recipient-row">
+                      <select class="field-select cc-select"><option>US +1</option><option>UK +44</option><option>SG +65</option></select>
+                      <input class="field-input" id="recipientInput" type="text" placeholder="(408) 789-2000" oninput="formatRecipient()" onclick="if(this.value===''){if(this.dataset.primed){this.value='(412) 456-9000';this.dataset.primed='';toggleSend();}else{this.dataset.primed='1';}}" />
+                    </div>
+                  </div>
+
+                  <div class="field-group">
+                    <label class="field-label" style="font-weight:700;">Message</label>
+                    <div class="msg-select" id="msgSelect">
+                      <div class="select-display" onclick="toggleMsg()">
+                        <svg class="sd-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h12a1 1 0 011 1v6a1 1 0 01-1 1H8l-3 3v-3H4a1 1 0 01-1-1V6a1 1 0 011-1z" stroke-linejoin="round"/></svg>
+                        <span class="sd-text">Hello World</span>
+                        <svg class="sd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      </div>
+                      <div class="sd-menu">
+                        <div class="sd-option selected" onclick="selectMsg(this)">
+                          <span class="sd-radio"></span>
+                          <svg class="sd-optIcon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h12a1 1 0 011 1v6a1 1 0 01-1 1H8l-3 3v-3H4a1 1 0 01-1-1V6a1 1 0 011-1z" stroke-linejoin="round"/></svg>
+                          <span class="sd-optText">Hello World</span>
+                        </div>
+                        <div class="sd-option" onclick="selectMsg(this)">
+                          <span class="sd-radio"></span>
+                          <svg class="sd-optIcon" viewBox="0 0 20 20"><text x="10" y="14.5" text-anchor="middle" font-size="12" font-weight="600" font-family="Georgia, serif" fill="currentColor">Aa</text></svg>
+                          <span class="sd-optText">Plain text</span>
+                        </div>
+                        <div class="sd-option" onclick="selectMsg(this)">
+                          <span class="sd-radio"></span>
+                          <svg class="sd-optIcon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="7.5"/><path d="M6.5 10l2.2 2.2 4.8-4.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <span class="sd-optText">Order Confirmation</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="btn-row" style="margin-top:4px;">
+                    <button class="btn-primary" id="sendBtn" onclick="sendMessage()" disabled><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" style="margin-right:5px;vertical-align:-2px;"><path d="M2 8l12-5-5 12-2-5z" stroke-linejoin="round"/></svg>Send message</button>
+                    <button class="btn-secondary run-postman"><svg viewBox="0 0 16 16"><path d="M9 2h5v5M14 2L7 9M12 9v4a1 1 0 01-1 1H3a1 1 0 01-1-1V5a1 1 0 011-1h4" stroke-linecap="round" stroke-linejoin="round"/></svg>Run in Postman</button>
+                  </div>
+                </div>
+
+                <!-- Right: code -->
+                <div class="test-panel">
+                  <div class="code-block">
+                    <button class="code-copy" onclick="copyCode()"><svg viewBox="0 0 16 16"><rect x="5" y="5" width="8" height="9" rx="1.5"/><path d="M11 5V3.5A1.5 1.5 0 009.5 2H4a1.5 1.5 0 00-1.5 1.5V11A1.5 1.5 0 004 12.5"/></svg></button>
+<div class="code-text" id="codeText"><span class="m">curl</span> -i -X <span class="m">POST</span> \
+     <span class="u">https://graph.facebook.com/v25.<span class="n">0</span>/<span class="n">1232111643325291</span>/messages</span> \
+     -H <span class="m">'Authorization: Bearer '</span> \
+     -H <span class="m">'Content-Type: application/json'</span> \
+     -d '{ "messaging_product": "whatsapp",
+     "to": "",
+     "type": "template",
+     "template": { "name": "hello_world",
+     "language": { "code": "en_US" } } }'</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="success-banner" id="sendSuccess" style="display:none;">
+              <svg class="success-banner-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="10" cy="10" r="8"/><path d="M6.4 10.3l2.4 2.4 4.8-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Message sent to <span id="sentTo"></span></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 3: Check test webhooks -->
+        <div class="task-item collapsed" id="webhookTask">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-info"><span class="task-title">Check test webhooks</span><div class="task-subtitle">About 2 minutes to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <p class="task-desc">Webhook signals received for your test messages: <span id="webhookNA">N/A</span></p>
+            <div class="wh-card" id="webhookTableWrap" style="display:none;">
+              <table class="wh-table">
+                <thead>
+                  <tr><th>Event</th><th>Status</th><th>Recipient</th><th>Received</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td class="wh-mono">message.status</td><td><span class="wh-pill wh-pill--sent">sent</span></td><td class="wh-mono wh-recipient">+1 484 000 1234</td><td>8:56:04 PM</td></tr>
+                  <tr><td class="wh-mono">message.status</td><td><span class="wh-pill wh-pill--delivered">delivered</span></td><td class="wh-mono wh-recipient">+1 484 000 1234</td><td>8:56:05 PM</td></tr>
+                  <tr><td class="wh-mono">message.status</td><td><span class="wh-pill wh-pill--read">read</span></td><td class="wh-mono wh-recipient">+1 484 000 1234</td><td>8:56:12 PM</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="continue-banner">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="images/next.png" alt="" style="width:36px;height:36px;flex-shrink:0;">
+        <span class="continue-banner-text">Next: Step 2. Production setup</span>
+      </div>
+      <button class="continue-btn" onclick="location.href='developer-step2.html'">Continue</button>
+    </div>
+    <div style="height: 36px;"></div>
+    </div><!-- /right-col -->
+
+  </div>
+
+    <script>
+    function toggleGroup(t){ t.closest('.nav-group').classList.toggle('collapsed'); }
+    function toggleTask(h){ h.closest('.task-item').classList.toggle('collapsed'); }
+    function claimNumber(){
+      document.getElementById('claimBtn').style.display = 'none';
+      document.getElementById('claimResult').style.display = 'block';
+      setTimeout(function(){
+        document.getElementById('claimLoading').style.display = 'none';
+        document.getElementById('claimContent').style.display = 'block';
+        generateToken();
+        var chk = document.getElementById('claimCheck');
+        chk.classList.add('task-check--done');
+        chk.innerHTML = '<svg viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>';
+        document.getElementById('claimSubtitle').textContent = 'Completed';
+        var tnd = document.getElementById('testNumberDisplay'); if (tnd) tnd.textContent = '+1 (555) 878-8991';
+      }, 1000);
+    }
+    function generateToken(){
+      var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      var t = 'EAA';
+      for (var i = 0; i < 210; i++) { t += chars.charAt(Math.floor(Math.random() * chars.length)); }
+      var field = document.getElementById('tokenField');
+      field.classList.add('filled');
+      var warn = field.querySelector('.token-warn');
+      if (warn) warn.remove();
+      field.querySelector('.token-text').textContent = t;
+      field.title = t;
+    }
+    function formatRecipient(){
+      var el = document.getElementById('recipientInput');
+      var d = el.value.replace(/\D/g, '').slice(0, 10);
+      if (d.length > 6) el.value = '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+      else if (d.length > 3) el.value = '(' + d.slice(0, 3) + ') ' + d.slice(3);
+      else if (d.length > 0) el.value = '(' + d;
+      else el.value = '';
+      toggleSend();
+    }
+    function toggleSend(){
+      var digits = document.getElementById('recipientInput').value.replace(/\D/g, '');
+      document.getElementById('sendBtn').disabled = digits.length !== 10;
+    }
+    function sendMessage(){
+      var cc = document.querySelector('.recipient-row .cc-select');
+      var code = cc ? cc.value.replace(/[^+\d]/g, '') : '';
+      var num = document.getElementById('recipientInput').value.trim();
+      if (!num) return;
+      var full = (code ? code + ' ' : '') + num;
+      var btn = document.getElementById('sendBtn');
+      btn.disabled = true;
+      setTimeout(function(){
+        document.getElementById('sentTo').textContent = full;
+        document.getElementById('sendSuccess').style.display = 'flex';
+        btn.disabled = false;
+        // Mark this task (Send a message) as completed
+        var chk = document.getElementById('sendCheck');
+        chk.classList.add('task-check--done');
+        chk.innerHTML = '<svg viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>';
+        document.getElementById('sendSubtitle').textContent = 'Completed';
+        // Sync webhook recipients to the number we sent to, then open + complete the webhook task
+        document.querySelectorAll('.wh-recipient').forEach(function(td){ td.textContent = full; });
+        // Reveal the webhook table now that a message has been sent
+        document.getElementById('webhookNA').style.display = 'none';
+        document.getElementById('webhookTableWrap').style.display = '';
+        var wt = document.getElementById('webhookTask');
+        wt.classList.remove('collapsed');
+        var wchk = wt.querySelector('.task-check');
+        wchk.classList.add('task-check--done');
+        wchk.innerHTML = '<svg viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>';
+        wt.querySelector('.task-subtitle').textContent = 'Completed';
+      }, 1000);
+    }
+    function syncSelectOverflow(el){
+      var body = el.closest('.task-body');
+      if (body) body.style.overflow = el.classList.contains('open') ? 'visible' : '';
+    }
+    function toggleMsg(){
+      var el = document.getElementById('msgSelect');
+      el.classList.toggle('open');
+      syncSelectOverflow(el);
+    }
+    function selectMsg(opt){
+      var menu = opt.parentElement, wrap = menu.parentElement;
+      menu.querySelectorAll('.sd-option').forEach(function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      var field = wrap.querySelector('.select-display');
+      field.querySelector('.sd-text').textContent = opt.querySelector('.sd-optText').textContent;
+      var newIcon = opt.querySelector('.sd-optIcon').cloneNode(true);
+      newIcon.setAttribute('class','sd-icon');
+      field.querySelector('.sd-icon').replaceWith(newIcon);
+      wrap.classList.remove('open');
+      syncSelectOverflow(wrap);
+    }
+    document.addEventListener('click', function(e){
+      document.querySelectorAll('.msg-select.open').forEach(function(el){
+        if(!el.contains(e.target)) { el.classList.remove('open'); syncSelectOverflow(el); }
+      });
+    });
+    function copyCode(){
+      var el = document.getElementById('codeText');
+      if (el && navigator.clipboard) navigator.clipboard.writeText(el.textContent);
+    }
+    document.querySelectorAll('.nav-link').forEach(function(link){
+      link.addEventListener('click', function(){
+        document.querySelectorAll('.nav-link').forEach(function(l){ l.classList.remove('active'); });
+        link.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

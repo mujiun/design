@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta Business Inbox (wireframe)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=block" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF; --page-bg: #F0F2F5; --surface: #F5F6F7;
+      --ink: #1C2B33; --ink2: #465A69; --ink3: #6B7A85;
+      --accent: #0A78BE; --accent-light: #E7F0FD;
+      --border: #E4E6EB; --border-light: #ECEEF0;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+      /* wireframe tokens */
+      --card: #FFFFFF; --card-border: #EEF0F2;
+      --label: #9BA6AE; --fill: #E3E7EA; --fill-soft: #EAEDEF;
+    }
+
+    html, body {
+      height: 100%; font-family: var(--title); color: var(--ink);
+      background: var(--page-bg); background-image: url('../shared/bg.jpg');
+      background-size: cover; background-attachment: fixed;
+      -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5; letter-spacing: 0.1px;
+      overflow: hidden;
+    }
+    body { display: flex; flex-direction: row; }
+
+    /* ══ WIREFRAME PRIMITIVES (from template) ══ */
+    .w-label { height: 11px; width: 84px; background: var(--label); border-radius: 6px; }
+    .w-label.sm { width: 60px; }
+    .w-label.lg { width: 108px; }
+    .w-fill { height: 16px; width: 100%; background: var(--fill); border-radius: 6px; }
+    .w-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--fill); flex-shrink: 0; }
+    .w-pill { height: 20px; width: 88px; border-radius: 999px; background: var(--fill); }
+    .w-btn { width: 74px; height: 32px; background: var(--fill); border-radius: 6px; flex-shrink: 0; }
+    .w-kebab { width: 34px; height: 34px; border: 1px solid var(--fill); border-radius: 6px; flex-shrink: 0; }
+    .w-search { flex: 1; height: 38px; background: var(--card); border: 1px solid var(--card-border); border-radius: 6px; display: flex; align-items: center; gap: 10px; padding: 0 14px; box-shadow: 0 1px 3px rgba(20,40,55,0.05); }
+    .w-search .dot { width: 16px; height: 16px; border-radius: 50%; background: var(--fill); flex-shrink: 0; }
+    .w-search .w-fill { width: 160px; height: 11px; background: var(--fill-soft); }
+
+    /* ══ LEFT SYSTEM ICON RAIL (real chrome) ══ */
+    .sys-nav { width: 52px; background: var(--bg); display: flex; flex-direction: column; align-items: center; padding: 8px 0; gap: 6px; flex-shrink: 0; z-index: 10; }
+    .sys-nav-logo { width: 40px; height: 40px; margin-bottom: 6px; }
+    .sys-nav-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .sys-nav-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--ink2); cursor: pointer; flex-shrink: 0; }
+    .sys-nav-icon:hover { background: var(--surface); }
+    .sys-nav-icon.active { color: #fff; background: #2b3a44; }
+    .sys-nav-icon svg { width: 22px; height: 22px; }
+    .sys-nav-spacer { flex: 1; }
+
+    /* ══ RIGHT SIDE ══ */
+    .right-side { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    /* ══ TOP BAR (real chrome shell, wireframe content) ══ */
+    .topbar { display: flex; align-items: center; justify-content: space-between; height: 66px; padding: 8px 20px; flex-shrink: 0; }
+    .topbar-left { display: flex; flex-direction: column; gap: 8px; }
+    .topbar-left .w-fill { width: 92px; height: 18px; background: var(--label); }
+    .topbar-left .w-fill.sub { width: 220px; height: 10px; background: var(--fill-soft); }
+    .topbar-right { display: flex; align-items: center; gap: 6px; }
+    .w-tbtn { height: 34px; background: var(--card); border: 1px solid var(--fill); border-radius: 4px; box-shadow: 0 1px 3px rgba(20,40,55,0.04); }
+    .w-tbtn.wide { width: 148px; }
+    .w-tbtn.med { width: 96px; }
+    .w-tbtn.icon { width: 34px; }
+    .topbar-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--fill); flex-shrink: 0; }
+
+    /* ══ MAIN AREA ══ */
+    .main-area { flex: 1; display: flex; padding: 0 16px 16px; gap: 6px; min-height: 0; }
+    .main-container { flex: 1; background: var(--bg); border-radius: 4px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); min-width: 0; }
+
+    /* ══ CHANNEL TABS (wireframe) ══ */
+    .channel-tabs { display: flex; align-items: center; padding: 0 16px; border-bottom: 1px solid var(--border); height: 52px; gap: 18px; flex-shrink: 0; }
+    .channel-tab { display: flex; align-items: center; gap: 6px; }
+    .channel-tab .w-fill { height: 11px; background: var(--fill-soft); }
+    .channel-tab.active .w-fill { background: var(--accent-light); }
+    .channel-tab .w-badge { width: 22px; height: 15px; border-radius: 10px; background: var(--fill); flex-shrink: 0; }
+    .channel-tab.active .w-badge { background: var(--accent); }
+
+    /* ══ LIST + CHAT SPLIT ══ */
+    .main-body { flex: 1; display: flex; min-height: 0; }
+
+    /* ══ CONVERSATION LIST (wireframe) ══ */
+    .conv-list { width: 320px; border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+    .conv-list-header { padding: 10px 12px 6px; display: flex; flex-direction: column; gap: 8px; }
+    .conv-search-row { display: flex; align-items: center; gap: 6px; }
+    .conv-list-header .w-search { height: 32px; }
+    .conv-list-header .w-search .w-fill { width: 90px; }
+    .w-manage { width: 64px; height: 32px; background: var(--card); border: 1px solid var(--fill); border-radius: 4px; flex-shrink: 0; }
+    .conv-filters { display: flex; align-items: center; gap: 6px; }
+    .w-filter { height: 22px; border-radius: 4px; background: var(--fill-soft); }
+    .w-filter.f1 { width: 54px; } .w-filter.f2 { width: 58px; } .w-filter.f3 { width: 68px; } .w-filter.f4 { width: 64px; }
+    .w-filter-icon { width: 26px; height: 22px; border-radius: 4px; background: var(--fill-soft); margin-left: auto; }
+
+    .conv-scroll { flex: 1; overflow-y: auto; }
+
+    /* re-engage banner (wireframe card) */
+    .reengage-banner { padding: 8px 10px; }
+    .reengage-inner { display: flex; gap: 12px; padding: 12px; background: var(--card); border: 1px solid var(--card-border); border-radius: 6px; align-items: flex-start; box-shadow: 0 4px 16px rgba(0,0,0,0.05); }
+    .reengage-thumb { width: 44px; height: 44px; border-radius: 4px; background: var(--fill); flex-shrink: 0; }
+    .reengage-body { flex: 1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+    .reengage-body .w-fill.t { width: 150px; height: 11px; background: var(--label); }
+    .reengage-body .w-fill.d { width: 100%; height: 9px; background: var(--fill-soft); }
+    .reengage-cta { width: 100%; height: 28px; border-radius: 42px; background: var(--fill); }
+
+    .conv-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; cursor: pointer; border-left: 3px solid transparent; }
+    .conv-item:hover { background: var(--surface); }
+    .conv-item.active { background: var(--accent-light); border-left-color: var(--accent); }
+    .conv-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--fill); flex-shrink: 0; }
+    .conv-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; padding-top: 3px; }
+    .conv-name-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .conv-name-row .w-fill { height: 12px; background: var(--label); }
+    .conv-date { width: 36px; height: 9px; border-radius: 6px; background: var(--fill-soft); flex-shrink: 0; }
+    .conv-preview { height: 10px; background: var(--fill); border-radius: 6px; }
+
+    /* ══ CHAT AREA (wireframe) ══ */
+    .chat-area { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); height: 60px; }
+    .chat-header-left { display: flex; align-items: center; gap: 10px; }
+    .chat-header-left .lines { display: flex; flex-direction: column; gap: 6px; }
+    .chat-header-left .lines .w-fill { width: 84px; height: 13px; background: var(--label); }
+    .chat-header-left .lines .w-fill.sub { width: 130px; height: 9px; background: var(--fill-soft); }
+    .chat-header-actions { display: flex; align-items: center; gap: 6px; }
+    .chat-action { width: 32px; height: 32px; border-radius: 4px; border: 1px solid var(--fill); flex-shrink: 0; }
+
+    .chat-messages { flex: 1; padding: 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; background: var(--bg); }
+    .chat-timestamp { align-self: center; width: 120px; height: 9px; border-radius: 6px; background: var(--fill-soft); margin-bottom: 6px; }
+    .msg-row { display: flex; align-items: flex-end; gap: 8px; }
+    .msg-row.in { justify-content: flex-start; }
+    .msg-row.out { justify-content: flex-end; }
+    .msg-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--fill); flex-shrink: 0; }
+    .bubble { padding: 6px 12px; border-radius: 18px; background: var(--fill); display: flex; flex-direction: column; gap: 6px; }
+    .msg-row.in .bubble { border-bottom-left-radius: 4px; }
+    .msg-row.out .bubble { border-bottom-right-radius: 4px; background: var(--accent-light); }
+    .bubble .line { height: 10px; border-radius: 6px; background: var(--fill-soft); }
+    .msg-row.out .bubble .line { background: rgba(10,120,190,0.22); }
+
+    .chat-input-area { padding: 12px 16px; }
+    .chat-composer { border: 1px solid var(--fill); border-radius: 16px; padding: 10px 14px 8px; display: flex; flex-direction: column; gap: 10px; }
+    .chat-composer .w-fill { width: 180px; height: 11px; background: var(--fill-soft); }
+    .chat-input-actions { display: flex; align-items: center; gap: 6px; justify-content: flex-end; }
+    .input-action { width: 30px; height: 30px; border-radius: 50%; background: var(--fill-soft); flex-shrink: 0; }
+    .input-send { width: 56px; height: 30px; border-radius: 14px; background: var(--fill); flex-shrink: 0; }
+
+    /* ══ PROFILE CONTAINER (wireframe) ══ */
+    .profile-container { width: 260px; background: var(--bg); border-radius: 4px; overflow-y: auto; padding: 16px 0; display: flex; flex-direction: column; flex-shrink: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-left: 2px; }
+    .contact-header { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 16px; }
+    .contact-header .who { display: flex; align-items: center; gap: 10px; }
+    .contact-header .who .w-circle { width: 40px; height: 40px; }
+    .contact-header .who .w-fill { width: 72px; height: 13px; background: var(--label); }
+    .contact-header .nav { display: flex; gap: 6px; }
+    .contact-header .nav .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--fill-soft); }
+    .contact-section { display: flex; flex-direction: column; gap: 12px; padding: 18px 16px; border-top: 1px solid var(--border); }
+    .contact-section .w-label { background: var(--label); }
+    .contact-row { display: flex; align-items: center; gap: 10px; }
+    .contact-row .ic { width: 16px; height: 16px; border-radius: 4px; background: var(--fill); flex-shrink: 0; }
+    .contact-row .w-fill { height: 10px; background: var(--fill-soft); }
+    .w-field { width: 100%; height: 30px; border-radius: 4px; border: 1px solid var(--fill); }
+    .w-chipbtn { width: 100px; height: 32px; border-radius: 4px; background: var(--fill); }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--fill); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ LEFT SYSTEM NAV (real icons) ══ -->
+  <div class="sys-nav">
+    <div class="sys-nav-logo"><img src="../shared/meta-logo.webp" alt="Meta" /></div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" style="width:26px;height:26px;"><path d="M11.3 4.6Q12 4 12.7 4.6L19.4 11.2Q20 11.7 20 12.5V19Q20 20.5 18.5 20.5H14V16.5Q14 15.5 13 15.5H11Q10 15.5 10 16.5V20.5H5.5Q4 20.5 4 19V12.5Q4 11.7 4.6 11.2L11.3 4.6Z"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px;"><path d="M6 16c-.7 0-1.1-.8-.6-1.3.9-.9 1.6-2 1.6-3.7V10a5 5 0 0 1 10 0v1c0 1.7.7 2.8 1.6 3.7.5.5.1 1.3-.6 1.3z"/><path d="M10 19a2 2 0 0 0 4 0"/></svg>
+    </div>
+    <div class="sys-nav-icon active">
+      <svg viewBox="0 0 24 24" style="width:22px;height:22px;"><path d="M5.04 15.59A8.5 8 0 1 1 8.81 18.42L4.3 20Z" fill="currentColor"/><circle cx="20.5" cy="3.5" r="2.6" fill="#C1121F"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="3.5" height="16" rx="1.5"/><rect x="10.25" y="8" width="3.5" height="12" rx="1.5"/><rect x="16.5" y="12" width="3.5" height="8" rx="1.5"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+    </div>
+    <div class="sys-nav-spacer"></div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" style="width:26px;height:26px;"><line x1="12" y1="4" x2="12" y2="20"/><line x1="4" y1="12" x2="20" y2="12"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+    <div class="sys-nav-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.82" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.2a2.7 2.7 0 0 1 5.3 1c0 1.9-2.65 2.2-2.65 3.9"/><path d="M12 16.2h.01"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT SIDE ══ -->
+  <div class="right-side">
+
+    <!-- ══ TOP BAR (wireframe content) ══ -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <div class="w-fill"></div>
+        <div class="w-fill sub"></div>
+      </div>
+      <div class="topbar-right">
+        <div class="w-tbtn wide"></div>
+        <div class="w-tbtn icon"></div>
+        <div class="w-tbtn icon"></div>
+        <div class="w-tbtn med"></div>
+        <div class="w-tbtn icon"></div>
+        <div class="topbar-avatar"></div>
+      </div>
+    </div>
+
+    <!-- ══ MAIN AREA ══ -->
+    <div class="main-area">
+
+      <!-- ══ MAIN WHITE CONTAINER (list + chat) ══ -->
+      <div class="main-container">
+        <!-- channel tabs -->
+        <div class="channel-tabs">
+          <div class="channel-tab active"><div class="w-fill" style="width:78px;"></div><div class="w-badge"></div></div>
+          <div class="channel-tab"><div class="w-fill" style="width:66px;"></div><div class="w-badge"></div></div>
+          <div class="channel-tab"><div class="w-fill" style="width:60px;"></div><div class="w-badge"></div></div>
+          <div class="channel-tab"><div class="w-fill" style="width:62px;"></div><div class="w-badge"></div></div>
+          <div class="channel-tab"><div class="w-fill" style="width:104px;"></div><div class="w-badge"></div></div>
+          <div class="channel-tab"><div class="w-fill" style="width:108px;"></div><div class="w-badge"></div></div>
+        </div>
+
+        <div class="main-body">
+          <!-- ══ CONVERSATION LIST ══ -->
+          <div class="conv-list">
+            <div class="conv-list-header">
+              <div class="conv-search-row">
+                <div class="w-search"><div class="dot"></div><div class="w-fill"></div></div>
+                <div class="w-manage"></div>
+              </div>
+              <div class="conv-filters">
+                <div class="w-filter f1"></div>
+                <div class="w-filter f2"></div>
+                <div class="w-filter f3"></div>
+                <div class="w-filter f4"></div>
+                <div class="w-filter-icon"></div>
+              </div>
+            </div>
+
+            <div class="conv-scroll">
+              <!-- re-engage banner -->
+              <div class="reengage-banner">
+                <div class="reengage-inner">
+                  <div class="reengage-thumb"></div>
+                  <div class="reengage-body">
+                    <div class="w-fill t"></div>
+                    <div class="w-fill d"></div>
+                    <div class="reengage-cta"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- conversation rows -->
+              <div class="conv-item active">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:64px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:92%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:88px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:78%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:52px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:88%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:104px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:72%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:116px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:90%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:46px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:68%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:78px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:80%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:72px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:86%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:68px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:74%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:100px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:84%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:84px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:82%;"></div>
+                </div>
+              </div>
+              <div class="conv-item">
+                <div class="conv-avatar"></div>
+                <div class="conv-info">
+                  <div class="conv-name-row"><div class="w-fill" style="width:56px;"></div><div class="conv-date"></div></div>
+                  <div class="conv-preview" style="width:90%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ CHAT AREA ══ -->
+          <div class="chat-area">
+            <div class="chat-header">
+              <div class="chat-header-left">
+                <div class="w-circle" style="width:36px;height:36px;"></div>
+                <div class="lines">
+                  <div class="w-fill"></div>
+                  <div class="w-fill sub"></div>
+                </div>
+              </div>
+              <div class="chat-header-actions">
+                <div class="chat-action"></div>
+                <div class="chat-action"></div>
+                <div class="chat-action"></div>
+                <div class="chat-action"></div>
+                <div class="chat-action"></div>
+              </div>
+            </div>
+
+            <div class="chat-messages">
+              <div class="chat-timestamp"></div>
+              <div class="msg-row in">
+                <div class="msg-avatar"></div>
+                <div class="bubble"><div class="line" style="width:200px;"></div></div>
+              </div>
+              <div class="msg-row out">
+                <div class="bubble"><div class="line" style="width:240px;"></div><div class="line" style="width:160px;"></div></div>
+              </div>
+              <div class="msg-row in">
+                <div class="msg-avatar"></div>
+                <div class="bubble"><div class="line" style="width:140px;"></div></div>
+              </div>
+              <div class="msg-row out">
+                <div class="bubble"><div class="line" style="width:180px;"></div></div>
+              </div>
+              <div class="msg-row in">
+                <div class="msg-avatar"></div>
+                <div class="bubble"><div class="line" style="width:220px;"></div><div class="line" style="width:120px;"></div></div>
+              </div>
+            </div>
+
+            <div class="chat-input-area">
+              <div class="chat-composer">
+                <div class="w-fill"></div>
+                <div class="chat-input-actions">
+                  <div class="input-action"></div>
+                  <div class="input-action"></div>
+                  <div class="input-action"></div>
+                  <div class="input-send"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ PROFILE CONTAINER (wireframe) ══ -->
+      <div class="profile-container">
+        <div class="contact-header">
+          <div class="who">
+            <div class="w-circle"></div>
+            <div class="w-fill"></div>
+          </div>
+          <div class="nav">
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+
+        <div class="contact-section">
+          <div class="w-label lg"></div>
+          <div class="contact-row"><div class="ic"></div><div class="w-fill" style="width:72px;"></div></div>
+          <div class="contact-row"><div class="ic"></div><div class="w-fill" style="width:110px;"></div></div>
+          <div class="contact-row"><div class="ic"></div><div class="w-fill" style="width:60px;"></div></div>
+          <div class="contact-row"><div class="ic"></div><div class="w-fill" style="width:68px;"></div></div>
+        </div>
+
+        <div class="contact-section">
+          <div class="w-label"></div>
+          <div class="w-chipbtn"></div>
+          <div class="w-field"></div>
+        </div>
+
+        <div class="contact-section">
+          <div class="w-label sm"></div>
+          <div class="w-field"></div>
+          <div class="contact-row"><div class="ic"></div><div class="w-fill" style="width:90px;"></div></div>
+          <div class="contact-row"><div class="ic"></div><div class="w-fill" style="width:116px;"></div></div>
+        </div>
+
+        <div class="contact-section">
+          <div class="w-label sm"></div>
+          <div class="w-chipbtn" style="width:80px;"></div>
+        </div>
+      </div>
+
+    </div><!-- /main-area -->
+  </div><!-- /right-side -->
+
+  <script>
+    // Embed mode: collapse the right-hand profile panel for a tighter two-pane view.
+    if (location.hash === '#embed') {
+      var _p = document.querySelector('.profile-container');
+      if (_p) _p.style.display = 'none';
+    }
+  </script>
+</body>
+</html>

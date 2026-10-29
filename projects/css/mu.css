@@ -1,5 +1,6 @@
 @charset "UTF-8";
 @import url(https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=swap);
+@import url(https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap);
 html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video { margin: 0; padding: 0; border: 0; font: inherit; font-size: 100%; vertical-align: baseline; }
 
 html { line-height: 1; }
@@ -136,11 +137,11 @@ i { color: #C8C9F5; }
 
 b, span.mark { font-weight: 800; }
 
-h1 { font-size: 32px; font-weight: 700; line-height: 1.6em; }
+h1 { font-family: 'Fraunces', Georgia, serif; font-size: 32px; font-weight: 600; line-height: 1.3em; letter-spacing: -0.01em; }
 
-h2 { font-size: 24px; font-weight: 700; line-height: 1.5em; }
+h2 { font-family: 'Fraunces', Georgia, serif; font-size: 24px; font-weight: 600; line-height: 1.4em; }
 
-h3 { font-size: 20px; font-weight: 500; line-height: 1.5em; }
+h3 { font-family: 'Fraunces', Georgia, serif; font-size: 20px; font-weight: 600; line-height: 1.4em; }
 
 h4 { font-size: 18px; font-weight: 500; line-height: 1.6em; }
 
@@ -329,7 +330,7 @@ span.br-lf { border-left: 1px #999 solid; font-size: 15px; font-weight: 500; col
 
 .qrcode { width: 150px; margin: 0 auto; }
 
-.part-title { margin-bottom: 30px; font-size: 28px; font-weight: 700; color: #35363A; display: inline-block; }
+.part-title { font-family: 'Fraunces', Georgia, serif; margin-bottom: 30px; font-size: 28px; font-weight: 600; color: #35363A; display: inline-block; }
 
 .part-titleSub { font-weight: 500; margin: 100px 0 200px 0; line-height: 1.6em; color: #bbb; }
 .part-titleSub b { color: #888; font-weight: 600; }

@@ -1,0 +1,5 @@
+;/*FB_PKG_DELIM*/
+
+__d("meta-business-checkmark-b4b-48-green",["ix"],(function(t,n,r,o,a,i,l,s){"use strict";var e=s("1138420");function u(t){return e}l.metaBusinessCheckmarkB4b48Green=u}),98);
+__d("meta-business-risk-b4b-48-red",["ix","gkx"],(function(t,n,r,o,a,i,l,s){"use strict";var e=r("gkx")("9366")||r("gkx")("9896"),u=s("942967"),c=s("700831");function d(t){var n=u;return e?n:c}l.metaBusinessRiskB4b48Red=d}),98);
+__d("BizWebTier1NotificationIcon.react",["GeoMediaItem.react","Image.react","meta-business-checkmark-b4b-48-green","meta-business-risk-b4b-48-red","react"],(function(t,n,r,o,a,i,l){"use strict";var e,s=e||(e=o("react")),u=48;function c(e){var t=e.platform,n=e.variant,a=n===void 0?"warning":n,i=a==="checkmark"?o("meta-business-checkmark-b4b-48-green").metaBusinessCheckmarkB4b48Green("light"):o("meta-business-risk-b4b-48-red").metaBusinessRiskB4b48Red("light");return s.jsx(r("GeoMediaItem.react"),{fit:"cover",media:s.jsx(r("Image.react"),{src:i}),platform:t,ratio:"circle",size:u})}c.displayName=c.name+" [from "+i.id+"]",l.default=c}),98);

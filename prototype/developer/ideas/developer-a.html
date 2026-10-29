@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta for Developers — WhatsApp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF;
+      --page-bg: #F0F2F5;
+      --surface: #F8F9FA;
+      --ink: #1C2B33;
+      --ink2: #465A69;
+      --ink3: #465A69;
+      --accent: #1877F2;
+      --accent-light: #E7F3FF;
+      --green: #006b4e;
+      --border: #DADDE1;
+      --border-light: #E4E6EB;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--title);
+      background: var(--page-bg);
+      background-image: url('../shared/bg.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* ══ TOP NAV ══ */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .meta-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .meta-logo img { height: 14px; width: auto; }
+
+    .topnav-tabs {
+      display: flex;
+      gap: 0;
+      align-items: center;
+    }
+
+    .topnav-tab {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink2);
+      text-decoration: none;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: color 0.12s;
+      cursor: pointer;
+    }
+
+    .topnav-tab:hover { color: #0A78BE; }
+
+    .topnav-tab.active {
+      color: #0A78BE;
+      background: #E1EDF7;
+      border-radius: 4px;
+      border-bottom-color: transparent;
+    }
+
+    .topnav-tab .caret {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 6px 10px;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    .search-icon { color: var(--ink3); flex-shrink: 0; }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 13px;
+      color: var(--ink);
+      width: 100%;
+      font-family: var(--font);
+    }
+
+    .search-box input::placeholder { color: var(--ink3); }
+
+    .nav-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-icon svg { width: 16px; height: 16px; color: var(--ink2); }
+
+    /* ══ BREADCRUMB ══ */
+    .breadcrumb {
+      padding: 14px 24px 0;
+      font-size: 13px;
+      color: var(--ink3);
+    }
+
+    .breadcrumb a { color: var(--ink2); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { margin: 0 8px; color: var(--ink3); font-size: 11px; }
+    .breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+    /* ══ PAGE TITLE ══ */
+    .page-title-area { padding: 12px 24px 16px; }
+
+    .page-title-area h1 {
+      font-family: var(--title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .page-title-area p { font-size: 13px; color: var(--ink2); }
+
+    /* ══ CONTENT LAYOUT ══ */
+    .content-layout {
+      display: flex;
+      gap: 16px;
+      padding: 0 24px 0;
+      align-items: flex-start;
+    }
+
+    /* ══ LEFT NAV ══ */
+    .left-nav {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 74px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .nav-dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin: 4px 0px 8px 0px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .nav-dropdown .dd-caret {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      display: block;
+      font-family: var(--title);
+      font-size: 15px;
+      font-weight: 450;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .nav-link:hover {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .nav-link.active {
+      color: #0A78BE;
+      font-weight: 700;
+      background: #E1EDF7;
+      border-radius: 4px;
+    }
+
+    .nav-group {
+      margin-top: 2px;
+    }
+
+    .nav-group-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      font-family: var(--title);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .nav-group-toggle:hover { background: var(--surface); }
+
+    .nav-group-toggle .chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      transform: rotate(180deg);
+    }
+
+    .nav-group.collapsed .chevron {
+      transform: rotate(0deg);
+    }
+
+    .nav-group-items {
+      overflow: hidden;
+      max-height: 300px;
+      transition: max-height 0.25s ease;
+    }
+
+    .nav-group.collapsed .nav-group-items {
+      max-height: 0;
+    }
+
+    .nav-link--sub {
+      padding-left: 22px;
+      font-size: 15px;
+      font-weight: 450;
+    }
+
+    /* ══ RIGHT CONTENT ══ */
+    .right-content {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 16px 24px 36px;
+      min-height: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .right-content h2 {
+      font-family: var(--title);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .right-content .overview-desc {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.4;
+      font-weight: 450;
+    }
+    .overview-desc .dot-sep { margin: 0 7px; color: var(--ink3); }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 16px 0;
+    }
+
+    .right-content h3 {
+      font-family: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    /* ══ TABS (segmented, solid active) ══ */
+    .tabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .tab-btn {
+      flex: 1;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      padding: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      transition: color 0.12s, background 0.12s;
+      text-align: center;
+    }
+
+    .tab-btn + .tab-btn {
+      border-left: 1px solid var(--border);
+    }
+
+    .tab-btn:hover { background: var(--surface); }
+
+    .tab-btn.active {
+      color: #fff;
+      background: #0A78BE;
+    }
+
+    /* ══ TAB EXPLAINER ══ */
+    .tab-explainer {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 14px 20px;
+      margin-top: 6px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #1C1E21;
+      line-height: 1.3;
+      font-weight: 450;
+    }
+
+    .tab-explainer strong {
+      font-weight: 700;
+    }
+
+    /* ══ STEP LIST ══ */
+    .step-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .step-item {
+      display: flex;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .step-item:has(.step-circle--green) .step-circle--green {
+      margin-left: -5px;
+    }
+
+    .step-item:has(.step-circle--green) .step-name {
+      line-height: 28px;
+    }
+
+    .step-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+      width: 18px;
+    }
+
+    .step-item:first-child .step-left {
+      padding-top: 4px;
+    }
+
+    .step-circle {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .step-dotted-line {
+      width: 0;
+      flex: 1;
+      border-left: 2.5px dashed var(--border);
+      border-image: repeating-linear-gradient(to bottom, var(--border) 0, var(--border) 3px, transparent 3px, transparent 7px) 1;
+    }
+
+    .step-item:last-child .step-dotted-line { display: none; }
+
+    .step-body {
+      flex: 1;
+      padding-bottom: 24px;
+    }
+
+    .step-item:last-child .step-body { padding-bottom: 0; }
+
+    .step-name {
+      font-family: var(--title);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 20px;
+      margin-bottom: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 999px;
+      line-height: 1.4;
+    }
+
+    .pill--optional {
+      color: var(--ink3);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.5;
+    }
+
+    .step-desc .time {
+      color: var(--ink2);
+      font-weight: 400;
+    }
+
+    .sep-dot {
+      margin: 0 5px 0 2px;
+      color: var(--ink3);
+    }
+
+    /* ══ GREEN CHECK ══ */
+    .step-circle--green {
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .step-circle--green svg {
+      width: 28px;
+      height: 28px;
+      fill: var(--green);
+    }
+
+    .step-name--green {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ══ TAB PANES ══ */
+    .tab-pane { display: none; padding-left: 12px; }
+    .tab-pane.active { display: block; }
+
+    /* ══ ACCOUNT TREE ══ */
+    .account-tree {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-top: 6px;
+    }
+
+
+    .tree-item {
+      position: relative;
+    }
+
+    .tree-item-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+    }
+
+    .tree-children {
+      margin-left: 14px; /* align with icon center */
+      padding-left: 24px;
+      position: relative;
+    }
+
+    /* Vertical line from parent icon down to last child */
+    .tree-children::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    /* Stop vertical line at last child's icon center */
+    .tree-children > .tree-item:last-child::after {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 20px;
+      bottom: 0;
+      width: 2px;
+      background: var(--surface);
+      z-index: 1;
+    }
+
+    /* Horizontal connector to child */
+    .tree-children > .tree-item > .tree-item-row::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 50%;
+      width: 20px;
+      height: 0;
+      border-top: 2px solid var(--border);
+    }
+
+    .tree-children > .tree-item > .tree-item-row {
+      position: relative;
+    }
+
+    .tree-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--accent-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tree-icon svg {
+      width: 14px;
+      height: 14px;
+      stroke: var(--accent);
+      fill: none;
+      stroke-width: 1.6;
+    }
+
+    .tree-icon--green { background: #E8F5E9; }
+    .tree-icon--green svg { stroke: var(--green); }
+
+    .tree-icon--purple { background: #F3E8FF; }
+    .tree-icon--purple svg { stroke: #7C3AED; }
+
+    .tree-label {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 28px;
+    }
+
+    .tree-tag {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink2);
+      background: var(--bg);
+      border: 1px solid var(--border-light);
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-left: 6px;
+    }
+
+    /* ══ BOTTOM BAR ══ */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+
+    .bottom-bar-left, .bottom-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bottom-bar svg { width: 16px; height: 16px; color: var(--ink3); cursor: pointer; }
+    .bottom-bar svg:hover { color: var(--ink2); }
+    .bottom-bar-text { font-size: 11px; color: var(--ink3); }
+
+    /* ══ LEFT SYSTEM SIDEBAR ══ */
+    .sys-sidebar {
+      position: fixed;
+      left: 0;
+      top: 60px;
+      bottom: 36px;
+      width: 46px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      gap: 4px;
+      z-index: 90;
+    }
+
+    .sys-sidebar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s;
+      color: var(--ink3);
+    }
+
+    .sys-sidebar-icon:hover {
+      background: var(--surface);
+      color: var(--ink2);
+    }
+
+    .sys-sidebar-icon.active {
+      background: #E1EDF7;
+      color: #0A78BE;
+    }
+
+    .sys-sidebar-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+
+    .sys-sidebar-spacer { flex: 1; }
+
+    /* Offset page content for sidebar */
+    .breadcrumb,
+    .page-title-area,
+    .content-layout { margin-left: 46px; padding-bottom: 16px; }
+
+    /* ══ ASSETS TREE ══ */
+    .assets-h { font-size:16px; font-weight:600; color:var(--ink); margin:40px 0 12px; }
+    .assets-card { background:#F2F3F5; border-radius:10px; padding:18px 24px; }
+    .tree { list-style:none; margin:0; padding:0; max-width:580px; }
+    .tree ul { list-style:none; margin:0; padding-left:22px; }
+    .tree li { position:relative; }
+    .tree ul li::before { content:''; position:absolute; top:0; left:-12px; height:100%; border-left:1px solid #C2C8CE; }
+    .tree ul li:last-child::before { height:16px; }
+    .tree ul li::after { content:''; position:absolute; top:16px; left:-12px; width:12px; border-top:1px solid #C2C8CE; }
+    .node { display:flex; align-items:baseline; padding:5px 0 5px 8px; font-size:14px; color:var(--ink); line-height:1.3; }
+    .node .lbl { white-space:nowrap; }
+    .node .lead { flex:1; border-bottom:1px dotted #B4BAC1; margin:0 8px 4px; min-width:16px; }
+    .node .stp { font-size:13px; color:var(--ink3); white-space:nowrap; }
+    a.step-item:hover .step-name { text-decoration: underline; }
+    .right-col { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .ns-h { font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 16px; }
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .docs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .tool-card { display: flex; gap: 12px; border: 1px solid var(--border-light); border-radius: 8px; padding: 14px; }
+    .tool-ico { width: 40px; height: 40px; border-radius: 8px; background: var(--surface); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--ink2); }
+    .tool-ico svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.7; }
+    .tool-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .tool-desc { font-size: 13px; color: var(--ink3); line-height: 1.4; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOP NAV ══ -->
+  <div class="topnav">
+    <div class="topnav-left">
+      <a class="meta-logo" href="#">
+        <img src="../shared/meta.svg" alt="Meta" />
+      </a>
+      <div class="topnav-tabs">
+        <a class="topnav-tab active">My Apps</a>
+        <a class="topnav-tab">Required actions</a>
+        <a class="topnav-tab">Docs <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Tools <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Support <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="nav-icons">
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M8 2a4 4 0 014 4c0 2-1 3.5-1 5H5c0-1.5-1-3-1-5a4 4 0 014-4zM6 13h4"/></svg></div>
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="3"/><path d="M2.5 14.5C2.5 11.5 5 9.5 8 9.5s5.5 2 5.5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEFT SYSTEM SIDEBAR ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-sidebar-icon active">
+      <svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><path d="M7 3L3 10l4 7M13 3l4 7-4 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-spacer"></div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 7v.01" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ BREADCRUMB ══ -->
+  <div class="breadcrumb">
+    <a href="#">Use cases</a>
+    <span class="sep">›</span>
+    <span class="current">Customize</span>
+  </div>
+
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content-layout">
+
+    <!-- LEFT NAV -->
+    <div class="left-nav">
+      <div class="nav-dropdown">
+        Connect on WhatsApp
+        <svg class="dd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <a class="nav-link active">Overview</a>
+
+      <div class="nav-group" id="nav-api">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Basic setup
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub" href="developer-step1.html">Step 1. Try it out</a>
+          <a class="nav-link nav-link--sub" href="developer-step2.html">Step 2. Production setup</a>
+          <a class="nav-link nav-link--sub" href="developer-step3.html">Step 3. Business verification</a>
+          <a class="nav-link nav-link--sub" href="developer-nextsteps.html">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-partner">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Become a Partner
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Become a Tech Provider</a>
+          <a class="nav-link nav-link--sub">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-other">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Other tools
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Permissions and features</a>
+          <a class="nav-link nav-link--sub">Resources</a>
+          <a class="nav-link nav-link--sub">Documentation</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+    <!-- RIGHT CONTENT -->
+    <div class="right-content">
+      <h2>Overview</h2>
+      <p class="overview-desc">Understand what you need to do based on your goals and the integration path you choose.</p>
+
+      <div class="section-divider"></div>
+
+      <h3>Select your integration path</h3>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchPane(this, 'api')">Basic setup</button>
+        <button class="tab-btn" onclick="switchPane(this, 'partner')">Become a Partner</button>
+      </div>
+
+      <div class="tab-explainer" id="explainer-api">
+        Integrate WhatsApp API directly into your own systems. <strong>Best for</strong> businesses building in-house messaging — e.g. a retailer sending order updates, a bank handling customer support, or an airline managing booking notifications.
+      </div>
+      <div class="tab-explainer" id="explainer-partner" style="display:none;">
+        Build solutions that serve other businesses. <strong>Best for</strong> SaaS platforms and technology companies — e.g. Twilio, MessageBird, or engagement tools offering WhatsApp as part of their product.
+      </div>
+
+      <!-- Tab: Basic Setup -->
+      <div class="tab-pane active" id="pane-api">
+        <div class="step-list">
+          <a class="step-item" href="developer-step1.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 1. Try it out <span class="pill pill--optional">Optional</span></p>
+              <p class="step-desc"><span class="time">5 min</span> <span class="sep-dot">·</span>Learn about WhatsApp API by sending a test message from your test number.</p>
+            </div>
+          </a>
+
+          <a class="step-item" href="developer-step2.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 2. Production setup</p>
+              <p class="step-desc"><span class="time">15 min</span> <span class="sep-dot">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</p>
+            </div>
+          </a>
+
+          <a class="step-item" href="developer-step3.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 3. Business verification</p>
+              <p class="step-desc"><span class="time">1–3 days</span> <span class="sep-dot">·</span>Verify your business to unlock higher messaging limits and access to additional API features.</p>
+            </div>
+          </a>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle step-circle--green">
+                <svg viewBox="0 0 20 20"><path d="M14.527 6.722a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+              </div>
+            </div>
+            <div class="step-body">
+              <p class="step-name step-name--green">Ready to message your customers at scale</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Become a Partner -->
+      <div class="tab-pane" id="pane-partner">
+        <div class="step-list">
+          <a class="step-item" href="developer-step1.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 1. Try it out <span class="pill pill--optional">Optional</span></p>
+              <p class="step-desc"><span class="time">5 min</span> <span class="sep-dot">·</span>Learn about WhatsApp API by sending a test message from your test number.</p>
+            </div>
+          </a>
+
+          <a class="step-item" href="developer-step2.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 2. Production setup</p>
+              <p class="step-desc"><span class="time">15 min</span> <span class="sep-dot">·</span>Add a real business phone number, configure your business profile, and generate a permanent access token.</p>
+            </div>
+          </a>
+
+          <a class="step-item" href="developer-step3.html" style="text-decoration: none; color: inherit;">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Step 3. Business verification</p>
+              <p class="step-desc"><span class="time">1–3 days</span> <span class="sep-dot">·</span>Verify your business to unlock higher messaging limits and access to additional API features.</p>
+            </div>
+          </a>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle"></div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name">Become a Tech Provider</p>
+              <p class="step-desc"><span class="time">1–2 weeks</span> <span class="sep-dot">·</span>Apply and complete your technical integration using the partner API, including embedded signup and client management.</p>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle step-circle--green">
+                <svg viewBox="0 0 20 20"><path d="M14.527 6.722a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+              </div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name step-name--green">Ready to provide solutions to other businesses</p>
+            </div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-left">
+              <div class="step-circle step-circle--green">
+                <svg viewBox="0 0 20 20"><path d="M14.527 6.722a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+              </div>
+              <div class="step-dotted-line"></div>
+            </div>
+            <div class="step-body">
+              <p class="step-name step-name--green">Upgrade partner tier or integrate more APIs</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /right-content -->
+
+    <div class="right-content" style="margin-top:16px;">
+      <div class="ns-h">Account and messaging tools</div>
+      <div class="tools-grid">
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11.2v5M12 8.2v.02" stroke-linecap="round"/></svg></div><div><div class="tool-title">Account overview</div><div class="tool-desc">See account status, alerts, insights and more.</div></div></div>
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" stroke-linejoin="round"/></svg></div><div><div class="tool-title">Phone numbers</div><div class="tool-desc">Manage your phone numbers. See status and quality rating.</div></div></div>
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M4 15l4.5-5 3 2.5L17 6" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 6h3v3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="tool-title">Insights</div><div class="tool-desc">See account and messaging insights.</div></div></div>
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z" stroke-linejoin="round"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1" stroke-linejoin="round"/></svg></div><div><div class="tool-title">Message templates</div><div class="tool-desc">Create and update templates and explore sample templates.</div></div></div>
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M10.5 4a2 2 0 0 1 4 0v.4a1 1 0 0 0 1 1H17a1 1 0 0 1 1 1v1.6a1 1 0 0 0 1 1 2 2 0 1 1 0 4 1 1 0 0 0-1 1V17a1 1 0 0 1-1 1h-1.6a1 1 0 0 1-1-1 2 2 0 1 0-4 0 1 1 0 0 1-1 1H7a1 1 0 0 1-1-1v-1.6a1 1 0 0 0-1-1 2 2 0 1 1 0-4 1 1 0 0 0 1-1V6.4a1 1 0 0 1 1-1h1.5a1 1 0 0 0 1-1z" stroke-linejoin="round"/></svg></div><div><div class="tool-title">WhatsApp Flows</div><div class="tool-desc">Edit and preview your Flows.</div></div></div>
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M16 6l5 6-5 6M8 6l-5 6 5 6M13.5 4l-3 16" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="tool-title">OpenAPI GitHub Repository</div><div class="tool-desc">Repository for all OpenAPI specifications for Meta APIs.</div></div></div>
+      </div>
+
+      <div class="ns-h" style="margin-top:24px;">Documentation and support</div>
+      <div class="docs-grid">
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v6a2.5 2.5 0 0 1-2.5 2.5H10l-4 3v-3H6.5A2.5 2.5 0 0 1 4 12.5z" stroke-linejoin="round"/><path d="M10 8.7a2 2 0 1 1 3 1.7c-.6.4-1 .8-1 1.5M12 13.4v.02" stroke-linecap="round"/></svg></div><div><div class="tool-title">Need support?</div><div class="tool-desc">Contact our support team, review open bug reports and tickets.</div></div></div>
+        <div class="tool-card"><div class="tool-ico"><svg viewBox="0 0 24 24"><path d="M6 3.5h8l4 4V19a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" stroke-linejoin="round"/><path d="M14 3.5V8h4" stroke-linejoin="round"/><path d="M9.5 12l-1.7 1.5L9.5 15M13.5 12l1.7 1.5L13.5 15" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="tool-title">Documentation</div><div class="tool-desc">Explore documentation to learn how to build on the Platform.</div></div></div>
+      </div>
+    </div>
+
+    <div style="height: 36px;"></div>
+    </div><!-- /right-col -->
+  </div>
+
+  <!-- ══ BOTTOM BAR ══ -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-left">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 8h8M8 4v8"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M2 6h12"/></svg>
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="8" cy="8" r="5.5"/><path d="M8 5v3.5l2 1.5"/></svg>
+    </div>
+    <div class="bottom-bar-right">
+      <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm0 2.5a1.25 1.25 0 110 2.5 1.25 1.25 0 010-2.5zM7 7.5h2v4.5H7z"/></svg>
+      <span class="bottom-bar-text">Meta © 2025</span>
+    </div>
+  </div>
+
+  <script>
+    function switchPane(btn, id) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('pane-' + id).classList.add('active');
+      btn.classList.add('active');
+      document.getElementById('explainer-api').style.display = id === 'api' ? '' : 'none';
+      document.getElementById('explainer-partner').style.display = id === 'partner' ? '' : 'none';
+
+      // Open matching nav group in left nav
+      const navMap = { api: 'nav-api', partner: 'nav-partner' };
+      const targetNav = navMap[id];
+      if (targetNav) {
+        const group = document.getElementById(targetNav);
+        if (group) group.classList.remove('collapsed');
+      }
+    }
+
+    function toggleGroup(toggle) {
+      toggle.closest('.nav-group').classList.toggle('collapsed');
+    }
+
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

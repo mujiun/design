@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta for Developers — Step 3. Business verification</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=swap" rel="stylesheet" />
+  <style>
+    @view-transition { navigation: auto; }
+    ::view-transition-old(root) { animation: 0.4s ease both vt-fade-out; }
+    ::view-transition-new(root) { animation: 0.4s ease both vt-fade-in; }
+    @keyframes vt-fade-out { to { opacity: 0; } }
+    @keyframes vt-fade-in { from { opacity: 0; } }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF;
+      --page-bg: #F0F2F5;
+      --surface: #F8F9FA;
+      --ink: #1C2B33;
+      --ink2: #465A69;
+      --ink3: #465A69;
+      --accent: #1877F2;
+      --accent-light: #E7F3FF;
+      --green: #006b4e;
+      --border: #DADDE1;
+      --border-light: #E4E6EB;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    html, body {
+      min-height: 100%;
+      font-family: var(--title);
+      background: var(--page-bg);
+      background-image: url('../shared/bg.jpg');
+      background-size: cover;
+      background-attachment: fixed;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      font-size: 14px;
+      line-height: 1.5;
+      letter-spacing: 0.1px;
+    }
+
+    /* ══ TOP NAV ══ */
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topnav-left {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .meta-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .meta-logo img { height: 14px; width: auto; }
+
+    .topnav-tabs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .topnav-tab {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      border-bottom: 3px solid transparent;
+      transition: color 0.12s;
+      cursor: pointer;
+    }
+
+    .topnav-tab:hover { color: #0A78BE; }
+
+    .topnav-tab.active {
+      color: #0A78BE;
+      font-weight: 600;
+      background: #E1EDF7;
+      border-radius: 4px;
+      border-bottom-color: transparent;
+    }
+
+    .topnav-tab .caret {
+      width: 12px;
+      height: 12px;
+      margin-left: 4px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.8;
+    }
+
+    .topnav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 6px 10px;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    .search-icon { color: var(--ink3); flex-shrink: 0; }
+
+    .search-box input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 14px;
+      color: var(--ink);
+      width: 100%;
+      font-family: var(--title);
+    }
+
+    .search-box input::placeholder { color: var(--ink3); }
+
+    .nav-icons {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .nav-icon svg { width: 16px; height: 16px; color: var(--ink2); }
+
+    /* ══ BREADCRUMB ══ */
+    .breadcrumb {
+      padding: 14px 24px 16px;
+      font-size: 13px;
+      color: var(--ink3);
+    }
+
+    .breadcrumb a { color: var(--ink2); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { margin: 0 8px; color: var(--ink3); font-size: 11px; }
+    .breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+    /* ══ PAGE TITLE ══ */
+    .page-title-area { padding: 12px 24px 16px; }
+
+    .page-title-area h1 {
+      font-family: var(--title);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .page-title-area p { font-size: 13px; color: var(--ink2); }
+
+    .pill {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 999px;
+      line-height: 1.4;
+      vertical-align: middle;
+      margin-left: 6px;
+      position: relative;
+      top: -1px;
+    }
+    .pill--optional {
+      color: var(--ink3);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+    }
+
+    /* ══ CONTENT LAYOUT ══ */
+    .content-layout {
+      display: flex;
+      gap: 16px;
+      padding: 0 24px 0;
+      align-items: flex-start;
+    }
+
+    /* ══ LEFT NAV ══ */
+    .left-nav {
+      width: 260px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 74px;
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 8px 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .nav-dropdown {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 12px;
+      margin: 4px 0px 8px 0px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .nav-dropdown .dd-caret {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      flex-shrink: 0;
+    }
+
+    .nav-link {
+      display: block;
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 450;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 10px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s, color 0.1s;
+    }
+
+    .nav-link:hover {
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .nav-link.active {
+      color: #0A78BE;
+      font-weight: 700;
+      background: #E1EDF7;
+      border-radius: 4px;
+    }
+
+    .nav-group {
+      margin-top: 2px;
+    }
+
+    .nav-group-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 12px;
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .nav-group-toggle:hover { background: var(--surface); }
+
+    .nav-group-toggle .chevron {
+      width: 14px;
+      height: 14px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.8;
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+      transform: rotate(180deg);
+    }
+
+    .nav-group.collapsed .chevron {
+      transform: rotate(0deg);
+    }
+
+    .nav-group-items {
+      overflow: hidden;
+      max-height: 300px;
+      transition: max-height 0.25s ease;
+    }
+
+    .nav-group.collapsed .nav-group-items {
+      max-height: 0;
+    }
+
+    .nav-link--sub {
+      padding-left: 22px;
+      font-size: 14px;
+      font-weight: 450;
+    }
+
+    /* ══ RIGHT CONTENT ══ */
+    .right-col {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-content {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 16px 24px;
+      min-height: 0;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .right-content h2 {
+      font-family: var(--title);
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .right-content .overview-desc {
+      font-size: 14px;
+      color: var(--ink2);
+      line-height: 1.4;
+      font-weight: 450;
+    }
+    .overview-desc .dot-sep { margin: 0 7px; color: var(--ink3); }
+
+    .section-divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 16px 0;
+    }
+
+    .right-content h3 {
+      font-family: var(--title);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+
+    /* ══ TASK ACCORDION ══ */
+    .task-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .task-item {
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .task-item:last-child {
+      border-bottom: none;
+    }
+
+    .task-item:first-child .task-header {
+      padding-top: 0;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.1s;
+    }
+
+    .task-header:hover {
+      /* no color/opacity change on hover */
+    }
+
+    .task-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      background: var(--bg);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .task-check--done {
+      border: none;
+      background: transparent;
+    }
+
+    .task-check--done svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--green);
+    }
+
+    .task-title {
+      font-family: var(--title);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .task-title--done {
+      color: var(--ink);
+    }
+
+    .task-info {
+      flex: 1;
+    }
+
+    .task-subtitle {
+      font-size: 12.6px;
+      font-weight: 400;
+      color: var(--ink3);
+      margin-top: 0;
+      line-height: 1.3;
+    }
+
+
+    .task-chevron {
+      width: 16px;
+      height: 16px;
+      stroke: var(--ink3);
+      fill: none;
+      stroke-width: 1.4;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .task-item:not(.collapsed) .task-chevron {
+      transform: rotate(-180deg);
+    }
+
+    .task-body {
+      overflow: hidden;
+      max-height: 2000px;
+      transition: max-height 0.35s ease, padding 0.35s ease;
+      padding: 0 0 16px 34px;
+    }
+
+    .task-item.collapsed .task-body {
+      max-height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    .task-desc {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .task-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-light);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .task-action:hover {
+      background: #D4E8FF;
+    }
+
+    .task-done-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--green);
+    }
+
+    /* ══ TASK 1-3 DETAIL ELEMENTS ══ */
+    .link-blue { color: #1461cc; text-decoration: none; }
+    .link-blue:hover { text-decoration: underline; }
+
+    .warn-banner {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #FCEFD7;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink);
+      line-height: 1.45;
+      margin-bottom: 16px;
+    }
+    .warn-banner svg { width: 18px; height: 18px; flex-shrink: 0; margin-top: 1px; }
+
+    .info-icon { width: 13px; height: 13px; vertical-align: -2px; margin-left: 4px; }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .toggle {
+      width: 34px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--border);
+      position: relative;
+      cursor: pointer;
+      flex-shrink: 0;
+      border: none;
+      padding: 0;
+      transition: background 0.15s;
+    }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
+      transition: transform 0.15s;
+    }
+    .toggle.on { background: #1877F2; }
+    .toggle.on::after { transform: translateX(14px); }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink2);
+      margin: 4px 0 16px;
+    }
+
+    .biz-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    .biz-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .biz-name { font-size: 15px; font-weight: 700; color: var(--ink); }
+    .biz-sub { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+    .biz-sub-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--ink2);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .phone-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+    .phone-icon { width: 20px; height: 20px; color: var(--ink2); flex-shrink: 0; }
+    .phone-info { flex: 1; min-width: 0; }
+    .phone-number {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .phone-id { font-size: 12px; color: var(--ink3); margin-top: 1px; }
+
+    .badge { font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 4px; }
+    .badge--unverified { background: #B0173A; color: #fff; }
+    .badge--verified { background: #E4F5EE; color: var(--green); }
+
+    .note-text { font-size: 13px; color: var(--ink2); margin: 4px 0 12px; }
+
+    /* ══ TASK SUB-STEPS ══ */
+    .sub-step {
+      margin-bottom: 24px;
+    }
+
+    .sub-step:last-child { margin-bottom: 0; }
+
+    .sub-step-label {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 550;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .placeholder-box {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: var(--ink3);
+      margin-bottom: 8px;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      background: #0A78BE;
+      border: 1px solid #0A78BE;
+      border-radius: 6px;
+      padding: 8px 16px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover { background: #096A9E; border-color: #096A9E; }
+
+    .btn-primary:disabled {
+      background: var(--border-light);
+      border-color: var(--border-light);
+      color: #A0AAB4;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      height: 36px;
+      cursor: pointer;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover { background: var(--surface); }
+
+    .token-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .token-field {
+      flex: 1;
+      min-width: 0;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--ink2);
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-radius: 6px;
+      padding: 0 12px;
+      height: 36px;
+      line-height: 36px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .sub-steps-container {
+      border: 1px solid var(--border-light);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .sub-step-bordered {
+      padding: 20px;
+    }
+
+    .sub-step-bordered + .sub-step-bordered {
+      border-top: 1px solid var(--border-light);
+    }
+
+    /* ══ TAB EXPLAINER ══ */
+    .tab-explainer {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 14px;
+      color: #1C1E21;
+      line-height: 1.3;
+      font-weight: 450;
+    }
+
+    /* ══ MINI TABS ══ */
+    .mini-tabs {
+      display: flex;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .mini-tab {
+      flex: 1;
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 550;
+      color: var(--ink);
+      padding: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.12s;
+    }
+
+    .mini-tab + .mini-tab { border-left: 1px solid var(--border); }
+    .mini-tab:hover { background: var(--surface); }
+    .mini-tab.active { color: #fff; background: #0A78BE; }
+
+    .mini-pane { display: none; }
+    .mini-pane.active { display: block; }
+
+    /* ══ TEST LAYOUT ══ */
+    .test-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .test-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .test-panel-title {
+      font-family: var(--title);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 0;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .field-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .field-select,
+    .field-input {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 10px;
+      height: 36px;
+      background: var(--bg);
+      outline: none;
+      width: 100%;
+    }
+
+    .field-select {
+      padding-right: 28px;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M3 4.5l3 3 3-3' fill='none' stroke='%234B4F56' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+
+    .field-select:focus,
+    .field-input:focus { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); outline: none; }
+
+    /* Custom radio dropdown */
+    .cust-select { position: relative; width: 100%; }
+    .cs-field {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; height: 40px; padding: 0 12px;
+      font-family: var(--font); font-size: 13px; color: var(--ink);
+      background: var(--bg); border: 1px solid var(--border); border-radius: 6px;
+      cursor: pointer; outline: none; text-align: left;
+    }
+    .cust-select.open .cs-field { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+    .cs-caret { width: 14px; height: 14px; color: var(--ink3); flex-shrink: 0; transition: transform .2s ease; }
+    .cust-select.open .cs-caret { transform: rotate(180deg); }
+    .cs-menu {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: var(--bg); border: 1px solid var(--border-light); border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12); padding: 6px; z-index: 20;
+    }
+    .cust-select.open .cs-menu { display: block; }
+    .cs-option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 12px; font-family: var(--font); font-size: 14px; color: var(--ink);
+      border-radius: 8px; cursor: pointer;
+    }
+    .cs-option:hover { background: var(--surface); }
+    .cs-option.selected { background: var(--accent-light); }
+    .cs-radio {
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid var(--border); background: var(--bg); position: relative;
+    }
+    .cs-option.selected .cs-radio { border-color: var(--accent); }
+    .cs-option.selected .cs-radio::after {
+      content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent);
+    }
+
+    .field-textarea {
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--ink);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 10px;
+      background: var(--bg);
+      outline: none;
+      width: 100%;
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .field-textarea:focus { border-color: var(--accent); }
+
+    /* Preview panel */
+    .preview-panel {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 16px;
+      min-height: 200px;
+      height: 100%;
+    }
+
+    .preview-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .preview-tab {
+      font-family: var(--title);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--ink3);
+      background: none;
+      border: none;
+      padding: 6px 12px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.12s;
+    }
+
+    .preview-tab:hover { color: var(--ink2); }
+    .preview-tab.active { color: #0A78BE; border-bottom-color: #0A78BE; }
+
+    .preview-pane { display: none !important; }
+    .preview-pane.active { display: block !important; }
+    .preview-pane.active[style*="justify-content"] { display: flex !important; }
+
+    .preview-message {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--ink2);
+      line-height: 1.5;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+    }
+
+    .preview-code {
+      background: #1E1E1E;
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: #D4D4D4;
+      line-height: 1.6;
+      overflow-x: auto;
+      white-space: pre;
+    }
+
+    .preview-code .key { color: #9CDCFE; }
+    .preview-code .str { color: #CE9178; }
+    .preview-code .punct { color: #D4D4D4; }
+
+    /* ══ CONTINUE BANNER ══ */
+    .continue-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg);
+      margin-bottom: 0;
+      border-radius: 8px;
+      padding: 16px 24px;
+      margin-top: 16px;
+
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+
+    .continue-banner-text {
+      font-family: var(--title);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+
+    .continue-btn {
+      font-family: var(--title);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 20px;
+      cursor: pointer;
+      transition: background 0.12s;
+    }
+
+    .continue-btn:hover {
+      background: var(--surface);
+    }
+
+    /* ══ BOTTOM BAR ══ */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 36px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      z-index: 50;
+    }
+
+    .bottom-bar-left, .bottom-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .bottom-bar svg { width: 16px; height: 16px; color: var(--ink3); cursor: pointer; }
+    .bottom-bar svg:hover { color: var(--ink2); }
+    .bottom-bar-text { font-size: 11px; color: var(--ink3); }
+
+    /* ══ LEFT SYSTEM SIDEBAR ══ */
+    .sys-sidebar {
+      position: fixed;
+      left: 0;
+      top: 48px;
+      bottom: 0;
+      width: 46px;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0;
+      gap: 4px;
+      z-index: 90;
+    }
+
+    .sys-sidebar-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s;
+      color: var(--ink3);
+    }
+
+    .sys-sidebar-icon:hover {
+      background: var(--surface);
+      color: var(--ink2);
+    }
+
+    .sys-sidebar-icon.active {
+      background: #E1EDF7;
+      color: #0A78BE;
+    }
+
+    .sys-sidebar-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 1.4;
+    }
+
+    .sys-sidebar-spacer { flex: 1; }
+
+    /* Offset page content for sidebar */
+    .breadcrumb { margin-left: 46px; }
+    .page-title-area { margin-left: 46px; }
+    .content-layout { margin-left: 46px; padding-bottom: 0; }
+
+    /* ══ STEP 1 ELEMENTS ══ */
+    .ask-ai {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--title); font-size: 13px; font-weight: 700; color: var(--ink);
+      border: 1.5px solid transparent; border-radius: 8px; padding: 7px 14px;
+      cursor: pointer; flex-shrink: 0;
+      background: linear-gradient(#fff,#fff) padding-box, linear-gradient(120deg,#0A78BE,#8B5CF6,#EC4899) border-box;
+    }
+    .ask-ai svg { width: 15px; height: 15px; }
+    .info-banner {
+      display: flex; align-items: center; gap: 8px;
+      background: #EBEDF0; border-radius: 6px; padding: 10px 12px;
+      font-size: 13px; color: var(--ink2); margin-bottom: 16px;
+    }
+    .info-banner svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .select-display {
+      display: flex; align-items: center; gap: 8px;
+      border: 1px solid var(--border); border-radius: 6px;
+      height: 40px; padding: 0 10px; background: var(--bg);
+      font-size: 13px; color: var(--ink); cursor: pointer;
+    }
+    .select-display .sd-icon { width: 20px; height: 20px; flex-shrink: 0; }
+    .select-display .sd-text { flex: 1; min-width: 0; }
+    .select-display .sd-text.placeholder { color: var(--ink3); }
+    .select-display .sd-caret { width: 12px; height: 12px; stroke: var(--ink3); fill: none; stroke-width: 1.5; flex-shrink: 0; }
+    .recipient-row { display: flex; gap: 8px; }
+    .recipient-row .cc-select { width: 96px; flex-shrink: 0; height: 40px; }
+    .recipient-row .field-input { flex: 1; height: 40px; }
+    .sendtest-card { border: 1px solid var(--border-light); border-radius: 8px; padding: 16px; margin-top: 4px; }
+    .code-block { position: relative; background: #F0F1F2; border-radius: 8px; padding: 16px; height: 100%; overflow: hidden; }
+    .code-copy {
+      position: absolute; top: 10px; right: 10px;
+      width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    .code-copy svg { width: 15px; height: 15px; stroke: var(--ink3); fill: none; stroke-width: 1.4; }
+    .code-text {
+      font-family: 'SF Mono','Fira Code',monospace; font-size: 12px; line-height: 1.7;
+      color: #1C2B33; white-space: pre; overflow-x: auto; margin-top: 20px;
+    }
+    .code-text .m { color: #C0341D; }
+    .code-text .u { text-decoration: underline; }
+    .code-text .n { color: #1877F2; }
+    .run-postman { display: inline-flex; align-items: center; gap: 6px; }
+    .run-postman svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+    /* ══ STEP 3 ELEMENTS ══ */
+    .verify-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; align-items: start; }
+    .verify-h { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 0; }
+    .verify-p { font-size: 14px; color: var(--ink); line-height: 1.5; margin-bottom: 2px; }
+    .verify-list { list-style: disc; padding-left: 20px; display: flex; flex-direction: column; gap: 2px; }
+    .verify-list li { font-size: 14px; color: var(--ink); line-height: 1.4; }
+    .phone-mock { max-width: 300px; border-radius: 10px; overflow: hidden; }
+    .pm-status { display:flex; justify-content:space-between; align-items:center; padding:6px 14px 2px; background:#fff; font-size:12px; font-weight:700; color:var(--ink); }
+    .pm-sig { display:flex; gap:4px; align-items:center; color:var(--ink); }
+    .pm-sig svg { height:11px; fill:currentColor; }
+    .pm-header { display:flex; align-items:center; gap:8px; padding:6px 12px 10px; background:#fff; }
+    .pm-back { width:16px; height:16px; stroke:var(--ink2); fill:none; stroke-width:2; flex-shrink:0; }
+    .pm-avatar { width:30px; height:30px; border-radius:50%; background:#0B7C4D; color:#fff; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .pm-name { font-size:13px; font-weight:700; color:var(--ink); line-height:1.15; }
+    .pm-sub { font-size:11px; color:var(--ink3); }
+    .pm-body { background:#E7DED0; padding:16px 14px; height:130px; }
+    .pm-bubble { background:#fff; border-radius:10px; height:64px; margin-bottom:12px; box-shadow:0 1px 1px rgba(0,0,0,0.05); }
+    .pm-line { background:rgba(0,0,0,0.12); border-radius:6px; height:8px; width:55%; }
+    .phone-cap { text-align:center; font-size:13px; color:var(--ink2); margin-top:10px; }
+    .docs-card { background:#F2F3F5; border-radius:10px; padding:18px 20px; display:grid; grid-template-columns:1fr 1fr; gap:14px 24px; align-content:start; }
+    .docs-rec { display:flex; align-items:center; gap:8px; font-size:14px; font-weight:700; color:var(--ink); margin-bottom:0; grid-column:1 / -1; }
+    .docs-rec svg { width:18px; height:18px; fill:var(--green); flex-shrink:0; }
+    .doc-item { margin-bottom:0; }
+    .doc-item:last-child { margin-bottom:0; }
+    .doc-item .dt { font-size:14px; font-weight:600; color:var(--ink); }
+    .doc-item .dd { font-size:13px; color:var(--ink3); margin-top:1px; line-height:1.4; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOP NAV ══ -->
+  <div class="topnav">
+    <div class="topnav-left">
+      <a class="meta-logo" href="#">
+        <img src="../shared/meta.svg" alt="Meta" />
+      </a>
+      <div class="topnav-tabs">
+        <a class="topnav-tab active">My Apps</a>
+        <a class="topnav-tab">Required actions</a>
+        <a class="topnav-tab">Docs <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Tools <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Support <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="nav-icons">
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="3"/><path d="M2.5 14.5C2.5 11.5 5 9.5 8 9.5s5.5 2 5.5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEFT SYSTEM SIDEBAR ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-sidebar-icon active">
+      <svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><path d="M7 3L3 10l4 7M13 3l4 7-4 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2" stroke-linecap="round"/></svg>
+    </div>
+    <div class="sys-sidebar-spacer"></div>
+    <div class="sys-sidebar-icon">
+      <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 7v.01" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <!-- ══ BREADCRUMB ══ -->
+  <div class="breadcrumb">
+    <a href="#">Use cases</a>
+    <span class="sep">›</span>
+    <span class="current">Customize</span>
+  </div>
+
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content-layout">
+
+    <!-- LEFT NAV -->
+    <div class="left-nav">
+      <div class="nav-dropdown">
+        <span style="display:flex;align-items:center;gap:8px;"><img src="images/waicon.svg" alt="" style="width:16px;height:16px;flex-shrink:0;">Connect on WhatsApp</span>
+        <svg class="dd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <a class="nav-link" href="index.html">Overview</a>
+
+      <div class="nav-group" id="nav-api">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Basic setup
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub" href="developer-step1.html">Step 1. Try it out</a>
+          <a class="nav-link nav-link--sub" href="developer-step2.html">Step 2. Production setup</a>
+          <a class="nav-link nav-link--sub active" href="developer-step3.html">Step 3. Business verification</a>
+          <a class="nav-link nav-link--sub" href="developer-nextsteps.html">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-partner">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Become a Partner
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Become a Tech Provider</a>
+          <a class="nav-link nav-link--sub">Next steps</a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-other">
+        <div class="nav-group-toggle" onclick="toggleGroup(this)">
+          Other tools
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub">Permissions and features</a>
+          <a class="nav-link nav-link--sub">Resources</a>
+          <a class="nav-link nav-link--sub">Documentation</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-col">
+    <div class="right-content">
+      <h2>Step 3. Business verification <span class="pill pill--optional">Optional</span></h2>
+      <p class="overview-desc">5 min<span class="dot-sep">·</span>Upload documents for Meta review (1–3 business days). Optional but recommended.</p>
+
+      <div class="section-divider"></div>
+
+      <!-- TASK LIST -->
+      <div class="task-list">
+
+        <!-- Task 1: Learn about business verification (done) -->
+        <div class="task-item">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check task-check--done">
+              <svg viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>
+            </div>
+            <div class="task-info"><span class="task-title">Learn about business verification</span><div class="task-subtitle">About 1 minute to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <div class="verify-layout">
+              <div>
+                <div class="verify-h">What's business verification?</div>
+                <p class="verify-p" style="margin-bottom:8px;">Business verification confirms the legitimacy of your business and unlocks additional WhatsApp benefits. Once your business is verified, you can:</p>
+                <ul class="verify-list">
+                  <li>Protect your WhatsApp Business account from being banned</li>
+                  <li>Show your display name in chats instead of your phone number</li>
+                  <li>Send more messages per phone number</li>
+                  <li>Register up to 20 phone numbers</li>
+                </ul>
+              </div>
+              <div style="justify-self:end;">
+                <img class="phone-mock" src="images/bv.png" alt="Example of showing a display name in chat" style="display:block;width:300px;max-width:100%;">
+                <div class="phone-cap">Example of showing a display name in chat</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task 2: Start business verification -->
+        <div class="task-item collapsed">
+          <div class="task-header" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-info"><span class="task-title">Start business verification</span><div class="task-subtitle">About 4 minutes to complete</div></div>
+            <svg class="task-chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="task-body">
+            <div class="field-group" style="margin-bottom:18px;">
+              <label class="form-label" style="margin-bottom:0;">Business location</label>
+              <div style="font-size:14px; color:var(--ink); margin-bottom:8px;">Where is your business registered?</div>
+              <div class="cust-select" id="bizLoc">
+                <button type="button" class="cs-field" onclick="toggleSelect('bizLoc')">
+                  <span class="cs-value">India</span>
+                  <svg class="cs-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="cs-menu">
+                  <div class="cs-option selected" onclick="selectOption(this)"><span class="cs-radio"></span>India</div>
+                  <div class="cs-option" onclick="selectOption(this)"><span class="cs-radio"></span>Brazil</div>
+                  <div class="cs-option" onclick="selectOption(this)"><span class="cs-radio"></span>Indonesia</div>
+                  <div class="cs-option" onclick="selectOption(this)"><span class="cs-radio"></span>Mexico</div>
+                  <div class="cs-option" onclick="selectOption(this)"><span class="cs-radio"></span>China</div>
+                  <div class="cs-option" onclick="selectOption(this)"><span class="cs-radio"></span>Other</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-label" style="margin-bottom:8px;">Documents needed</div>
+            <div class="docs-card">
+              <div class="docs-rec"><svg viewBox="0 0 20 20"><path d="M10.111.852a9.26 9.26 0 1 1 0 18.519 9.26 9.26 0 0 1 0-18.519zm4.416 5.87a.927.927 0 0 0-1.305-.101l-.065.056a40.495 40.495 0 0 0-4.488 4.386L7.062 9.457a.926.926 0 0 0-1.309 1.309l2.315 2.315a.925.925 0 0 0 1.358-.052l.055-.065.007-.009a38.637 38.637 0 0 1 4.865-4.865l.01-.007.064-.055a.926.926 0 0 0 .1-1.306z"/></svg>Recommended</div>
+              <div class="doc-item"><div class="dt">GST REG-06 (Official Tax Registration)</div><div class="dd">Official tax registration document; digital signature is not mandatory</div></div>
+              <div class="doc-item"><div class="dt">GST REG-25 (Provisional Registration Certificate)</div><div class="dd">Temporary document while awaiting official GST registration</div></div>
+              <div class="doc-item"><div class="dt">Certificate of Incorporation / Formation</div><div class="dd">Issued by the Ministry of Corporate Affairs; must show seal/emblem at the bottom</div></div>
+              <div class="doc-item"><div class="dt">Udyam Registration Certificate</div><div class="dd">For MSME-registered businesses; must have QR code at the bottom</div></div>
+              <div class="doc-item"><div class="dt">FSSAI License</div><div class="dd">For food-related businesses; issued by Food Safety and Standards Authority of India</div></div>
+              <div class="doc-item"><div class="dt">Business License / Shop and Establishment License</div><div class="dd">Issued by local municipal authority; varies by state</div></div>
+              <div class="doc-item"><div class="dt">Utility Bills</div><div class="dd">Electricity, gas, water, internet, or phone bills; latest bills are recommended</div></div>
+              <div class="doc-item"><div class="dt">Bank Statements</div><div class="dd">Latest bank statements</div></div>
+            </div>
+
+            <p class="task-desc" style="margin:14px 0 12px;color:var(--ink3);font-size:12.6px;">Complete the business verification application. Only an admin user can complete business verification. <a class="link-blue" href="#">Learn more</a>.</p>
+            <button class="btn-primary">Start verification</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="continue-banner">
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="images/next.png" alt="" style="width:36px;height:36px;flex-shrink:0;">
+        <span class="continue-banner-text">Next steps</span>
+      </div>
+      <button class="continue-btn" onclick="location.href='developer-nextsteps.html'">Continue</button>
+    </div>
+    <div style="height: 36px;"></div>
+    </div><!-- /right-col -->
+
+  </div>
+
+    <script>
+    function toggleGroup(t){ t.closest('.nav-group').classList.toggle('collapsed'); }
+    function toggleTask(h){ h.closest('.task-item').classList.toggle('collapsed'); }
+    function toggleSelect(id){ document.getElementById(id).classList.toggle('open'); }
+    function selectOption(opt){
+      var menu = opt.parentElement, wrap = menu.parentElement;
+      menu.querySelectorAll('.cs-option').forEach(function(o){ o.classList.remove('selected'); });
+      opt.classList.add('selected');
+      wrap.querySelector('.cs-value').textContent = opt.textContent.trim();
+      wrap.classList.remove('open');
+    }
+    document.addEventListener('click', function(e){
+      document.querySelectorAll('.cust-select.open').forEach(function(el){
+        if(!el.contains(e.target)) el.classList.remove('open');
+      });
+    });
+    function copyCode(){
+      var el = document.getElementById('codeText');
+      if (el && navigator.clipboard) navigator.clipboard.writeText(el.textContent);
+    }
+    document.querySelectorAll('.nav-link').forEach(function(link){
+      link.addEventListener('click', function(){
+        document.querySelectorAll('.nav-link').forEach(function(l){ l.classList.remove('active'); });
+        link.classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

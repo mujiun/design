@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Manager — Create template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=block" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @view-transition { navigation: auto; }
+
+    :root {
+      --bg: #FFFFFF; --page-bg: #F0F2F5; --surface: #F5F6F7;
+      --ink: #1C2B33; --ink2: #465A69; --ink3: #6B7A85;
+      --accent: #0A78BE; --accent-light: #E7F0FD; --link: #0A78BE;
+      --border: #E4E6EB; --border-light: #ECEEF0; --green: #117D1A;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html, body {
+      min-height: 100%; font-family: var(--title);
+      background: var(--page-bg); background-image: url('../shared/bg.jpg');
+      background-size: cover; background-attachment: fixed; color: var(--ink);
+      -webkit-font-smoothing: antialiased; font-size: 13px; line-height: 1.5; letter-spacing: 0.1px;
+    }
+
+    /* ══ LEFT SYSTEM ICON RAIL ══ */
+    .sys-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 64px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 16px 0 14px; gap: 6px; z-index: 90; }
+    .sys-logo { margin-bottom: 8px; }
+    .sys-logo img { width: 32px; height: 32px; object-fit: contain; display: block; }
+    .sys-biz { position: relative; width: 36px; height: 36px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .sys-biz img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .sys-biz svg { width: 24px; height: 24px; display: block; }
+    .sys-biz span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transform: translateY(-1px); color: #fff; font-weight: 600; font-size: 11px; }
+    .sys-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink2); transition: background 0.12s; }
+    .sys-icon:hover { background: var(--surface); }
+    .sys-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+    .sys-spacer { flex: 1; }
+
+    /* ══ SHELL ══ */
+    .wrap { margin-left: 64px; padding: 22px 28px 90px; }
+    .topbar { display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 18px; padding-left: 4px; }
+    .topbar .crumb-sep { display: inline-flex; align-items: center; }
+    .topbar .crumb-sep svg { width: 20px; height: 20px; stroke: var(--ink2); fill: none; stroke-width: 1.8; }
+    .body-row { display: flex; gap: 20px; align-items: flex-start; }
+
+    /* ══ NAV ══ */
+    .wa-nav { width: 240px; flex-shrink: 0; padding-top: 2px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 6px; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; text-decoration: none; user-select: none; transition: background 0.1s; white-space: nowrap; }
+    .nav-item:hover { background: rgba(0,0,0,0.06); }
+    .nav-item.active { background: #1C2B33; color: #fff; font-weight: 600; }
+    .nav-item .ni-ic { width: 20px; height: 20px; flex-shrink: 0; }
+    .nav-item .ni-ic svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+    .nav-item .ni-ic img { width: 20px; height: 20px; object-fit: contain; display: block; }
+    .nav-item .ni-caret { margin-left: auto; flex-shrink: 0; width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.4; transition: transform 0.2s; transform-box: fill-box; transform-origin: center; }
+    .nav-group.collapsed .ni-caret { transform: rotate(180deg); }
+    .nav-sub { overflow: hidden; max-height: 300px; transition: max-height 0.25s ease; }
+    .nav-group.collapsed .nav-sub { max-height: 0; }
+    .nav-sub .nav-item { padding-left: 46px; font-weight: 450; }
+
+    /* nav collapse */
+    .wa-nav { transition: width 0.18s ease; }
+    .wa-nav.collapsed { width: 60px; }
+    .wa-nav.collapsed .nav-item { width: 44px; height: 40px; margin: 2px auto; padding: 0; justify-content: center; gap: 0; border-radius: 10px; }
+    .wa-nav.collapsed .nav-item .ni-caret { display: none; }
+    .wa-nav.txt-hide .nav-item { font-size: 0; }
+    .wa-nav.txt-hide .ni-caret { display: none; }
+    .wa-nav.txt-hide .nav-sub { display: none; }
+    .wa-nav.collapsed .nav-sub { display: none; }
+    .nav-foot { position: fixed; left: 92px; bottom: 24px; width: 240px; display: flex; justify-content: flex-end; padding: 0 8px; z-index: 80; transition: width 0.18s ease; }
+    .wa-nav.collapsed .nav-foot { width: 60px; justify-content: center; padding: 0; }
+    .nav-toggle { width: 30px; height: 30px; border: none; background: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+    .nav-toggle:hover { background: var(--surface); }
+    .nav-toggle svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .wa-nav.collapsed .nav-toggle svg { transform: scaleX(-1); }
+
+    /* ══ CONTENT ══ */
+    .content { flex: 1; min-width: 0; }
+    .wizard { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-left: 2px; }
+    .wz-step { display: flex; align-items: center; gap: 8px; }
+    .wz-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .wz-dot svg { width: 11px; height: 11px; }
+    .wz-step.done .wz-dot { border-color: #31A24C; background: #31A24C; }
+    .wz-step.done .wz-dot svg { stroke: #fff; fill: none; stroke-width: 2.6; }
+    .wz-step.active .wz-dot { border-color: var(--accent); }
+    .wz-step.active .wz-dot::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+    .wz-label { font-size: 14px; font-weight: 600; color: var(--ink3); }
+    .wz-step.active .wz-label { color: var(--accent); }
+    .wz-step.done .wz-label { color: var(--ink); }
+    .wz-line { width: 30px; height: 2px; background: var(--border); }
+
+    .layout { display: flex; gap: 16px; align-items: flex-start; }
+    .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px; }
+
+    .card { background: var(--bg); border: 1px solid var(--border-light); border-radius: 4px; padding: 12px 16px 16px 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .card h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .card .card-sub { font-size: 13px; color: var(--ink); line-height: 1.5; margin-bottom: 16px; }
+    .card .card-sub a { color: var(--link); text-decoration: none; }
+    .opt-sub { font-size: 13px; color: #5b6770; line-height: 1.5; }
+    .ct-info { width: 13px; height: 13px; border-radius: 50%; background: #2d3340; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-size: 8.5px; font-style: italic; font-weight: 700; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    /* content component (from design system) */
+    .ct-optional { font-weight: 400; color: var(--ink3); }
+    .ct-optional::before { content: '·'; margin: 0 5px; }
+    .ct-dropdown { position: relative; width: 220px; }
+    .ct-select { display: flex; align-items: center; justify-content: space-between; height: 36px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 0 14px; background: #fff; font-size: 14px; font-weight: 450; letter-spacing: -0.005em; color: var(--ink); cursor: pointer; }
+    .ct-select > svg { width: 11px; height: 11px; color: #303E45; flex-shrink: 0; }
+    .ct-select-val .ct-icon svg { width: 16px; height: 16px; }
+    .ct-menu { display: none; flex-direction: column; gap: 4px; position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); z-index: 30; }
+    .ct-dropdown.open .ct-menu { display: flex; }
+    .ct-dropdown.drop-up .ct-menu { top: auto; bottom: calc(100% + 6px); }
+    .ct-option { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 6px; font-size: 14px; color: var(--ink2); font-weight: 450; letter-spacing: -0.005em; cursor: pointer; white-space: nowrap; }
+    .ct-option:hover { background: #F5F6F8; }
+    .ct-option.selected { background: #E8F1FD; }
+    .ct-radio { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; border: 1px solid #C9D0D8; background: #fff; position: relative; }
+    .ct-radio.checked::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 10px; height: 10px; border-radius: 50%; background: #3b6fb5; }
+    .ct-icon { width: 20px; height: 20px; flex-shrink: 0; color: var(--ink2); display: flex; align-items: center; justify-content: center; margin-right: -4px; }
+    .ct-icon svg { width: 16px; height: 16px; }
+    .ct-opt-label { font-weight: 400; }
+    .ct-option.disabled { color: var(--ink3); cursor: default; }
+    .ct-option.disabled:hover { background: none; }
+    .ct-option.disabled .ct-radio { opacity: 0.5; }
+    .ct-dropzone { margin-top: 12px; border: 2px dashed #C9D0D8; border-radius: 4px; padding: 22px; text-align: center; font-size: 14px; color: var(--ink); line-height: 1.35; }
+    input.inp:disabled { background: #F2F4F7; color: var(--ink3); cursor: not-allowed; }
+    input.inp:disabled::placeholder { color: #B9C0C7; }
+    .ct-dropzone a { color: var(--link); text-decoration: none; }
+    .ct-dropzone a:hover { text-decoration: underline; }
+    .ct-meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 6px; }
+    .ct-add-var { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 500; color: var(--ink); cursor: pointer; }
+    .ct-add-var svg { width: 13px; height: 13px; }
+    .ct-toolbar { display: inline-flex; align-items: center; gap: 16px; color: #3a3f48; }
+    .ct-toolbar svg { width: 16px; height: 16px; }
+    .ct-toolbar b, .ct-toolbar i, .ct-toolbar s { font-size: 16px; line-height: 1; cursor: pointer; }
+    .ct-code-icon { font-family: ui-monospace, Menlo, monospace; font-size: 14px; line-height: 1; cursor: pointer; }
+    .opt { font-weight: 400; color: var(--ink3); }
+    .opt::before { content: '·'; margin: 0 5px; }
+
+    /* header identity card */
+    .tpl-head { display: flex; align-items: center; gap: 14px; padding: 16px; }
+    .tpl-mega { width: 44px; height: 44px; border-radius: 4px; overflow: hidden; flex-shrink: 0; background: #377E6A; display: flex; align-items: center; justify-content: center; }
+    .tpl-mega img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .tpl-mega svg { width: 24px; height: 24px; fill: #fff; }
+    .tpl-head-name { font-size: 16px; font-weight: 600; color: var(--ink); }
+    .tpl-head-meta { font-size: 12px; color: var(--ink2); margin-top: 1px; }
+
+    /* form */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .lbl { display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .lbl .opt { font-size: 13px; }
+    .row2 { display: grid; grid-template-columns: 1fr 220px; gap: 8px; }
+    input.inp, select.inp, textarea.inp { width: 100%; font-family: var(--title); font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid #C9D0D8; border-radius: 4px; padding: 9px 12px; outline: none; }
+    input.inp::placeholder, textarea.inp::placeholder { color: var(--ink3); }
+    .ct-select-val { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .ct-select-val .ct-icon { width: 20px; height: 20px; }
+    input.inp { height: 36px; }
+    input.inp:focus, textarea.inp:focus, select.inp:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+    textarea.inp { resize: vertical; min-height: 92px; line-height: 1.5; }
+    select.inp { max-width: 220px; }
+    .inp-wrap { position: relative; }
+    .inp-wrap .inp { padding-right: 80px; }
+    .bubble.has-btns { padding-bottom: 0; }
+    .inp-count { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 13.5px; line-height: 1.3; color: var(--ink3); pointer-events: none; }
+    #bodyCount { top: 12px; transform: none; }
+
+    /* custom dropdown (design system) */
+    .dd { position: relative; }
+    .dd-select { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 36px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 0 13px; background: var(--bg); font-size: 14px; color: var(--ink); cursor: pointer; }
+    .dd-select svg { width: 11px; height: 11px; color: var(--ink2); flex-shrink: 0; transition: transform 0.15s; }
+    .dd.open .dd-select { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+    .dd.open .dd-select svg { transform: rotate(180deg); }
+    .dd-menu { display: none; flex-direction: column; gap: 4px; position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 30; }
+    .dd.open .dd-menu { display: flex; }
+    .dd-option { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; font-size: 14px; color: var(--ink); cursor: pointer; }
+    .dd-option:hover { background: var(--surface); }
+    .dd-option.selected { background: var(--accent-light); }
+    .dd-radio { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; border: 1px solid #C9D0D8; background: #fff; position: relative; }
+    .dd-option.selected .dd-radio::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 10px; height: 10px; border-radius: 50%; background: #3b6fb5; }
+    .row-between { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+    .add-var { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: var(--ink2); background: none; border: none; cursor: pointer; font-family: var(--title); }
+    .add-var svg { width: 13px; height: 13px; }
+    .editor-toolbar { display: flex; align-items: center; gap: 2px; color: var(--ink2); }
+    .editor-toolbar button { background: none; border: none; cursor: pointer; color: var(--ink2); font-size: 14px; padding: 4px 7px; border-radius: 4px; font-family: var(--title); }
+    .editor-toolbar button:hover { background: var(--surface); }
+
+    /* radio (pricing) */
+    .radio-list { display: flex; flex-direction: column; gap: 4px; }
+    .radio-opt { display: flex; gap: 12px; align-items: flex-start; padding: 12px; border-radius: 8px; cursor: pointer; }
+    .radio-opt:hover { background: var(--surface); }
+    .radio-opt.active { background: var(--accent-light); }
+    .radio-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid #B9C0C7; flex-shrink: 0; margin-top: 1px; position: relative; }
+    .radio-opt.active .radio-dot { border-color: var(--accent); }
+    .radio-opt.active .radio-dot::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: var(--accent); }
+    .radio-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+    .radio-desc { font-size: 12.5px; color: var(--ink2); line-height: 1.45; margin-top: 2px; }
+    .radio-desc a { color: var(--link); text-decoration: none; }
+
+    /* buttons add / chips */
+    .btn-ghost { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--ink); background: var(--bg); border: 1px solid #d1d5db; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+    .btn-ghost:hover { background: var(--surface); }
+    .chip-btn { display: inline-flex; align-items: center; gap: 8px; margin: 0 8px 8px 0; font-size: 13px; color: var(--accent); background: var(--accent-light); border: 1px solid #C4DBF9; border-radius: 6px; padding: 6px 10px; }
+    .chip-btn .x { cursor: pointer; font-weight: 600; opacity: .6; }
+    .chip-btn .x:hover { opacity: 1; }
+    /* design-system button component */
+    .bt-add-wrap { position: relative; display: inline-block; margin-top: 6px; }
+    .bt-add { display: inline-flex; align-items: center; gap: 8px; height: 36px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 0 12px; font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; }
+    .bt-add:hover { background: var(--surface); }
+    .bt-add svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .bt-add .bt-add-caret { width: 11px; height: 11px; color: #303E45; }
+    .bt-add-menu { display: none; flex-direction: column; gap: 4px; position: absolute; top: calc(100% + 6px); left: 0; min-width: 250px; background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); padding: 6px; z-index: 30; }
+    .bt-add-wrap.open .bt-add-menu { display: flex; }
+    .bt-add-opt { display: flex; align-items: center; gap: 10px; min-height: 32px; padding: 6px 10px; font-size: 14px; color: var(--ink2); font-weight: 450; letter-spacing: -0.005em; border-radius: 6px; cursor: pointer; white-space: nowrap; }
+    .bt-add-opt:hover { background: #F5F6F8; }
+    .bt-add-opt svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--ink2); }
+    .bt-add-opt-txt { display: flex; flex-direction: column; line-height: 1.25; }
+    .bt-add-opt-sub { font-size: 12px; color: var(--ink3); margin-top: 1px; display: none; }
+    .bt-add-opt.disabled { color: var(--ink3); cursor: default; }
+    .bt-add-opt.disabled:hover { background: none; }
+    .bt-add-opt.disabled svg { color: var(--ink3); opacity: 0.5; }
+    .bt-add-opt.disabled .bt-add-opt-sub { display: block; }
+    /* added-button editing rows (from design system) */
+    .bt-card { background: #F5F6F7; border: none; border-radius: 4px; padding: 12px; margin-top: 10px; }
+    .bt-row { position: relative; display: flex; gap: 14px; align-items: flex-start; background: #fff; border: none; border-radius: 4px; padding: 14px 16px; }
+    .bt-row + .bt-row { margin-top: 10px; }
+    .bt-row.dragging { opacity: 0.4; }
+    .bt-row.drag-over::before { content: ''; position: absolute; left: 0; right: 0; top: -6px; height: 2px; border-radius: 2px; background: var(--accent); }
+    .bt-handle { display: grid; grid-template-columns: repeat(2, 3px); gap: 3px; align-self: center; flex-shrink: 0; cursor: grab; }
+    .bt-handle:active { cursor: grabbing; }
+    .bt-handle i { width: 3px; height: 3px; border-radius: 50%; background: #C9D0D8; }
+    .bt-main { flex: 1; min-width: 0; }
+    .bt-fields { display: flex; gap: 10px; flex-wrap: wrap; }
+    .bt-field { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
+    .bt-field--grow { flex: 1; min-width: 190px; }
+    .bt-field--type { flex: 0 0 200px; width: 200px; min-width: 200px; }
+    .bt-field-label { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .bt-select, .bt-input { display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 36px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 0 13px; background: #fff; font-size: 14px; color: var(--ink); }
+    .bt-select { cursor: pointer; }
+    .bt-select svg { width: 11px; height: 11px; color: #303E45; flex-shrink: 0; }
+    .bt-input .bt-count { font-size: 13px; color: #8a8f98; flex-shrink: 0; }
+    .bt-input .bt-ph { color: var(--ink2); }
+    .bt-close { align-self: center; cursor: pointer; color: var(--ink); flex-shrink: 0; }
+    .bt-close svg { width: 18px; height: 18px; }
+    .bt-field--narrow { flex: 0 0 110px; width: 110px; min-width: 110px; }
+    .bt-input .bt-ph { color: var(--ink3); }
+    .bt-check-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--green); align-items: center; justify-content: center; flex-shrink: 0; }
+    .bt-check-ok.show { display: flex; }
+    .bt-check-ok svg { width: 10px; height: 10px; }
+    .bt-input input { flex: 1; min-width: 0; border: none; outline: none; background: none; font-family: var(--title); font-size: 14px; color: var(--ink); }
+    .bt-input input::placeholder { color: var(--ink3); }
+    .bt-check { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 14px; color: var(--ink2); }
+    .bt-check { cursor: pointer; user-select: none; }
+    .bt-checkbox { width: 18px; height: 18px; border: 1.5px solid #C9D0D8; border-radius: 4px; flex-shrink: 0; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .bt-checkbox.checked { border-color: #3b6fb5; }
+    .bt-checkbox.checked::after { content: ''; width: 5px; height: 10px; border: solid #3b6fb5; border-width: 0 1.5px 1.5px 0; transform: translateY(-1px) rotate(45deg); }
+    .bt-info-box { display: flex; gap: 10px; background: #F5F6F7; border-radius: 4px; padding: 12px 14px; margin-top: 14px; font-size: 13px; color: var(--ink); line-height: 1.5; }
+    .bt-info-box svg { width: 15px; height: 15px; flex-shrink: 0; color: #2d3340; margin-top: 2px; }
+    .bt-info-box a { color: var(--link); text-decoration: none; }
+
+    /* validity toggle */
+    .validity-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .toggle { position: relative; width: 40px; height: 22px; flex-shrink: 0; margin-top: 2px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle .track { position: absolute; inset: 0; background: #fff; border: 1px solid #d1d5db; border-radius: 999px; transition: .15s; cursor: pointer; }
+    .toggle .track::before { content: ''; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; background: #1C2B33; border-radius: 50%; transition: .15s; }
+    .toggle input:checked + .track { background: var(--accent-light); border-color: #d1d5db; }
+    .toggle input:checked + .track::before { background: var(--accent); transform: translateX(18px); }
+
+    /* preview */
+    .preview-col { width: 300px; flex-shrink: 0; position: sticky; top: 20px; }
+    .preview-card { background: var(--bg); border: 1px solid var(--border-light); border-radius: 4px; overflow: hidden; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .preview-card h4 { font-size: 16px; font-weight: 600; padding: 16px 16px 12px; margin-bottom: 0; }
+    .phone { background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), #EFE7DE url('images/preview.jpg') center/cover; border-radius: 0px; padding: 18px 24px; }
+    .bubble { position: relative; background: #fff; border-radius: 0 8px 8px 8px; padding: 8px 10px 7px; max-width: 80%; box-shadow: 0 1px 1px rgba(0,0,0,0.12); font-size: 13px; color: #111; }
+    .bubble::before { content: ''; position: absolute; top: 0; left: -6px; width: 8px; height: 12px; background: #fff; clip-path: polygon(100% 0, 0 0, 100% 100%); }
+    .bubble .b-media { width: 100%; height: 100px; border-radius: 6px; object-fit: cover; display: block; margin-bottom: 7px; background: #d9d9d9; }
+    .bubble .b-header { font-weight: 600; margin-bottom: 4px; white-space: pre-wrap; }
+    .bubble .b-body { white-space: pre-wrap; line-height: 1.45; }
+    .bubble .b-footer { color: #667781; font-size: 11px; margin-top: 6px; }
+    .bubble .b-time { text-align: right; font-size: 10px; color: #99a; margin-top: 2px; margin-bottom: 4px; }
+    .b-line.inline { display: flex; align-items: flex-end; gap: 8px; }
+    .b-line.inline .b-body { flex: 1; }
+    .b-line.inline .b-time { margin-top: 0; flex-shrink: 0; }
+    .bubble-btns { margin: 0 -10px; }
+    .bubble-btn { display: flex; align-items: center; justify-content: center; gap: 9px; color: #008069; font-weight: 400; font-size: 12.5px; padding: 8px; border-top: 1px solid #eef0f1; }
+    .bubble-btn svg { width: 14px; height: 14px; }
+
+    /* footer bar */
+    .footbar { position: fixed; left: 352px; right: 24px; bottom: 20px; background: var(--bg); border: 1px solid var(--border-light); border-radius: 4px; padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; gap: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); z-index: 80; transition: left 0.18s ease; }
+    .wa-nav.collapsed ~ .content .footbar { left: 172px; }
+    .footbar-right { display: flex; gap: 8px; }
+    .btn-primary { font-family: var(--title); font-size: 14px; font-weight: 500; color: #fff; background: var(--accent); border: none; border-radius: 4px; padding: 6px 16px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+    .btn-primary.disabled { opacity: 0.45; pointer-events: none; }
+    /* submit confirmation modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal { background: #fff; border-radius: 4px; width: 440px; max-width: 90vw; box-shadow: 0 16px 48px rgba(0,0,0,0.2); overflow: hidden; }
+    .modal-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px 8px; }
+    .modal-header h2 { font-size: 16px; font-weight: 600; color: var(--ink); }
+    .modal-close { width: 26px; height: 26px; border: none; background: none; cursor: pointer; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: var(--ink2); }
+    .modal-close:hover { background: var(--surface); }
+    .modal-close svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .modal-body { padding: 2px 20px 18px; font-size: 14px; color: var(--ink); line-height: 1.55; }
+    .modal-footer { display: flex; justify-content: flex-end; gap: 8px; padding: 8px 20px 18px; }
+    .modal-loading { display: flex; align-items: center; gap: 12px; color: var(--ink); }
+    .spinner { width: 20px; height: 20px; border: 2.5px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .btn-primary:hover { background: #096AAA; }
+    .btn-secondary { font-family: var(--title); font-size: 14px; font-weight: 500; color: var(--ink); background: var(--bg); border: 1px solid #d1d5db; border-radius: 4px; padding: 6px 16px; cursor: pointer; text-decoration: none; }
+    .btn-secondary:hover { background: var(--surface); }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ ICON RAIL ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-logo"><img src="../shared/meta-logo.svg" alt="Meta" /></div>
+    <div class="sys-biz"><svg viewBox="0 0 32 32"><path fill="#25D366" d="M16 2.7C8.6 2.7 2.7 8.6 2.7 16c0 2.4.6 4.6 1.8 6.6L2.7 29.3l6.9-1.8c1.9 1 4.1 1.6 6.4 1.6 7.4 0 13.3-5.9 13.3-13.3S23.4 2.7 16 2.7z"/></svg><span>B</span></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><path d="M3 6h16M3 11h16M3 16h16" stroke-linecap="round"/></svg></div>
+    <div class="sys-spacer"></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><path d="M11 4v14M4 11h14" stroke-linecap="round"/></svg></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L19 19" stroke-linecap="round"/></svg></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="3"/><path d="M11 3v2M11 17v2M3 11h2M17 11h2M5 5l1.5 1.5M15.5 15.5L17 17M17 5l-1.5 1.5M6.5 15.5L5 17" stroke-linecap="round"/></svg></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="8"/><path d="M9 8.5a2 2 0 113 1.7c-.7.4-1 .8-1 1.8M11 15.5v.01" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <span>WhatsApp Manager</span>
+      <span class="crumb-sep"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>Create template</span>
+    </div>
+
+    <div class="body-row">
+      <!-- ══ NAV ══ -->
+      <nav class="wa-nav collapsed txt-hide">
+        <a class="nav-item"><span class="ni-ic"><img src="../shared/wam-overview.webp" alt=""></span>Overview</a>
+
+        <div class="nav-group" id="grp-templates">
+          <div class="nav-item" onclick="toggleGrp('grp-templates')"><span class="ni-ic"><img src="../shared/wam-messagetemplates.webp" alt=""></span>Message templates<svg class="ni-caret" viewBox="0 0 16 16"><path d="M3 10.5l5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="nav-sub">
+            <a class="nav-item active" href="template-list.html">Manage templates</a>
+            <a class="nav-item">Template library</a>
+          </div>
+        </div>
+
+        <a class="nav-item"><span class="ni-ic"><img src="../shared/wam-insights.webp" alt=""></span>Insights</a>
+
+        <div class="nav-group collapsed" id="grp-account">
+          <div class="nav-item" onclick="toggleGrp('grp-account')"><span class="ni-ic"><img src="../shared/wam-accounttools.webp" alt=""></span>Account tools<svg class="ni-caret" viewBox="0 0 16 16"><path d="M3 10.5l5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="nav-sub">
+            <a class="nav-item">Messaging limits</a>
+            <a class="nav-item">Flows</a>
+            <a class="nav-item">Phone numbers</a>
+            <a class="nav-item">Catalog</a>
+            <a class="nav-item">Activity log</a>
+          </div>
+        </div>
+
+        <div class="nav-foot"><button class="nav-toggle" onclick="toggleNav()" title="Collapse menu"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M8 4v12" stroke-linecap="round"/><path d="M13.5 7.5L11 10l2.5 2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      </nav>
+
+      <!-- ══ CONTENT ══ -->
+      <div class="content">
+        <div class="layout">
+          <div class="main-col">
+
+            <!-- Template identity header -->
+            <div class="card tpl-head">
+              <div class="tpl-mega"><svg viewBox="0 0 24 24" fill-rule="evenodd" clip-rule="evenodd"><path d="M12 15h1.297a3 3 0 0 1 1.917.693l3.427 2.847c1.111.923 2.728.38 2.923-1.05.227-1.67.436-4.016.436-6.99s-.21-5.32-.436-6.99c-.195-1.43-1.812-1.973-2.923-1.05l-3.426 2.847A3 3 0 0 1 13.296 6H6.5a4.5 4.5 0 0 0-.5 8.973V19a3 3 0 1 0 6 0v-4zm8-4.5c0-2.617-.167-4.719-.36-6.27l-3.147 2.616A5 5 0 0 1 13.297 8H12v5h1.297a5 5 0 0 1 3.196 1.154l3.147 2.616c.193-1.551.36-3.653.36-6.27zM10 13V8H6.5a2.5 2.5 0 0 0 0 5H10zm-2 2h2v4a1 1 0 1 1-2 0v-4z"/></svg></div>
+              <div>
+                <div class="tpl-head-name" id="tplName">marketing_default · English</div>
+                <div class="tpl-head-meta">Marketing · Default</div>
+              </div>
+            </div>
+
+            <!-- Template name and language -->
+            <div class="card">
+              <h3>Template name and language</h3>
+              <div class="row2" style="margin-top:14px;">
+                <div class="field" style="margin-bottom:0;">
+                  <label class="lbl">Template name</label>
+                  <div class="inp-wrap">
+                    <input class="inp" id="nameInp" value="" maxlength="512" oninput="render()" />
+                    <span class="inp-count" id="nameCount">17/512</span>
+                  </div>
+                </div>
+                <div class="field" style="margin-bottom:0;">
+                  <label class="lbl">Language</label>
+                  <div class="dd" id="langDD" data-value="English">
+                    <div class="dd-select" onclick="toggleDD('langDD')"><span class="dd-val">English</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                    <div class="dd-menu">
+                      <div class="dd-option selected" onclick="pickDD('langDD','English')"><span class="dd-radio"></span>English</div>
+                      <div class="dd-option" onclick="pickDD('langDD','Spanish')"><span class="dd-radio"></span>Spanish</div>
+                      <div class="dd-option" onclick="pickDD('langDD','Portuguese')"><span class="dd-radio"></span>Portuguese</div>
+                      <div class="dd-option" onclick="pickDD('langDD','Hindi')"><span class="dd-radio"></span>Hindi</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Content -->
+            <div class="card">
+              <h3>Content</h3>
+              <p class="card-sub">Add a header, body and footer for your template. Cloud API hosted by Meta will review the template variables and content to protect the security and integrity of our services. <a href="#">About templates</a></p>
+
+              <div class="field">
+                <label class="lbl">Media sample<span class="ct-optional">Optional</span></label>
+                <div class="ct-dropdown" id="mediaDD">
+                  <div class="ct-select" onclick="document.getElementById('mediaDD').classList.toggle('open')">
+                    <span class="ct-select-val"><span class="ct-icon" id="mediaIcon" style="display:none;"></span><span id="mediaVal">None</span></span>
+                    <svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg>
+                  </div>
+                  <div class="ct-menu">
+                    <div class="ct-option selected" onclick="pickMedia(this,'None')"><span class="ct-radio checked"></span><span class="ct-opt-label">None</span></div>
+                    <div class="ct-option" onclick="pickMedia(this,'Image')"><span class="ct-radio"></span><span class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span><span class="ct-opt-label">Image</span></div>
+                    <div class="ct-option" onclick="pickMedia(this,'Video')"><span class="ct-radio"></span><span class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="9.5 7 17 12 9.5 17" fill="currentColor" stroke="none"/></svg></span><span class="ct-opt-label">Video</span></div>
+                    <div class="ct-option" onclick="pickMedia(this,'Document')"><span class="ct-radio"></span><span class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span><span class="ct-opt-label">Document</span></div>
+                    <div class="ct-option" onclick="pickMedia(this,'Location')"><span class="ct-radio"></span><span class="ct-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3.6" fill="currentColor" stroke="none"/></svg></span><span class="ct-opt-label">Location</span></div>
+                  </div>
+                </div>
+                <div class="ct-dropzone hidden" id="mediaDrop">
+                  <span id="mediaDropText">Drag and drop to upload your image</span><br>
+                  Or <a href="#">choose files on your device</a>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="lbl">Header <span class="opt">Optional</span></label>
+                <div class="inp-wrap">
+                  <input class="inp" id="headerInp" placeholder="Add your header..." maxlength="60" oninput="render()" />
+                  <span class="inp-count" id="headerCount">0/60</span>
+                </div>
+                <div class="ct-meta-row">
+                  <span class="ct-add-var"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add variable</span>
+                  <span class="ct-info">i</span>
+                </div>
+              </div>
+
+              <div class="field">
+                <label class="lbl">Body</label>
+                <div class="inp-wrap">
+                  <textarea class="inp" id="bodyInp" maxlength="1024" oninput="render()">Hello</textarea>
+                  <span class="inp-count" id="bodyCount">0/1024</span>
+                </div>
+                <div class="ct-meta-row">
+                  <span class="ct-toolbar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>
+                    <b>B</b><i>I</i><s>S</s>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 18 22 12 17 6"/><polyline points="7 6 2 12 7 18"/><line x1="13.5" y1="5" x2="10.5" y2="19"/></svg>
+                  </span>
+                  <span class="ct-add-var"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add variable</span>
+                  <span class="ct-info">i</span>
+                </div>
+              </div>
+
+              <div class="field" style="margin-bottom:0;">
+                <label class="lbl">Footer <span class="opt">Optional</span></label>
+                <div class="inp-wrap">
+                  <input class="inp" id="footerInp" placeholder="Add your footer..." maxlength="60" oninput="render()" />
+                  <span class="inp-count" id="footerCount">0/60</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="card" id="buttonsCard">
+              <h3>Buttons <span class="opt" style="font-size:14px;">Optional</span></h3>
+              <p class="card-sub">Create buttons that let customers respond to your message or take action. You can add up to 10 buttons. If you add more than 3 buttons, they will appear in a list.</p>
+              <div class="bt-add-wrap" id="btnAddWrap">
+                <div class="bt-add" onclick="toggleBtnMenu(event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Add button<svg class="bt-add-caret" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                <div class="bt-add-menu">
+                  <div class="bt-add-opt" onclick="pickBtn('Visit website')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span>Visit website</span></div>
+                  <div class="bt-add-opt" onclick="pickBtn('Call on WhatsApp')"><svg viewBox="0 0 24 24" fill="none"><path d="M12.04 2.5a9.5 9.5 0 0 0-8.2 14.3L2.5 21.5l4.9-1.3a9.5 9.5 0 1 0 4.64-17.7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path fill="currentColor" d="M17.84 16.14c-.24.68-1.42 1.31-1.96 1.35-.5.05-.98.22-3.3-.69-2.79-1.1-4.56-3.94-4.7-4.12-.14-.18-1.13-1.5-1.13-2.86s.72-2.03.97-2.31c.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.48.24.56.81 1.96.88 2.1.07.14.12.31.02.49-.09.18-.14.29-.27.45-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.92 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.18-.21.69-.8.87-1.08.18-.28.37-.23.62-.14.25.09 1.61.76 1.89.9.28.14.46.21.53.32.07.12.07.68-.17 1.36z"/></svg><span class="bt-add-opt-txt">Call on WhatsApp<span class="bt-add-opt-sub">1 button maximum</span></span></div>
+                  <div class="bt-add-opt" onclick="pickBtn('Call phone number')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="bt-add-opt-txt">Call phone number<span class="bt-add-opt-sub">1 button maximum</span></span></div>
+                  <div class="bt-add-opt" onclick="pickBtn('Copy offer code')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span>Copy offer code</span></div>
+                </div>
+              </div>
+              <div id="btnChips"></div>
+            </div>
+
+            <!-- Validity -->
+            <div class="card">
+              <h3 style="margin-bottom:4px;">Message validity period</h3>
+              <p class="card-sub" style="margin-bottom:16px;">You can set a custom validity period that your marketing message must be delivered by before it expires. If a message is not delivered within this timeframe, you will not be charged and your customer will not see the message.</p>
+              <div class="validity-row">
+                <div>
+                  <div class="lbl" style="margin-bottom:2px;">Set custom validity period for your message</div>
+                  <p class="opt-sub" style="margin-bottom:0;">If you don't set a custom validity period, the standard 10 minutes WhatsApp message validity period will be applied.</p>
+                </div>
+                <label class="toggle"><input type="checkbox" id="validityToggle" onchange="toggleValidity()" /><span class="track"></span></label>
+              </div>
+              <div class="field hidden" id="validityField" style="margin-top:16px;margin-bottom:0;">
+                <label class="lbl" style="display:flex;align-items:center;gap:6px;">Validity period <span class="ct-info">i</span></label>
+                <div class="dd" id="valDD" data-value="10 minutes">
+                  <div class="dd-select" onclick="toggleDD('valDD')"><span class="dd-val">10 minutes</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                  <div class="dd-menu">
+                    <div class="dd-option" onclick="pickDD('valDD','30 seconds')"><span class="dd-radio"></span>30 seconds</div>
+                    <div class="dd-option" onclick="pickDD('valDD','1 minute')"><span class="dd-radio"></span>1 minute</div>
+                    <div class="dd-option" onclick="pickDD('valDD','2 minutes')"><span class="dd-radio"></span>2 minutes</div>
+                    <div class="dd-option" onclick="pickDD('valDD','3 minutes')"><span class="dd-radio"></span>3 minutes</div>
+                    <div class="dd-option" onclick="pickDD('valDD','5 minutes')"><span class="dd-radio"></span>5 minutes</div>
+                    <div class="dd-option selected" onclick="pickDD('valDD','10 minutes')"><span class="dd-radio"></span>10 minutes</div>
+                    <div class="dd-option" onclick="pickDD('valDD','15 minutes')"><span class="dd-radio"></span>15 minutes</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- ══ PREVIEW ══ -->
+          <div class="preview-col">
+            <div class="preview-card">
+              <h4>Template preview</h4>
+              <div class="phone">
+                <div class="bubble">
+                  <div class="b-header hidden" id="pvHeader"></div>
+                  <div class="b-line" id="pvLine">
+                    <div class="b-body" id="pvBody"></div>
+                    <div class="b-time">10:15 PM</div>
+                  </div>
+                  <div class="b-footer hidden" id="pvFooter"></div>
+                  <div class="bubble-btns" id="pvBtns"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ FOOTER ACTION BAR ══ -->
+        <div class="footbar">
+          <a class="btn-secondary" href="template-list.html">Discard</a>
+          <div class="footbar-right">
+            <a class="btn-secondary" href="index.html">Previous</a>
+            <a class="btn-primary" id="submitBtn" href="#" onclick="event.preventDefault(); openSubmitModal();">Submit for review</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit confirmation modal -->
+  <div class="modal-overlay" id="submitModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Submit for review</h2>
+        <button class="modal-close" onclick="closeSubmitModal()"><svg viewBox="0 0 24 24" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="modal-body" id="submitModalBody">You're about to submit this template for review. WhatsApp typically reviews templates within 24 hours, and you won't be able to edit it while it's under review. Do you want to continue?</div>
+      <div class="modal-footer" id="submitModalFooter">
+        <button class="btn-secondary" onclick="closeSubmitModal()">Go back</button>
+        <button class="btn-primary" onclick="submitConfirm()">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openSubmitModal() { document.getElementById('submitModal').classList.add('open'); }
+    function closeSubmitModal() { document.getElementById('submitModal').classList.remove('open'); }
+    function submitConfirm() {
+      document.querySelector('#submitModal .modal-header h2').textContent = 'Submitting';
+      document.getElementById('submitModalBody').innerHTML = '<div class="modal-loading"><span class="spinner"></span> Submitting your template for review…</div>';
+      document.getElementById('submitModalFooter').style.display = 'none';
+      setTimeout(function () { window.location.href = 'template-list.html'; }, 1600);
+    }
+    function toggleValidity() {
+      var on = document.getElementById('validityToggle').checked;
+      var f = document.getElementById('validityField');
+      f.classList.toggle('hidden', !on);
+      if (on) setTimeout(function () { f.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 30);
+    }
+    function toggleGrp(id) { document.getElementById(id).classList.toggle('collapsed'); }
+    function toggleNav() {
+      var nav = document.querySelector('.wa-nav');
+      if (nav.classList.contains('collapsed')) {
+        nav.classList.remove('collapsed');
+        setTimeout(function () { nav.classList.remove('txt-hide'); }, 180);
+      } else {
+        nav.classList.add('txt-hide');
+        setTimeout(function () { nav.classList.add('collapsed'); }, 120);
+      }
+    }
+    if (location.hash === '#embed') {
+      var _embnav = document.querySelector('.wa-nav');
+      if (_embnav) _embnav.classList.add('collapsed', 'txt-hide');
+    }
+
+    function toggleDD(id) {
+      var dd = document.getElementById(id), was = dd.classList.contains('open');
+      document.querySelectorAll('.dd.open').forEach(function (x) { x.classList.remove('open'); });
+      if (!was) dd.classList.add('open');
+    }
+    function pickDD(id, val) {
+      var dd = document.getElementById(id);
+      dd.dataset.value = val;
+      dd.querySelector('.dd-val').textContent = val;
+      dd.querySelectorAll('.dd-option').forEach(function (o) { o.classList.toggle('selected', o.textContent.trim() === val); });
+      dd.classList.remove('open');
+      render();
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.dd')) document.querySelectorAll('.dd.open').forEach(function (x) { x.classList.remove('open'); });
+    });
+
+    const state = { buttons: [] };
+
+    function setPrice(k) {
+      document.getElementById('prMax').classList.toggle('active', k === 'max');
+      document.getElementById('prDef').classList.toggle('active', k === 'def');
+    }
+
+    function toggleBtnMenu(e) {
+      e.stopPropagation();
+      document.getElementById('btnAddWrap').classList.toggle('open');
+    }
+    var SINGLE_MAX = ['Call on WhatsApp', 'Call phone number'];
+    function updateBtnMenu() {
+      document.querySelectorAll('#btnAddWrap .bt-add-opt').forEach(function (opt) {
+        var txt = opt.querySelector('.bt-add-opt-txt');
+        if (!txt) return;
+        var label = txt.childNodes[0].textContent.trim();
+        if (SINGLE_MAX.indexOf(label) !== -1) opt.classList.toggle('disabled', state.buttons.some(function (b) { return b.t === label; }));
+      });
+    }
+    function pickBtn(label) {
+      document.getElementById('btnAddWrap').classList.remove('open');
+      if (state.buttons.length >= 10) return;
+      if (SINGLE_MAX.indexOf(label) !== -1 && state.buttons.some(function (b) { return b.t === label; })) return;
+      state.buttons.push({ t: label, txt: label }); render();
+      setTimeout(function () {
+        var card = document.getElementById('buttonsCard');
+        var footClearance = 110; // fixed footbar height + gap
+        var overflow = card.getBoundingClientRect().bottom - (window.innerHeight - footClearance);
+        if (overflow > 0) window.scrollBy({ top: overflow, behavior: 'smooth' });
+      }, 30);
+    }
+    function pickMedia(el, val) {
+      var dd = document.getElementById('mediaDD');
+      dd.querySelectorAll('.ct-option').forEach(function (o) {
+        o.classList.remove('selected');
+        o.querySelector('.ct-radio').classList.remove('checked');
+      });
+      el.classList.add('selected');
+      el.querySelector('.ct-radio').classList.add('checked');
+      document.getElementById('mediaVal').textContent = val;
+      var optIcon = el.querySelector('.ct-icon');
+      var trigIcon = document.getElementById('mediaIcon');
+      if (optIcon) { trigIcon.innerHTML = optIcon.innerHTML; trigIcon.style.display = 'flex'; }
+      else { trigIcon.innerHTML = ''; trigIcon.style.display = 'none'; }
+      var showDrop = (val === 'Image' || val === 'Video' || val === 'Document');
+      document.getElementById('mediaDrop').classList.toggle('hidden', !showDrop);
+      if (showDrop) document.getElementById('mediaDropText').textContent = 'Drag and drop to upload your ' + val.toLowerCase();
+      var hdr = document.getElementById('headerInp');
+      hdr.disabled = (val !== 'None');
+      if (hdr.disabled) { hdr.value = ''; render(); }
+      dd.classList.remove('open');
+    }
+    document.addEventListener('click', function (e) {
+      document.getElementById('btnAddWrap').classList.remove('open');
+      document.querySelectorAll('.ct-dropdown.open').forEach(function (dd) { if (!dd.contains(e.target)) dd.classList.remove('open'); });
+    });
+    function toggleActive(el) {
+      var dd = el.parentElement;
+      if (!dd.classList.contains('open')) {
+        var spaceBelow = window.innerHeight - el.getBoundingClientRect().bottom;
+        dd.classList.toggle('drop-up', spaceBelow < 260);
+      }
+      dd.classList.toggle('open');
+    }
+    function changeBtnType(i, newType) {
+      if (SINGLE_MAX.indexOf(newType) !== -1 && state.buttons.some(function (b) { return b.t === newType; }) && state.buttons[i].t !== newType) return;
+      state.buttons[i] = { t: newType, txt: newType }; render();
+    }
+    function setBtnText(i, val) {
+      state.buttons[i].txt = val;
+      renderPreviewBtns();
+    }
+    function pickActive(el, val, i) {
+      var dd = el.closest('.ct-dropdown');
+      dd.querySelectorAll('.ct-option').forEach(function (o) { o.classList.remove('selected'); o.querySelector('.ct-radio').classList.remove('checked'); });
+      el.classList.add('selected');
+      el.querySelector('.ct-radio').classList.add('checked');
+      dd.querySelector('.bt-active-val').textContent = val;
+      dd.classList.remove('open');
+      if (typeof i === 'number') state.buttons[i].active = val;
+    }
+    function toggleTrack(el, i) {
+      var on = el.querySelector('.bt-checkbox').classList.toggle('checked');
+      state.buttons[i].track = on;
+    }
+    function onPhoneInput(el, i) {
+      state.buttons[i].phone = el.value;
+      var digits = el.value.replace(/\D/g, '').length;
+      el.parentElement.querySelector('.bt-check-ok').classList.toggle('show', digits === 10);
+      el.parentElement.querySelector('.bt-count').textContent = el.value.length + '/20';
+      validateForm();
+    }
+    var dragIdx = null;
+    function btnDragStart(e, i) { dragIdx = i; e.currentTarget.classList.add('dragging'); }
+    function btnDragOver(e, i) { e.preventDefault(); e.currentTarget.classList.add('drag-over'); }
+    function btnDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+    function btnDrop(e, i) {
+      e.preventDefault();
+      if (dragIdx === null || dragIdx === i) return;
+      var moved = state.buttons.splice(dragIdx, 1)[0];
+      state.buttons.splice(i, 0, moved);
+      dragIdx = null;
+      render();
+    }
+    function btnDragEnd() { dragIdx = null; render(); }
+    function removeBtn(i) { state.buttons.splice(i, 1); render(); }
+    function escapeHtml(s) { return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function validateForm() {
+      var ok = document.getElementById('bodyInp').value.trim() !== '';
+      if (ok) {
+        var reqs = document.querySelectorAll('#btnChips .bt-required');
+        for (var i = 0; i < reqs.length; i++) {
+          var el = reqs[i];
+          if (el.classList.contains('bt-phone')) {
+            if (el.value.replace(/\D/g, '').length !== 10) { ok = false; break; }
+          } else if (el.value.trim() === '') { ok = false; break; }
+        }
+      }
+      document.getElementById('submitBtn').classList.toggle('disabled', !ok);
+    }
+
+    function render() {
+      const nm = document.getElementById('nameInp').value || 'template';
+      const lang = document.getElementById('langDD').dataset.value;
+      document.getElementById('tplName').textContent = nm + ' · ' + lang;
+      document.getElementById('nameCount').textContent = nm.length + '/512';
+
+      const h = document.getElementById('headerInp').value;
+      const b = document.getElementById('bodyInp').value;
+      const f = document.getElementById('footerInp').value;
+      document.getElementById('headerCount').textContent = h.length + '/60';
+      document.getElementById('bodyCount').textContent = b.length + '/1024';
+      document.getElementById('footerCount').textContent = f.length + '/60';
+
+      const pvH = document.getElementById('pvHeader');
+      pvH.textContent = h; pvH.classList.toggle('hidden', !h);
+      document.getElementById('pvBody').textContent = b;
+      document.getElementById('pvLine').classList.toggle('inline', b.length < 10 && b.indexOf('\n') === -1);
+      const pvF = document.getElementById('pvFooter');
+      pvF.textContent = f; pvF.classList.toggle('hidden', !f);
+
+      document.getElementById('btnChips').innerHTML = state.buttons.length ? ('<div class="bt-card">' + state.buttons.map((b, i) =>
+        `<div class="bt-row" draggable="true" ondragstart="btnDragStart(event,${i})" ondragover="btnDragOver(event,${i})" ondragleave="btnDragLeave(event)" ondrop="btnDrop(event,${i})" ondragend="btnDragEnd()">
+           <div class="bt-handle"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+           <div class="bt-main">${btnFields(b, i)}</div>
+           <div class="bt-close" onclick="removeBtn(${i})"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+         </div>`).join('') + '</div>') : '';
+      updateBtnMenu();
+      validateForm();
+
+      renderPreviewBtns();
+    }
+
+    function renderPreviewBtns() {
+      var pvBtnHtml;
+      var one = function (b) { return '<div class="bubble-btn">' + pvBtnIcon(b.t) + escapeHtml(b.txt) + '</div>'; };
+      if (state.buttons.length > 3) {
+        pvBtnHtml = state.buttons.slice(0, 2).map(one).join('');
+        pvBtnHtml += '<div class="bubble-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>See all options</div>';
+      } else {
+        pvBtnHtml = state.buttons.map(one).join('');
+      }
+      document.getElementById('pvBtns').innerHTML = pvBtnHtml;
+      document.querySelector('.bubble').classList.toggle('has-btns', state.buttons.length > 0);
+    }
+
+    function pvBtnIcon(t) {
+      var a = 'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"';
+      if (t === 'Visit website') return '<svg ' + a + '><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+      if (t === 'Copy offer code') return '<svg ' + a + '><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      if (t === 'Call on WhatsApp') return '<svg viewBox="0 0 24 24" fill="none"><path d="M12.04 2.5a9.5 9.5 0 0 0-8.2 14.3L2.5 21.5l4.9-1.3a9.5 9.5 0 1 0 4.64-17.7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path fill="currentColor" d="M17.84 16.14c-.24.68-1.42 1.31-1.96 1.35-.5.05-.98.22-3.3-.69-2.79-1.1-4.56-3.94-4.7-4.12-.14-.18-1.13-1.5-1.13-2.86s.72-2.03.97-2.31c.25-.28.55-.35.73-.35.18 0 .37 0 .53.01.17.01.4-.06.62.48.24.56.81 1.96.88 2.1.07.14.12.31.02.49-.09.18-.14.29-.27.45-.14.16-.29.36-.41.48-.14.14-.28.29-.12.57.16.28.72 1.19 1.55 1.92 1.07.95 1.97 1.25 2.25 1.39.28.14.44.12.6-.07.18-.21.69-.8.87-1.08.18-.28.37-.23.62-.14.25.09 1.61.76 1.89.9.28.14.46.21.53.32.07.12.07.68-.17 1.36z"/></svg>';
+      return '<svg ' + a + '><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>';
+    }
+
+    function btnFields(b, i) {
+      var t = b.t;
+      var caret = '<svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg>';
+      var ACTIONS = ['Visit website', 'Call on WhatsApp', 'Call phone number', 'Copy offer code'];
+      var typeOpts = ACTIONS.map(function (opt) {
+        var used = SINGLE_MAX.indexOf(opt) !== -1 && state.buttons.some(function (bb) { return bb.t === opt; }) && state.buttons[i].t !== opt;
+        return '<div class="ct-option' + (opt === t ? ' selected' : '') + (used ? ' disabled' : '') + '"' + (used ? '' : ' onclick="changeBtnType(' + i + ',\'' + opt + '\')"') + '><span class="ct-radio' + (opt === t ? ' checked' : '') + '"></span><span class="ct-opt-label">' + opt + '</span></div>';
+      }).join('');
+      var type = '<div class="bt-field bt-field--type"><label class="bt-field-label">Type of Action</label>' +
+        '<div class="ct-dropdown" style="width:100%">' +
+        '<div class="bt-select" onclick="toggleActive(this)"><span>' + escapeHtml(t) + '</span>' + caret + '</div>' +
+        '<div class="ct-menu">' + typeOpts + '</div></div></div>';
+      function field(key, ph, max, req, phone) {
+        var val = b[key] || '';
+        var cls = ((req ? 'bt-required ' : '') + (phone ? 'bt-phone' : '')).trim();
+        var oninput = phone
+          ? 'onPhoneInput(this,' + i + ')'
+          : 'state.buttons[' + i + '].' + key + '=this.value; this.nextElementSibling.textContent=this.value.length+\'/\'+this.maxLength; ' + (key === 'txt' ? 'renderPreviewBtns();' : 'validateForm();');
+        var chk = phone ? '<span class="bt-check-ok' + (val.replace(/\D/g, '').length === 10 ? ' show' : '') + '"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>' : '';
+        return '<div class="bt-input"><input ' + (cls ? 'class="' + cls + '" ' : '') + 'value="' + escapeHtml(val) + '" placeholder="' + ph + '" maxlength="' + max + '" oninput="' + oninput + '" />' + chk + '<span class="bt-count">' + val.length + '/' + max + '</span></div>';
+      }
+      function activeForDD() {
+        var current = b.active || '7 days';
+        var opts = '';
+        for (var d = 1; d <= 14; d++) {
+          var lbl = d + (d > 1 ? ' days' : ' day');
+          opts += '<div class="ct-option' + (lbl === current ? ' selected' : '') + '" onclick="pickActive(this,\'' + lbl + '\',' + i + ')"><span class="ct-radio' + (lbl === current ? ' checked' : '') + '"></span><span class="ct-opt-label">' + lbl + '</span></div>';
+        }
+        return '<div class="ct-dropdown" style="width:100%">' +
+          '<div class="bt-select" onclick="toggleActive(this)"><span class="bt-active-val">' + current + '</span>' + caret + '</div>' +
+          '<div class="ct-menu" style="max-height:240px;overflow-y:auto">' + opts + '</div></div>';
+      }
+      if (t === 'Visit website') {
+        return '<div class="bt-fields">' + type +
+          '<div class="bt-field bt-field--grow"><label class="bt-field-label">Button Text</label>' + field('txt', 'Add button text', 40) + '</div>' +
+          '<div class="bt-field bt-field--narrow"><label class="bt-field-label">URL Type</label><div class="bt-select"><span>Static</span>' + caret + '</div></div>' +
+          '<div class="bt-field bt-field--grow"><label class="bt-field-label">Website URL</label>' + field('url', 'https://www.example', 2000, true) + '</div>' +
+          '</div><div class="bt-check" onclick="toggleTrack(this,' + i + ')"><span class="bt-checkbox' + (b.track ? ' checked' : '') + '"></span>Track app conversions (Marketing Messages API for WhatsApp only) <span class="ct-info">i</span></div>';
+      }
+      if (t === 'Call on WhatsApp') {
+        return '<div class="bt-fields">' + type +
+          '<div class="bt-field bt-field--grow"><label class="bt-field-label">Active for <span class="ct-info">i</span></label>' + activeForDD() + '</div>' +
+          '</div><div class="bt-info-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Turn on calling in the <a href="#">WhatsApp Manager portal</a>. Alternatively, you can use the Phone Number Settings API. <a href="#">About calling on WhatsApp</a></span></div>';
+      }
+      if (t === 'Call phone number') {
+        return '<div class="bt-fields">' + type +
+          '<div class="bt-field"><label class="bt-field-label">Country</label><div class="bt-select"><span>US +1</span>' + caret + '</div></div>' +
+          '<div class="bt-field bt-field--grow"><label class="bt-field-label">Phone number</label>' + field('phone', 'Enter phone number', 20, true, true) + '</div>' +
+          '</div>';
+      }
+      if (t === 'Copy offer code') {
+        return '<div class="bt-fields">' + type +
+          '<div class="bt-field bt-field--grow"><label class="bt-field-label">Offer code</label>' + field('offer', 'Enter sample', 20, true) + '</div>' +
+          '</div>';
+      }
+      return '<div class="bt-fields">' + type +
+        '<div class="bt-field bt-field--grow"><label class="bt-field-label">Button Text</label>' + field('txt', 'Add button text', 25) + '</div></div>';
+    }
+
+    document.getElementById('nameInp').value = 'your_template_' + Math.floor(10000000 + Math.random() * 90000000);
+    render();
+  </script>
+</body>
+</html>

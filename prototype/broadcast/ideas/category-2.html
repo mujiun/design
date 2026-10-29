@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WhatsApp Manager — Create template</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=block" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @view-transition { navigation: auto; }
+
+    :root {
+      --bg: #FFFFFF; --page-bg: #F0F2F5; --surface: #F5F6F7;
+      --ink: #1C2B33; --ink2: #465A69; --ink3: #6B7A85;
+      --accent: #0A78BE; --accent-light: #E7F0FD; --link: #0A78BE;
+      --border: #E4E6EB; --border-light: #ECEEF0; --green: #117D1A;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html, body {
+      min-height: 100%; font-family: var(--title);
+      background: var(--page-bg); background-image: url('../shared/bg.jpg');
+      background-size: cover; background-attachment: fixed; color: var(--ink);
+      -webkit-font-smoothing: antialiased; font-size: 13px; line-height: 1.5; letter-spacing: 0.1px;
+    }
+
+    /* ══ LEFT SYSTEM ICON RAIL ══ */
+    .sys-sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 64px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 16px 0 14px; gap: 6px; z-index: 90; }
+    .sys-logo { margin-bottom: 8px; }
+    .sys-logo img { width: 32px; height: 32px; object-fit: contain; display: block; }
+    .sys-biz { position: relative; width: 36px; height: 36px; margin-bottom: 8px; border: 1px solid var(--border); border-radius: 4px; display: flex; align-items: center; justify-content: center; }
+    .sys-biz svg { width: 24px; height: 24px; display: block; }
+    .sys-biz span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; transform: translateY(-1px); color: #fff; font-weight: 600; font-size: 11px; }
+    .sys-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink2); transition: background 0.12s; }
+    .sys-icon:hover { background: var(--surface); }
+    .sys-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+    .sys-spacer { flex: 1; }
+
+    /* ══ SHELL ══ */
+    .wrap { margin-left: 64px; padding: 22px 28px 80px; }
+    .topbar { display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: 600; color: var(--ink); margin-bottom: 18px; padding-left: 4px; }
+    .topbar .crumb-sep { display: inline-flex; align-items: center; }
+    .topbar .crumb-sep svg { width: 20px; height: 20px; stroke: var(--ink2); fill: none; stroke-width: 1.8; }
+    .body-row { display: flex; gap: 20px; align-items: flex-start; }
+
+    /* ══ NAV ══ */
+    .wa-nav { width: 240px; flex-shrink: 0; padding-top: 2px; }
+    .nav-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 6px; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; text-decoration: none; user-select: none; transition: background 0.1s; white-space: nowrap; }
+    .nav-item:hover { background: rgba(0,0,0,0.06); }
+    .nav-item.active { background: #1C2B33; color: #fff; font-weight: 600; }
+    .nav-item .ni-ic { width: 20px; height: 20px; flex-shrink: 0; }
+    .nav-item .ni-ic svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.6; }
+    .nav-item .ni-ic img { width: 20px; height: 20px; object-fit: contain; display: block; }
+    .nav-item .ni-caret { margin-left: auto; flex-shrink: 0; width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.4; transition: transform 0.2s; transform-box: fill-box; transform-origin: center; }
+    .nav-group.collapsed .ni-caret { transform: rotate(180deg); }
+    .nav-sub { overflow: hidden; max-height: 300px; transition: max-height 0.25s ease; }
+    .nav-group.collapsed .nav-sub { max-height: 0; }
+    .nav-sub .nav-item { padding-left: 46px; font-weight: 450; }
+
+    /* nav collapse */
+    .wa-nav { transition: width 0.18s ease; }
+    .wa-nav.collapsed { width: 60px; }
+    .wa-nav.collapsed .nav-item { width: 44px; height: 40px; margin: 2px auto; padding: 0; justify-content: center; gap: 0; border-radius: 10px; }
+    .wa-nav.collapsed .nav-item .ni-caret { display: none; }
+    .wa-nav.txt-hide .nav-item { font-size: 0; }
+    .wa-nav.txt-hide .ni-caret { display: none; }
+    .wa-nav.txt-hide .nav-sub { display: none; }
+    .wa-nav.collapsed .nav-sub { display: none; }
+    .nav-foot { position: fixed; left: 92px; bottom: 24px; width: 240px; display: flex; justify-content: flex-end; padding: 0 8px; z-index: 80; transition: width 0.18s ease; }
+    .wa-nav.collapsed .nav-foot { width: 60px; justify-content: center; padding: 0; }
+    .nav-toggle { width: 30px; height: 30px; border: none; background: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+    .nav-toggle:hover { background: var(--surface); }
+    .nav-toggle svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+    .wa-nav.collapsed .nav-toggle svg { transform: scaleX(-1); }
+
+    /* ══ CONTENT ══ */
+    .content { flex: 1; min-width: 0; }
+
+    /* wizard */
+    .wizard { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-left: 2px; }
+    .wz-step { display: flex; align-items: center; gap: 8px; }
+    .wz-dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .wz-dot svg { width: 11px; height: 11px; }
+    .wz-step.done .wz-dot { border-color: var(--accent); background: var(--accent); }
+    .wz-step.done .wz-dot svg { stroke: #fff; fill: none; stroke-width: 2.6; }
+    .wz-step.active .wz-dot { border-color: var(--accent); background: linear-gradient(90deg, var(--accent) 0 50%, #fff 50% 100%); }
+    .wz-label { font-size: 14px; font-weight: 600; color: var(--ink3); }
+    .wz-step.active .wz-label { color: var(--accent); }
+    .wz-step.done .wz-label { color: var(--ink); }
+    .wz-line { width: 30px; height: 2px; background: var(--border); }
+
+    .layout { display: flex; gap: 20px; align-items: flex-start; }
+    .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+
+    .card { background: var(--bg); border: 1px solid var(--border-light); border-radius: 4px; padding: 12px 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.03); }
+    .card h3 { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
+    .card .card-sub { font-size: 13px; color: var(--ink); line-height: 1.5; margin-bottom: 16px; }
+    .card .card-sub a { color: var(--link); text-decoration: none; }
+
+    /* segmented category */
+    .seg { display: flex; border: 1px solid #d1d5db; border-radius: 4px; overflow: hidden; }
+    .seg button { flex: 1; display: flex; align-items: center; justify-content: center; gap: 7px; font-family: var(--title); font-size: 13.5px; font-weight: 500; color: var(--ink); padding: 8px 11px; border: none; background: var(--bg); cursor: pointer; }
+    .seg button + button { border-left: 1px solid #d1d5db; }
+    .seg button svg { width: 16px; height: 16px; }
+    .seg button:hover { background: var(--surface); }
+    .seg button svg { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+    .seg button.active { background: #E4E6EB; }
+
+    /* format radios */
+    .fmt-list { display: flex; flex-direction: column; margin-top: 14px; }
+    .fmt { display: flex; gap: 12px; align-items: center; padding: 9px 12px; cursor: pointer; }
+    .fmt.active { background: var(--accent-light); border-radius: 8px; }
+    .fmt-radio { width: 24px; height: 24px; border-radius: 50%; border: 1px solid #B9C0C7; background: #fff; flex-shrink: 0; position: relative; }
+    .fmt.active .fmt-radio::after { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: var(--accent); }
+    .fmt-title { font-size: 14px; font-weight: 450; color: var(--ink); }
+    .fmt-desc { font-size: 13px; color: var(--ink2); line-height: 1.45; margin-top: 2px; }
+
+    /* pre-approved templates promo */
+    .promo { display: flex; align-items: center; gap: 18px; }
+    .promo-art { width: 130px; height: 78px; border-radius: 8px; background: linear-gradient(135deg,#DFF3E6,#CFE9F7); flex-shrink: 0; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .promo-art svg { width: 30px; height: 30px; }
+    .promo h3 { font-size: 15px; margin-bottom: 4px; }
+    .promo p { font-size: 13px; color: var(--ink2); line-height: 1.45; }
+    .promo .promo-btn { margin-left: auto; }
+
+    .btn-ghost { font-family: var(--title); font-size: 14px; font-weight: 600; color: var(--ink); background: var(--bg); border: 1px solid #d1d5db; border-radius: 6px; padding: 9px 16px; cursor: pointer; white-space: nowrap; }
+    .btn-ghost:hover { background: var(--surface); }
+
+    /* preview col */
+    .preview-col { width: 330px; flex-shrink: 0; position: sticky; top: 20px; }
+    .preview-card { background: var(--bg); border: 1px solid var(--border-light); border-radius: 4px; padding: 16px; box-shadow: 0 4px 24px rgba(0,0,0,0.03); }
+    .preview-card h4 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+    .phone { background: linear-gradient(rgba(0,0,0,0.05), rgba(0,0,0,0.05)), #EFE7DE url('images/preview.jpg') center/cover; border-radius: 4px; padding: 12px 16px; height: 380px; }
+    .bubble { position: relative; background: #fff; border-radius: 0 8px 8px 8px; padding: 8px 10px 0px; max-width: 80%; box-shadow: 0 1px 1px rgba(0,0,0,0.12); font-size: 13px; color: #111; }
+    .bubble::before { content: ''; position: absolute; top: 0; left: -6px; width: 8px; height: 12px; background: #fff; clip-path: polygon(100% 0, 0 0, 100% 100%); }
+    .bubble .b-media { width: 100%; height: 100px; border-radius: 6px; object-fit: cover; display: block; margin-bottom: 7px; background: #d9d9d9; }
+    .b-catalog { display: flex; gap: 10px; align-items: center; background: #f0f2f5; border-radius: 6px; padding: 6px; margin-bottom: 7px; }
+    .b-cat-thumb { width: 60px; height: 60px; align-self: center; border-radius: 6px; object-fit: cover; flex-shrink: 0; background: #d9d9d9; }
+    .b-cat-text { display: flex; flex-direction: column; justify-content: center; min-width: 0; }
+    .b-cat-title { font-size: 12.5px; font-weight: 600; color: #111; line-height: 1.3; }
+    .b-cat-sub { font-size: 11.5px; color: #667781; line-height: 1.35; margin-top: 0; }
+    .bubble .b-body { white-space: pre-wrap; line-height: 1.45; }
+    .bubble .b-time { text-align: right; font-size: 10px; color: #99a; margin-top: 3px; margin-bottom: 4px; }
+    .bubble-btns { margin-top: 7px; margin-left: -10px; margin-right: -10px; }
+    .bubble-btn { display: flex; align-items: center; justify-content: center; gap: 9px; color: #008069; font-weight: 500; font-size: 13px; padding: 8px; border-top: 1px solid #eef0f1; }
+    .bubble-btn svg { width: 13px; height: 13px; }
+
+    .pv-meta { margin-top: 14px; }
+    .pv-meta h5 { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .pv-meta p { font-size: 13px; color: var(--ink); line-height: 1.45; margin-bottom: 12px; }
+    .pv-meta p:last-child { margin-bottom: 0; }
+
+    /* footer action bar */
+    .footbar { position: fixed; left: 352px; right: 24px; bottom: 20px; background: var(--bg); border: 1px solid var(--border-light); border-radius: 4px; padding: 14px 20px; display: flex; justify-content: space-between; box-shadow: 0 4px 16px rgba(0,0,0,0.08); z-index: 80; transition: left 0.18s ease; }
+    .wa-nav.collapsed ~ .content .footbar { left: 172px; }
+    .btn-primary { font-family: var(--title); font-size: 14px; font-weight: 500; color: #fff; background: var(--accent); border: none; border-radius: 4px; padding: 6px 16px; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; }
+    .btn-primary:hover { background: #096AAA; }
+    .btn-secondary { font-family: var(--title); font-size: 14px; font-weight: 500; color: var(--ink); background: var(--bg); border: 1px solid #d1d5db; border-radius: 4px; padding: 6px 16px; cursor: pointer; text-decoration: none; }
+    .btn-secondary:hover { background: var(--surface); }
+    .hidden { display: none !important; }
+  
+    /* form fields + dropdown (ported from configuration.html) */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .lbl { display: block; font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .row2 { display: grid; grid-template-columns: 1fr 220px; gap: 8px; }
+    input.inp { width: 100%; font-family: var(--title); font-size: 14px; color: var(--ink); background: var(--bg); border: 1px solid #C9D0D8; border-radius: 4px; padding: 9px 12px; outline: none; height: 36px; }
+    input.inp::placeholder { color: var(--ink3); }
+    input.inp:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+    .inp-wrap { position: relative; }
+    .inp-wrap .inp { padding-right: 80px; }
+    .inp-count { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 13.5px; line-height: 1.3; color: var(--ink3); pointer-events: none; }
+    .dd { position: relative; }
+    .dd-select { display: flex; align-items: center; justify-content: space-between; gap: 12px; height: 36px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 0 13px; background: var(--bg); font-size: 14px; color: var(--ink); cursor: pointer; }
+    .dd-select svg { width: 11px; height: 11px; color: var(--ink2); flex-shrink: 0; transition: transform 0.15s; }
+    .dd.open .dd-select { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+    .dd.open .dd-select svg { transform: rotate(180deg); }
+    .dd-menu { display: none; flex-direction: column; gap: 4px; position: absolute; left: 0; right: 0; top: calc(100% + 6px); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 30; }
+    .dd.open .dd-menu { display: flex; }
+    .dd-option { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 6px; font-size: 14px; color: var(--ink); cursor: pointer; }
+    .dd-option:hover { background: var(--surface); }
+    .dd-option.selected { background: var(--accent-light); }
+    .dd-radio { width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%; border: 1px solid #C9D0D8; background: #fff; position: relative; }
+    .dd-option.selected .dd-radio::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 10px; height: 10px; border-radius: 50%; background: #3b6fb5; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ ICON RAIL ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-logo"><img src="../shared/meta-logo.svg" alt="Meta" /></div>
+    <div class="sys-biz"><svg viewBox="0 0 32 32"><path fill="#25D366" d="M16 2.7C8.6 2.7 2.7 8.6 2.7 16c0 2.4.6 4.6 1.8 6.6L2.7 29.3l6.9-1.8c1.9 1 4.1 1.6 6.4 1.6 7.4 0 13.3-5.9 13.3-13.3S23.4 2.7 16 2.7z"/></svg><span>B</span></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><path d="M3 6h16M3 11h16M3 16h16" stroke-linecap="round"/></svg></div>
+    <div class="sys-spacer"></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><path d="M11 4v14M4 11h14" stroke-linecap="round"/></svg></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L19 19" stroke-linecap="round"/></svg></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="3"/><path d="M11 3v2M11 17v2M3 11h2M17 11h2M5 5l1.5 1.5M15.5 15.5L17 17M17 5l-1.5 1.5M6.5 15.5L5 17" stroke-linecap="round"/></svg></div>
+    <div class="sys-icon"><svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="8"/><path d="M9 8.5a2 2 0 113 1.7c-.7.4-1 .8-1 1.8M11 15.5v.01" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <div class="wrap">
+    <div class="topbar">
+      <span>WhatsApp Manager</span>
+      <span class="crumb-sep"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span>Create template</span>
+    </div>
+
+    <div class="body-row">
+      <!-- ══ NAV ══ -->
+      <nav class="wa-nav">
+        <a class="nav-item"><span class="ni-ic"><img src="../shared/wam-overview.webp" alt=""></span>Overview</a>
+
+        <div class="nav-group" id="grp-templates">
+          <div class="nav-item" onclick="toggleGrp('grp-templates')"><span class="ni-ic"><img src="../shared/wam-messagetemplates.webp" alt=""></span>Message templates<svg class="ni-caret" viewBox="0 0 16 16"><path d="M3 10.5l5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="nav-sub">
+            <a class="nav-item active" href="template-list.html">Manage templates</a>
+            <a class="nav-item">Template library</a>
+          </div>
+        </div>
+
+        <a class="nav-item"><span class="ni-ic"><img src="../shared/wam-insights.webp" alt=""></span>Insights</a>
+
+        <div class="nav-group collapsed" id="grp-account">
+          <div class="nav-item" onclick="toggleGrp('grp-account')"><span class="ni-ic"><img src="../shared/wam-accounttools.webp" alt=""></span>Account tools<svg class="ni-caret" viewBox="0 0 16 16"><path d="M3 10.5l5-5 5 5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div class="nav-sub">
+            <a class="nav-item">Messaging limits</a>
+            <a class="nav-item">Flows</a>
+            <a class="nav-item">Phone numbers</a>
+            <a class="nav-item">Catalog</a>
+            <a class="nav-item">Activity log</a>
+          </div>
+        </div>
+
+        <div class="nav-foot"><button class="nav-toggle" onclick="toggleNav()" title="Collapse menu"><svg viewBox="0 0 20 20"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M8 4v12" stroke-linecap="round"/><path d="M13.5 7.5L11 10l2.5 2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+      </nav>
+
+      <!-- ══ CONTENT ══ -->
+      <div class="content">
+        <div class="layout">
+          <div class="main-col">
+            <!-- Template name and language -->
+            <div class="card">
+              <h3>Template name and language</h3>
+              <div class="row2" style="margin-top:14px;">
+                <div class="field" style="margin-bottom:0;">
+                  <label class="lbl">Template name</label>
+                  <div class="inp-wrap">
+                    <input class="inp" id="nameInp" value="" maxlength="512" oninput="document.getElementById('nameCount').textContent=this.value.length+'/512'" />
+                    <span class="inp-count" id="nameCount">0/512</span>
+                  </div>
+                </div>
+                <div class="field" style="margin-bottom:0;">
+                  <label class="lbl">Language</label>
+                  <div class="dd" id="langDD" data-value="English">
+                    <div class="dd-select" onclick="toggleDD('langDD')"><span class="dd-val">English</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                    <div class="dd-menu">
+                      <div class="dd-option selected" onclick="pickDD('langDD','English')"><span class="dd-radio"></span>English</div>
+                      <div class="dd-option" onclick="pickDD('langDD','Spanish')"><span class="dd-radio"></span>Spanish</div>
+                      <div class="dd-option" onclick="pickDD('langDD','Portuguese')"><span class="dd-radio"></span>Portuguese</div>
+                      <div class="dd-option" onclick="pickDD('langDD','Hindi')"><span class="dd-radio"></span>Hindi</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Set up your template</h3>
+              <p class="card-sub">Choose the category that best describes your message template. Then select the type of message you want to send. <a href="#">Learn more about categories.</a></p>
+
+              <div class="seg" id="catSeg">
+                <button class="active" data-cat="Marketing" onclick="setCat(this)"><svg viewBox="0 0 16 16"><path fill="currentColor" stroke="none" d="M4.7 15.762h.776c.633 0 1.143-.51 1.143-1.143v-2.4H3.114c.267.815.42 1.638.45 2.446a1.135 1.135 0 0 0 1.135 1.097zM2.429 10.314h5.44s.045.038.068.053a15.303 15.303 0 0 0 2.735 1.372c1.014.388 2.073.678 3.193.86v.008c-.053.42.236.8.655.854h.1c.373 0 .7-.282.753-.663a43.68 43.68 0 0 0 0-11.627.762.762 0 0 0-.853-.655.762.762 0 0 0-.655.853v.008c-1.12.183-2.187.472-3.193.861-.952.366-1.859.815-2.735 1.371-.023.016-.045.03-.068.054h-5.44A1.905 1.905 0 0 0 .524 5.568v2.819c0 1.051.853 1.904 1.905 1.904v.023z"/></svg>Marketing</button>
+                <button data-cat="Utility" onclick="setCat(this)"><svg viewBox="0 0 16 16"><path fill="currentColor" stroke="none" d="M10.824 13.684a2.775 2.775 0 0 1-2.682 2.078 2.771 2.771 0 0 1-2.682-2.078c.815.085 1.71.138 2.683.138.971 0 1.867-.053 2.681-.138zM8.143.524a4.849 4.849 0 0 1 4.848 4.848v1.55c0 1.204.568 2.34 1.532 3.062.569.427.47 1.26-.21 1.468-1.282.389-3.383.846-6.17.846s-4.888-.457-6.17-.846c-.68-.207-.78-1.04-.21-1.468a3.83 3.83 0 0 0 1.531-3.063V5.372A4.848 4.848 0 0 1 8.143.524z"/></svg>Utility</button>
+                <button data-cat="Authentication" onclick="setCat(this)"><svg viewBox="0 0 16 16"><path fill="currentColor" stroke="none" d="M6.726 6.457a4.339 4.339 0 0 0-4.168 1.13A4.343 4.343 0 1 0 9.83 9.56l.897-.897a.763.763 0 0 0 .184-.298l.385-1.158 1.159-.386a.763.763 0 0 0 .482-.482l.386-1.158 1.157-.386a.762.762 0 0 0 .521-.722V2.047a.763.763 0 0 0-.761-.762h-2.027a.762.762 0 0 0-.482.173l-.056.05-4.949 4.95zm-.084 3.188a1.433 1.433 0 1 1-2.025 2.026 1.433 1.433 0 0 1 2.025-2.026z"/></svg>Authentication</button>
+              </div>
+
+              <div class="fmt-list" id="fmtList"></div>
+            </div>
+          </div>
+
+          <!-- ══ PREVIEW ══ -->
+          <div class="preview-col">
+            <div class="preview-card">
+              <h4>Template preview</h4>
+              <div class="phone">
+                <div class="bubble">
+                  <img class="b-media hidden" id="pvMedia" src="images/basket.jpg" alt="" />
+                  <div class="b-catalog hidden" id="pvCatalog">
+                    <img class="b-cat-thumb" id="pvCatThumb" src="" alt="" />
+                    <div class="b-cat-text">
+                      <div class="b-cat-title" id="pvCatTitle"></div>
+                      <div class="b-cat-sub" id="pvCatSub"></div>
+                    </div>
+                  </div>
+                  <div class="b-body" id="pvBody"></div>
+                  <div class="b-time">11:59</div>
+                  <div class="bubble-btns" id="pvBtns"></div>
+                </div>
+              </div>
+              <div class="pv-meta">
+                <h5>This template is good for</h5>
+                <p id="pvGood"></p>
+                <h5>Template areas you can customize</h5>
+                <p id="pvCustom"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ══ FOOTER ACTION BAR ══ -->
+        <div class="footbar">
+          <a class="btn-secondary" href="template-list.html">Discard</a>
+          <a class="btn-primary" id="nextBtn" href="configuration.html">Next</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleGrp(id) { document.getElementById(id).classList.toggle('collapsed'); }
+    function toggleNav() {
+      var nav = document.querySelector('.wa-nav');
+      if (nav.classList.contains('collapsed')) {
+        nav.classList.remove('collapsed');
+        setTimeout(function () { nav.classList.remove('txt-hide'); }, 180);
+      } else {
+        nav.classList.add('txt-hide');
+        setTimeout(function () { nav.classList.add('collapsed'); }, 120);
+      }
+    }
+
+    if (location.hash === '#embed') {
+      var _embnav = document.querySelector('.wa-nav');
+      if (_embnav) _embnav.classList.add('collapsed', 'txt-hide');
+    }
+
+    const DATA = {
+      Marketing: {
+        formats: [
+          { t: 'Default', d: 'Send messages with media and customized buttons to engage your customers.',
+            pv: { media: 'images/basket.jpg',
+                  body: 'Hey there! Check out our fresh groceries now! Use code <b>HEALTH</b> to get additional 10% off on your entire purchase.',
+                  btns: ['Shop now', 'Copy code'] } },
+          { t: 'Catalog', d: 'Send messages that drive sales by connecting your product catalog.',
+            pv: { catalog: { img: 'images/basket.jpg', title: "Jasper's Market Catalog", sub: 'Browse details of our offerings.' },
+                  body: 'Discover our latest products and bestsellers in our catalog. Browse and shop with ease on WhatsApp #happyshopping!',
+                  btns: ['View catalog'] } },
+          { t: 'Flows', d: 'Send a form to capture customer interests, appointment requests or run surveys.',
+            pv: { media: 'images/flows.jpg',
+                  body: 'Make dinner with Jasper Market! Our free online courses will be available soon! Sign up today to reserve a spot!',
+                  btns: ['Sign up'] } }
+        ],
+        good: 'Welcome messages, promotions, offers, coupons, newsletters, announcements',
+        custom: 'Media, header, body, footer, button'
+      },
+      Utility: {
+        formats: [
+          { t: 'Default', d: 'Send messages about an existing order or account.',
+            pv: { body: 'Good news! Your order 23KFEJJ2312 has shipped!\n\nHere’s your tracking information, please check the link below.',
+                  btns: ['Track shipment'] } },
+          { t: 'Order update', d: 'Confirm a new order and share the order details with your customer.',
+            pv: { body: '<b>Order update</b>\n\nThanks for your order, Jamie! We’ve confirmed order 23KFEJJ2312 and it’s now being prepared. View your order details below.',
+                  btns: ['View order'] } },
+          { t: 'Payment update', d: 'Confirm a payment and share the receipt with your customer.',
+            pv: { body: '<b>Payment update</b>\n\nWe’ve received your payment of $80.00 for order 23KFEJJ2312. Thank you! View your receipt below.',
+                  btns: ['View receipt'] } }
+        ],
+        media: false,
+        body: 'Good news! Your order 23KFEJJ2312 has shipped!\n\nHere\u2019s your tracking information, please check link below.',
+        btns: ['Track shipment'],
+        good: 'Order confirmations, account update, receipts, appointment reminders, billing',
+        custom: 'Media, header, body, footer, button'
+      },
+      Authentication: {
+        formats: [
+          { t: 'One-time Passcode', d: 'Send codes to verify a transaction or login.' }
+        ],
+        media: false,
+        body: '123456 is your verification code. For your security, do not share this code.',
+        btns: [],
+        good: 'One-time password, account recovery code, account verification, integrity challenges',
+        custom: 'Code delivery method'
+      }
+    };
+
+    const state = { cat: 'Marketing', fmt: 'Default' };
+
+    function setCat(el) {
+      document.querySelectorAll('#catSeg button').forEach(b => b.classList.remove('active'));
+      el.classList.add('active');
+      state.cat = el.dataset.cat;
+      state.fmt = DATA[state.cat].formats[0].t;
+      renderFormats(); renderPreview();
+    }
+    function setFmt(i) { state.fmt = DATA[state.cat].formats[i].t; renderFormats(); renderPreview(); }
+
+    function renderFormats() {
+      const fmts = DATA[state.cat].formats;
+      document.getElementById('fmtList').innerHTML = fmts.map((f, i) =>
+        `<div class="fmt${f.t === state.fmt ? ' active' : ''}" onclick="setFmt(${i})"><span class="fmt-radio"></span><div><div class="fmt-title">${f.t}</div><div class="fmt-desc">${f.d}</div></div></div>`
+      ).join('');
+    }
+
+    function btnIcon(label) {
+      if (/copy/i.test(label)) {
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+      }
+      if (/shop|visit|website/i.test(label)) {
+        return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+      }
+      return '';
+    }
+
+    function updateNext() {
+      var href = 'configuration.html';
+      if (state.cat === 'Authentication') href = 'config-auth.html';
+      else if (state.cat === 'Utility') href = 'config-utility.html';
+      else if (state.cat === 'Marketing' && state.fmt === 'Catalog') href = 'config-catalog.html';
+      else if (state.cat === 'Marketing' && state.fmt === 'Flows') href = 'config-flow.html';
+      document.getElementById('nextBtn').href = href;
+    }
+    function renderPreview() {
+      updateNext();
+      const d = DATA[state.cat];
+      const fmt = d.formats.find(f => f.t === state.fmt) || {};
+      const pv = fmt.pv || d;
+
+      const pvMedia = document.getElementById('pvMedia');
+      if (typeof pv.media === 'string') { pvMedia.src = pv.media; pvMedia.classList.remove('hidden'); }
+      else { pvMedia.classList.add('hidden'); }
+
+      const cat = pv.catalog;
+      const pvCat = document.getElementById('pvCatalog');
+      if (cat) {
+        document.getElementById('pvCatThumb').src = cat.img;
+        document.getElementById('pvCatTitle').textContent = cat.title;
+        document.getElementById('pvCatSub').textContent = cat.sub;
+        pvCat.classList.remove('hidden');
+      } else { pvCat.classList.add('hidden'); }
+
+      document.getElementById('pvBody').innerHTML = pv.body;
+      document.getElementById('pvBtns').innerHTML = pv.btns.map(t =>
+        `<div class="bubble-btn">${btnIcon(t)}${t}</div>`
+      ).join('');
+      document.getElementById('pvGood').textContent = d.good;
+      document.getElementById('pvCustom').textContent = d.custom;
+    }
+
+    renderFormats(); renderPreview();
+  
+    function toggleDD(id) {
+      var dd = document.getElementById(id), was = dd.classList.contains('open');
+      document.querySelectorAll('.dd.open').forEach(function (x) { x.classList.remove('open'); });
+      if (!was) dd.classList.add('open');
+    }
+    function pickDD(id, val) {
+      var dd = document.getElementById(id);
+      dd.dataset.value = val;
+      dd.querySelector('.dd-val').textContent = val;
+      dd.querySelectorAll('.dd-option').forEach(function (o) { o.classList.toggle('selected', o.textContent.trim() === val); });
+      dd.classList.remove('open');
+    }
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('.dd')) document.querySelectorAll('.dd.open').forEach(function (x) { x.classList.remove('open'); });
+    });
+  </script>
+</body>
+</html>

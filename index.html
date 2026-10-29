@@ -3,732 +3,758 @@
 <head>
   <link rel="icon" type="image/png" href="projects/favicons/mu.png">
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mu Jiun Shie — Sr. Product Designer</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&display=block" rel="stylesheet" />
+  <link rel="preload" href="https://fonts.gstatic.com/s/commissioner/v24/tDbw2o2WnlgI0FNDgduEk4jAhwgumbU1SVfU5BD8OuRL8OstC6KOhgvBYWSFJ-Mgdrgiju6fF8m0akXaaRg2_g.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="https://fonts.gstatic.com/s/fraunces/v38/6NU78FyLNQOQZAnv9bYEvDiIdE9Ea92uemAk_WBq8U_9v0c2Wa0KxC9TeP2Xz5c.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="css/nav.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Commissioner:wght@300..700&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #FFFFFF;
-      --surface: #F9F9F9;
-      --surface2: #F0EFED;
-      --ink: #434343;
-      --ink2: #6e502e;
-      --ink3: #9A958E;
-      --accent: #D56C00;
-      --accent-light: #FDF3E8;
-      --border: rgba(67,67,67,0.1);
-      --border2: rgba(67,67,67,0.06);
-      --user-bubble: #434343;
-      --user-text: #FFFFFF;
-      --ai-bubble: #F9F9F9;
-      --ai-border: rgba(67,67,67,0.12);
-      --tag-bg: #F0EFED;
-      --tag-text: #6e502e;
-      --card-hover: rgba(161,93,17,0.04);
-      --font: 'Commissioner', system-ui, sans-serif;
-      --radius: 16px;
-      --radius-sm: 8px;
-      --radius-pill: 999px;
-      --header-h: 61px;
-      --input-h: 82px;
+      --mu-white:    #ffffff;
+      --mu-gray-50:  #f7f7f8;
+      --mu-gray-100: #f2f2f3;
+      --mu-gray-200: #e8e8ea;
+      --mu-gray-300: #d6d6d9;
+      --mu-gray-400: #b0b0b6;
+      --mu-gray-500: #767680;
+      --mu-gray-600: #6e6e73;
+      --mu-gray-700: #48484d;
+      --mu-gray-800: #2c2c30;
+      --mu-gray-900: #1d1d1f;
+
+      --mu-ink:     var(--mu-gray-900);
+      --mu-ink-2:   var(--mu-gray-600);
+      --mu-ink-3:   var(--mu-gray-500);
+      --mu-bg:      var(--mu-gray-50);
+      --mu-border:  var(--mu-gray-200);
+
+      --mu-radius-sm:   8px;
+      --mu-radius-md:   12px;
+      --mu-radius-lg:   16px;
+      --mu-radius-xl:   20px;
+      --mu-radius-full: 999px;
+
+      --mu-shadow-sm: 0 1px 2px rgba(0,0,0,.05), 0 1px 4px rgba(0,0,0,.04);
+      --mu-shadow-md: 0 2px 6px rgba(0,0,0,.06), 0 8px 24px rgba(0,0,0,.08);
+      --mu-shadow-lg: 0 10px 30px rgba(0,0,0,.12), 0 24px 70px rgba(0,0,0,.18);
+
+      --mu-font: 'Commissioner', -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      --mu-serif: 'Fraunces', Georgia, serif;
+      --mu-mono: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+      --mu-ease: cubic-bezier(.25,.1,.25,1);
+
+      /* aliases consumed by shared css/nav.css */
+      --bg: var(--mu-bg);
+      --surface: var(--mu-white);
+      --surface2: var(--mu-gray-100);
+      --ink: var(--mu-ink);
+      --ink2: var(--mu-ink-2);
+      --ink3: var(--mu-ink-3);
+      --accent: var(--mu-ink);
+      --accent-light: var(--mu-gray-100);
+      --border: var(--mu-border);
+      --border2: var(--mu-border);
+      --font: var(--mu-font);
+      --serif: var(--mu-serif);
     }
 
-    html { overflow-y: scroll; scrollbar-gutter: stable; }
+    html { overflow-y: scroll; scrollbar-gutter: stable; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--ink);
-      -webkit-font-smoothing: antialiased;
+    body {
+      font-family: var(--mu-font);
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--mu-ink);
+      background: var(--mu-bg);
     }
 
-    /* header/nav/menu styles in css/nav.css */
+    a { color: inherit; }
 
-    /* ── CENTER STAGE (landing) ── */
-    .center-stage {
-      min-height: calc(100dvh - 150px);
+    :where(a, button):focus-visible {
+      outline: 2px solid var(--mu-gray-800);
+      outline-offset: 2px;
+    }
+
+    header { flex-shrink: 0; }
+
+    /* ───────────────── HERO (coverflow) ───────────────── */
+    .hero {
+      position: relative;
+      min-height: auto;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 40px 20px 100px;
+      overflow: hidden;
+    }
+
+    .hero-head {
+      padding: 60px 24px 0;
       text-align: center;
-      transition: opacity 0.3s ease, transform 0.3s ease;
+      animation: riseIn .7s var(--mu-ease) .1s both;
     }
 
-    .center-stage .greeting {
-      font-family: var(--font);
-      font-weight: 300;
-      font-size: clamp(24px, 5vw, 40px);
-      line-height: 1.25;
+    .hero-head h1 .inline-logo {
+      height: 0.6em;
+      width: auto;
+      vertical-align: -0.02em;
+      margin: 0 0.08em;
+    }
+    .hero-head h1 .inline-logo.gg { height: 0.66em; }
+    .hero-head h1 .inline-logo.wa { height: 0.66em; }
+    .hero-head h1 .nowrap { white-space: nowrap; }
+
+    .hero-head h1 {
+      font-family: var(--mu-serif);
+      font-optical-sizing: auto;
+      font-weight: 600;
+      font-size: clamp(30px, 4vw, 40px);
+      line-height: 1.08;
       letter-spacing: -0.02em;
-      margin-bottom: 36px;
-      max-width: 100%;
+      max-width: 35ch;
+      margin: 0 auto;
+      color: var(--mu-ink);
     }
 
-    .center-stage .greeting strong {
-      font-weight: 700;
-      letter-spacing: -0.025em;
-    }
-
-    .rotate-line { display: none; }
-    .rotate-line.active { display: inline; }
-
-    .rotate-line .typed-text {
-      border-right: 2px solid var(--accent);
-      animation: blink-caret 0.6s step-end infinite;
-    }
-
-    .rotate-line .typed-text.done {
-      border-right-color: transparent;
-      animation: none;
-    }
-
-    @keyframes blink-caret {
-      0%, 100% { border-right-color: var(--accent); }
-      50% { border-right-color: transparent; }
-    }
-
-    .center-stage .greeting em {
-      color: var(--accent);
-      font-style: italic;
-    }
-
-    .center-stage .sub {
-      font-family: var(--font);
-      font-size: 15px;
-      font-weight: 400;
-      color: var(--ink3);
+    .hero-head .sub {
+      margin: 16px auto 0;
+      font-size: 16px;
       line-height: 1.6;
-      max-width: 460px;
-      margin-bottom: 12px;
+      color: var(--mu-ink-2);
+      max-width: 680px;
     }
 
-    /* ── STATUS PILL ── */
-    .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      font-family: var(--font);
-      font-size: 11.5px;
-      font-weight: 500;
-      color: var(--ink3);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      padding: 5px 12px;
-      margin-bottom: 20px;
-      letter-spacing: 0.02em;
+    .hero-head .hero-rule,
+    .side-head .hero-rule,
+    .foot-rule {
+      display: block;
+      width: 1px;
+      height: 64px;
+      background: var(--mu-gray-500);
+      margin: 24px auto;
     }
+    .foot-rule { margin: 40px auto; }
 
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #22C55E;
-      box-shadow: 0 0 0 2px rgba(34,197,94,0.2);
-      animation: pulse 2s ease infinite;
+    /* ── INDEPENDENT / SIDE PROJECTS ── */
+    .side-head {
+      text-align: center;
+      padding: 0 24px;
+      margin-top: 0;
     }
-
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 0 2px rgba(34,197,94,0.2); }
-      50% { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+    .side-head .sub-head {
+      margin: 0 auto;
+      font-family: var(--mu-serif);
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: var(--mu-ink);
     }
-
-    /* ── ICE BREAKERS ── */
-    .icebreakers {
+    .side-head .sub {
+      margin: 0 auto;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--mu-ink-2);
+      max-width: 680px;
+    }
+    .side-head .me-avatar {
+      display: block;
+      height: 60px;
+      width: 60px;
+      object-fit: contain;
+      margin: 0 auto;
+    }
+    .side-grid {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
       justify-content: center;
-      max-width: 900px;
-      margin-bottom: 28px;
+      gap: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 24px 24px 24px;
     }
-
-    .ice-btn {
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--ink2);
-      background: var(--bg);
-      border: 1px solid rgba(67,67,67,0.2);
-      border-radius: var(--radius-pill);
-      padding: 8px 16px;
+    .side-card {
+      width: 430px;
+      max-width: 100%;
       cursor: pointer;
-      transition: all 0.18s ease;
-      text-align: left;
-      line-height: 1.4;
+      text-align: center;
     }
-
-    .ice-btn:hover {
-      background: var(--accent-light);
-      border-color: var(--accent);
-      color: var(--accent);
+    .side-card .frame {
+      border: 1px solid var(--mu-border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--mu-gray-100);
+      box-shadow: 0 2px 10px rgba(0,0,0,.05);
+      transition: transform .3s var(--mu-ease), box-shadow .3s var(--mu-ease);
     }
-
-    .ice-label {
-      font-family: var(--font);
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--ink3);
-      letter-spacing: 0.03em;
-      margin-bottom: 6px;
+    .side-card:hover .frame {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 28px rgba(0,0,0,.1);
     }
+    .side-card img { width: 100%; display: block; }
+    .side-cap {
+      margin-top: 16px;
+      font-family: var(--mu-mono);
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--mu-ink-2);
+    }
+    .side-cap b { font-weight: 500; color: var(--mu-ink); }
 
-    .ice-btn.used {
-      opacity: 0.45;
+    /* ── SIDE COVERFLOW (apps + animations) ── */
+    .scf {
+      position: relative;
+      overflow-x: clip;            /* clip off-screen cards horizontally (no sideways page scroll) while letting card shadows show above/below */
+      padding-top: 10px;
+    }
+    .scf-track {
+      position: relative;
+      width: 100%;
+      height: 646px;               /* hugs the 630px active card — minimal top/bottom gap */
+    }
+    .scf-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      height: 630px;               /* row height; width set per-media so aspect matches (no crop) */
+      cursor: pointer;
+      transition: transform .45s var(--mu-ease);
+      -webkit-user-select: none; user-select: none;
+    }
+    .scf-card .scf-frame {
+      width: 100%;
+      height: 100%;
+      border: 0.5px solid var(--mu-border);
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--mu-gray-100);
+    }
+    .scf-card img, .scf-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;           /* card aspect == media aspect → fills with no crop */
+      display: block;
       pointer-events: none;
     }
-
-    /* ── CHAT CONTAINER ── */
-    .chat-wrap {
-      max-width: 960px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 0 20px 120px;
+    .scf-cap {
+      text-align: center;
+      margin: 6px auto 0;
+      max-width: 560px;
+      padding: 0 24px;
+      font-family: var(--mu-font);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--mu-ink-2);
+      min-height: 22px;
+      transition: opacity .25s var(--mu-ease);
     }
-
-    .messages {
-      padding-top: 48px;
-      padding-bottom: 20px;
+    .scf-cap b { font-weight: 500; color: var(--mu-ink); }
+    .scf-cap .scf-link {
+      color: var(--mu-ink-2);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+      white-space: nowrap;
     }
+    .scf-cap .scf-link:hover { color: var(--mu-ink); }
 
-    .msg {
+    /* ── 3 fun videos in a row (no carousel) ── */
+    .fun-row {
       display: flex;
-      gap: 14px;
-      margin-bottom: 20px;
-      animation: fadeUp 0.35s ease both;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 24px;
+      flex-wrap: wrap;
+      max-width: 1320px;
+      margin: 30px auto 0;
+      padding: 0 24px;
+    }
+    .fun-item { width: 408px; max-width: 100%; }
+    .fun-item video {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+      border-radius: 16px;
+      border: 0.5px solid var(--mu-border);
+      background: var(--mu-gray-100);
+    }
+    html.dark .fun-item video { border-color: rgba(255,255,255,0.12); }
+    @media (max-width: 760px) {
+      .fun-row { gap: 16px; }
+      .fun-item { width: 300px; }
     }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── Scroll-triggered full-page DARK MODE (toggled by JS when the side-projects section is reached) ── */
+    .dark-zone { margin-top: 32px; padding-bottom: 24px; }   /* plain wrapper; also the scroll trigger target */
+
+    /* smooth transitions for every element whose colour flips */
+    html, body,
+    .logo, .logo span, nav a, .menu-toggle, .menu-toggle svg,
+    .hero-head h1, .hero-head .sub-head, .hero-head .sub,
+    .side-head .sub-head, .side-head .sub, .me-avatar,
+    .hero-rule, .foot-rule, .scf-cap, .scf-cap b, .scf-cap .scf-link,
+    .scf-frame, .ov-all a {
+      transition: background-color .55s ease, color .55s ease, border-color .55s ease,
+                  fill .55s ease, stroke .55s ease, filter .55s ease;
     }
 
-    .msg.user { flex-direction: row-reverse; }
+    html.dark, html.dark body { background: #15151a; }
+    /* header */
+    html.dark .logo { color: #fff; }
+    html.dark .logo span { color: #6a6a72; }
+    html.dark nav a { color: rgba(255,255,255,0.7); }
+    html.dark nav a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+    html.dark nav a.active { color: #fff; }
+    html.dark .menu-toggle { border-color: rgba(255,255,255,0.25); background: transparent; }
+    html.dark .menu-toggle svg { stroke: #fff; }
+    /* hero/carousel text (still partly visible as dark fades in) */
+    html.dark .hero-head h1 { color: #fff; }
+    html.dark .hero-head .sub-head { color: rgba(255,255,255,0.92); }
+    html.dark .hero-head .sub { color: rgba(255,255,255,0.55); }
+    /* top-carousel focus caption in dark — same colours as the fun caption */
+    html.dark .focus-cap { color: rgba(255,255,255,0.62); }
+    html.dark .focus-cap .bcap-t { color: #fff; }
+    html.dark .focus-cap .bcap-link { color: rgba(255,255,255,0.72); }
+    html.dark .focus-cap .bcap-link:hover { color: #fff; }
+    /* side-projects section */
+    html.dark .side-head .sub-head { color: #fff; }
+    html.dark .side-head .sub { color: rgba(255,255,255,0.58); }
+    html.dark .me-avatar { filter: invert(1); }
+    html.dark .hero-rule,
+    html.dark .foot-rule { background: rgba(255,255,255,0.22); }
+    html.dark .scf-cap { color: rgba(255,255,255,0.62); }
+    html.dark .scf-cap b { color: #fff; }
+    html.dark .scf-cap .scf-link { color: rgba(255,255,255,0.72); }
+    html.dark .scf-cap .scf-link:hover { color: #fff; }
+    html.dark .scf-frame { border-color: rgba(255,255,255,0.14); }
+    html.dark .ov-all a { color: rgba(255,255,255,0.45); border-color: rgba(255,255,255,0.18); background: transparent; }
+    html.dark .ov-all a:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: transparent; }
+    @media (max-width: 700px) {
+      .scf-track { height: 332px; }
+      .scf-card { height: 320px; }
+      .scf-cap { font-size: 13px; }
+    }
 
-    .avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      flex-shrink: 0;
+    .hero-head .sub-head {
+      margin: 4px auto 0;
+      font-family: var(--mu-serif);
+      font-weight: 600;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+      color: var(--mu-ink);
+    }
+    .hero-head .brand-logos {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 13px;
-      font-weight: 600;
-      font-family: var(--font);
-      overflow: hidden;
-      margin-top: 2px;
+      gap: 16px;
+      margin: 24px auto 0;
+    }
+    .hero-head .brand-logos img {
+      display: block;
+      height: 18px;
+      width: auto;
+      opacity: 1;
+    }
+    /* per-logo height so the LETTERS match visually (descenders/glyphs vary) */
+    .hero-head .brand-logos img[alt="Google"]    { height: 24px; }
+    .hero-head .brand-logos img[alt="WhatsApp"]  { height: 26px; }
+
+    .hero-head .sub-head + .sub {
+      margin-top: 0;
     }
 
-    .avatar.mu {
-      background: var(--ink);
-      color: var(--bg);
-      font-size: 15px;
-      font-weight: 700;
-    }
-
-    .avatar.visitor {
-      background: var(--surface2);
-      color: var(--ink2);
-      font-size: 11px;
-      font-weight: 500;
-      border: 1px solid var(--border);
-    }
-
-    .bubble {
-      max-width: 88%;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      font-size: 15px;
-      line-height: 1.4;
-      color: var(--ink);
-      font-family: var(--font);
-      font-weight: 400;
-    }
-
-    .msg.ai .bubble {
-      background: var(--ai-bubble);
-      border: 1px solid var(--ai-border);
-      border-top-left-radius: 4px;
-    }
-
-    .msg.user .bubble {
-      background: var(--user-bubble);
-      color: var(--user-text);
-      border-top-right-radius: 4px;
-    }
-
-    .bubble strong { font-weight: 600; }
-    .bubble p + p { margin-top: 10px; }
-
-    /* ── TYPING INDICATOR ── */
-    .typing-indicator {
-      display: flex;
-      gap: 5px;
-      padding: 14px 18px;
-      width: fit-content;
-    }
-
-    .typing-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--ink3);
-      animation: bounce 1.2s ease infinite;
-    }
-    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-6px); }
-    }
-
-    /* ── MSG CONTENT ── */
-    .msg-content {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── PROJECT CAROUSEL ── */
-    .carousel-wrap {
-      width: 100%;
-      margin-top: 8px;
+    /* skewed parallelogram stack */
+    .cf {
       position: relative;
-    }
-
-    .carousel {
+      flex: none;
+      min-height: 0;
       display: flex;
-      gap: 12px;
-      overflow-x: scroll;
-      overflow-y: hidden;
-      scrollbar-width: none;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 10px;
-      padding-right: 24px;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 30px;                 /* gap above the cards (autoplay) */
+      transition: padding-top .4s var(--mu-ease);
+    }
+    .cf.user-active {
+      padding-top: 320px;                /* push the focused card down so the hero text scrolls off the top */
     }
 
-    .carousel::-webkit-scrollbar { display: none; }
-
-    .project-card {
-      flex-shrink: 0;
-      width: 336px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      overflow: hidden;
-      scroll-snap-align: start;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.22s ease, box-shadow 0.22s ease;
-      display: flex;
-      flex-direction: column;
-      cursor: pointer;
-    }
-
-    .project-card:hover:not(.coming-soon) {
-      border-color: var(--accent);
-    }
-
-    .project-card:hover:not(.coming-soon) .card-title {
-      color: var(--accent);
-    }
-
-    .project-card.coming-soon {
-      cursor: default;
-    }
-
-    .card-img {
-      width: 100%;
-      flex-shrink: 0;
+    .cf-track {
       position: relative;
-      overflow: hidden;
+      width: 100%;
+      height: 300px;
+      transition: height .4s var(--mu-ease);
     }
+    .cf.user-active .cf-track { height: 540px; }   /* room for the focused card */
 
-    .coming-soon-pill {
+    .cf-card {
       position: absolute;
-      bottom: 8px;
-      left: 14px;
-      font-size: 11px;
-      font-weight: 500;
-      color: #fff;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      padding: 4px 8px;
-      border-radius: 999px;
-      z-index: 1;
+      top: 0;
+      left: 50%;
+      --cw: 450px;                   /* base card width (responsive); autoplay display size so active = scale(1.0), crisp on Safari */
+      width: var(--cw);
+      margin-left: calc(var(--cw) / -2);
+      cursor: pointer;
+      transition: transform .4s var(--mu-ease), opacity .3s var(--mu-ease);
+      /* NO will-change: it makes Safari cache a 1×-rasterized bitmap and upscale it → blur when scaled */
+      -webkit-user-select: none; user-select: none;
+    }
+    /* in focus, hide the receded neighbour cards so they don't peek past the zoomed browser */
+    .cf-card .browser {
+      display: flex;
+      flex-direction: column;
+      border-radius: 6px;
+      overflow: hidden;              /* clips images crisply; NO clip-path (Safari rasterizes clip-path → blur when scaled) */
+      background: var(--mu-gray-100);
+      border: 1px solid var(--mu-border);
     }
 
-    .card-img img {
+    .cf-card .bview { position: relative; }
+    .cf-card .bimg {
+      position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.4s ease;
-    }
-
-    .project-card:hover:not(.coming-soon) .card-img img {
-      transform: scale(1.06);
-    }
-
-    .card-body {
-      padding: 14px 16px 16px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
-
-    .card-tags {
-      display: flex;
-      gap: 5px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .tag {
-      font-family: var(--font);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      background: var(--tag-bg);
-      color: var(--tag-text);
-      border-radius: var(--radius-pill);
-      padding: 3px 9px;
-    }
-
-    .tag.accent {
-      background: var(--accent-light);
-      color: var(--accent);
-    }
-
-    .card-company {
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .card-title {
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 650;
-      color: var(--ink);
-      margin-bottom: 6px;
-      letter-spacing: -0.01em;
-    }
-
-    .card-summary {
-      font-family: var(--font);
-      font-size: 13px;
-      font-weight: 400;
-      color: var(--ink2);
-      line-height: 1.35;
-      flex: 1;
-    }
-
-    .card-arrow {
-      color: var(--accent);
-      font-size: 16px;
-      font-weight: 700;
-      transition: transform 0.18s ease;
-      display: inline-block;
-    }
-
-    .project-card:hover:not(.coming-soon) .card-arrow { transform: translateX(3px); }
-
-    .carousel-wrap::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0; right: 0;
-      width: 32px;
-      background: linear-gradient(to left, var(--bg), transparent);
+      object-position: top left;
+      display: block;
       pointer-events: none;
-      z-index: 2;
+      transition: opacity .4s var(--mu-ease);
     }
+    .cf-card .bwire { opacity: 1; z-index: 2; }          /* wireframe shown when stacked */
+    .cf-card.is-active .bwire { opacity: 0; }            /* polished shown when focused */
 
-    .carousel-arrow {
+    /* live prototype embed — large render scaled down (×2.2 card scale = 0.8 net) */
+    .cf-card .bembed {
       position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--ink);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      z-index: 3;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-      transition: opacity 0.2s, background 0.15s;
-    }
-
-    .carousel-arrow:hover {
-      background: var(--surface);
-    }
-
-    .carousel-arrow--left { left: 6px; }
-    .carousel-arrow--right { right: 6px; }
-
-    .carousel-arrow.hidden { opacity: 0; pointer-events: none; }
-
-    /* ── PROJECT MODAL ── */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.5);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      top: 0; left: 0;
+      width: 1432px;
+      height: 880px;
+      transform: scale(0.3143);      /* 1432 × 0.3143 = 450 → fills the bview exactly */
+      transform-origin: top left;
+      border-radius: 0 0 8px 8px;   /* round the iframe itself (≈6px visual after card scale) */
+      border: 0;
       opacity: 0;
       pointer-events: none;
+      z-index: 3;
+      transition: opacity .3s var(--mu-ease);
+    }
+    .cf.user-active .cf-card.is-active .browser { border-radius: 6px; }
+    .cf.user-active .cf-card.is-active .bview { border-radius: 0 0 6px 6px; }
+
+    /* live iframe only when zoomed (focus); autoplay/stacked show screenshots.
+       In focus the iframe is INTERACTIVE (clicks reach the prototype). Scrolling is forwarded from
+       inside the iframe via postMessage, and the parent translates the scaled iframe (Safari-safe).
+       Opening the project is done only from the caption's "View project" link. */
+    .cf.user-active .cf-card.is-active .bembed { opacity: 1; pointer-events: auto; }
+    .cf.user-active .cf-card.is-active .bview:has(.bembed) .bpol { opacity: 0; }
+
+    /* focus caption — rendered OUTSIDE the scaled card so it stays crisp on Safari
+       (a counter-scaled caption inside the 3× card gets rasterized tiny then upscaled → blur) */
+    .focus-cap {
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      text-align: center;
+      padding: 0 24px;
+      font-family: var(--mu-font);
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--mu-ink-2);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .28s var(--mu-ease);
+      z-index: 6;
+    }
+    .focus-cap.show { opacity: 1; pointer-events: auto; }
+
+    /* crisp browser-bar overlay (rendered OUTSIDE the 3× scale so it stays sharp on Safari);
+       positioned over the focused browser's chrome in JS. Only the dots+URL need it — the flat
+       grey bar + rounded corners underneath are a flat colour, so their blur is invisible. */
+    .focus-chrome {
+      position: absolute;
+      left: 0; top: 0;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 200;        /* above the cards (z-index up to ~100) so it covers the blurry chrome */
+      transition: opacity .2s var(--mu-ease);
+    }
+    .focus-chrome.show { opacity: 1; }
+    .focus-chrome .fc-dots { position: absolute; top: 50%; transform: translateY(-50%); display: flex; align-items: center; }
+    .focus-chrome .fc-dots i { border-radius: 50%; display: block; }
+    .focus-chrome .fc-dots i:nth-child(1) { background: #fc605c; }
+    .focus-chrome .fc-dots i:nth-child(2) { background: #fdbc40; }
+    .focus-chrome .fc-dots i:nth-child(3) { background: #34c749; }
+    .focus-chrome .fc-url {
+      margin: 0 auto;
+      font-family: var(--mu-mono);
+      color: var(--mu-ink-3);
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+    /* hide the blurry originals in focus; the crisp overlay replaces them (keep the white URL pill) */
+    .cf.user-active .cf-card.is-active .bdots { visibility: hidden; }
+    .cf.user-active .cf-card.is-active .burl { color: transparent; }
+    .focus-cap .bcap-t { font-weight: 500; color: var(--mu-ink); }
+    .focus-cap .bcap-link {
+      font-weight: 400;
+      color: var(--mu-ink-2);
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .focus-cap .bcap-link:hover { color: var(--mu-ink); }
+
+    .cf.user-active .cf-card.is-active .burl {
+      font-size: 3px;               /* show the link only in focus mode */
+    }
+
+    /* Safari-style browser frame inside each card */
+    .bchrome {
+      height: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 7px;
+      position: relative;
+      background: #f3f3f5;
+      border-bottom: 1px solid var(--mu-border);
+      flex-shrink: 0;
+    }
+    .bdots { display: flex; gap: 2.5px; flex-shrink: 0; position: absolute; left: 5px; top: 50%; transform: translateY(-50%); }
+    .bdots i { width: 3.2px; height: 3.2px; border-radius: 50%; display: block; }
+    .bdots i:nth-child(1) { background: #fc605c; }
+    .bdots i:nth-child(2) { background: #fdbc40; }
+    .bdots i:nth-child(3) { background: #34c749; }
+    .burl {
+      width: 55%;
+      height: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      text-align: center;
+      background: #fff;
+      border: 0.5px solid #e4e4e7;
+      border-radius: 6px;
+      font-family: var(--mu-mono);
+      font-size: 0;                 /* hide the browser link text */
+      font-weight: 500;
+      color: var(--mu-ink-3);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 10px;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+    .cf-card .bview { height: calc(var(--cw) * 0.6133); flex: none; overflow: hidden; border-radius: 0 0 6px 6px; }  /* keep browser aspect ratio at any card width (450→276) */
+    /* focus uses CSS `zoom` (set in JS) instead of transform:scale — Safari re-rasterizes
+       zoomed content at full resolution (crisp), whereas transform:scale upscales a bitmap. */
+
+    /* ───────────────── OVERVIEW (image left / context right) ───────────────── */
+    .overview {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 96px 56px 64px;
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .ov-media {
+      border-radius: var(--mu-radius-lg);
+      overflow: hidden;
+      background: var(--mu-gray-100);
+      border: 1px solid var(--mu-border);
+      box-shadow: var(--mu-shadow-md);
+      aspect-ratio: 1200 / 720;
+    }
+    .ov-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+    .ov-eyebrow {
+      font-family: var(--mu-mono);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mu-ink-3);
+      margin-bottom: 12px;
+    }
+    .ov-title {
+      font-family: var(--mu-serif);
+      font-weight: 600;
+      font-size: clamp(26px, 2.6vw, 36px);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: var(--mu-ink);
+      margin-bottom: 16px;
+    }
+    .ov-context {
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--mu-ink-2);
+      margin-bottom: 24px;
+      max-width: 44ch;
+    }
+    .ov-metrics {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 30px;
+    }
+    .ov-metric .n {
+      font-family: var(--mu-serif);
+      font-weight: 600;
+      font-size: 30px;
+      color: var(--mu-ink);
+      line-height: 1;
+    }
+    .ov-metric .l {
+      font-size: 12.5px;
+      color: var(--mu-ink-3);
+      margin-top: 6px;
+    }
+    .ov-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      color: var(--mu-white);
+      background: var(--mu-gray-900);
+      border-radius: var(--mu-radius-full);
+      padding: 12px 24px;
+      transition: background .18s var(--mu-ease), transform .18s var(--mu-ease);
+    }
+    .ov-cta:hover { background: var(--mu-gray-800); transform: translateY(-1px); }
+    .ov-cta svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .ov-all {
+      text-align: center;
+      padding: 0 24px 80px;
+    }
+    .ov-all a {
+      font-family: var(--mu-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--mu-ink-2);
+      text-decoration: none;
+      border-bottom: 1px solid var(--mu-gray-300);
+      padding-bottom: 3px;
+      transition: color .15s var(--mu-ease), border-color .15s var(--mu-ease);
+    }
+    .ov-all a:hover { color: var(--mu-ink); border-color: var(--mu-ink); }
+
+    @keyframes riseIn { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ───────────────── MODAL ───────────────── */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
       transition: opacity 0.25s ease;
       padding: 24px;
     }
-
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
     .modal {
-      background: var(--bg);
-      border-radius: var(--radius);
-      width: 95%;
-      max-width: 1280px;
-      height: 90vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+      background: var(--mu-white);
+      border-radius: var(--mu-radius-lg);
+      width: 100%; max-width: 1440px; height: 95vh;
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: var(--mu-shadow-lg);
       transform: translateY(12px) scale(0.98);
       transition: transform 0.25s ease;
     }
-
-    .modal-overlay.open .modal {
-      transform: translateY(0) scale(1);
-    }
-
+    .modal-overlay.open .modal { transform: translateY(0) scale(1); }
     .modal-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 20px; border-bottom: 1px solid var(--mu-border); flex-shrink: 0;
     }
-
-    .modal-title {
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--ink);
-    }
-
+    .modal-title { font-family: var(--mu-serif); font-size: 16px; font-weight: 600; color: var(--mu-ink); }
     .modal-close {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      border: none;
-      background: var(--surface2);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      flex-shrink: 0;
-      color: var(--ink2);
-      transition: all 0.15s ease;
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: var(--mu-gray-100); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+      color: var(--mu-ink-2); transition: all 0.15s ease;
     }
+    .modal-close:hover { background: var(--mu-ink); color: var(--mu-white); }
+    .modal-body { flex: 1; min-height: 0; }
+    .modal-body iframe { width: 100%; height: 100%; border: none; }
 
-    .modal-close:hover {
-      background: var(--ink);
-      color: var(--bg);
-    }
-
-    .modal-body {
-      flex: 1;
-      min-height: 0;
-    }
-
-    .modal-body iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    /* ── INPUT BAR ── */
-    .input-area {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      background: var(--bg);
-      border-top: 1px solid var(--border2);
-      padding: 16px 20px 24px;
-      z-index: 50;
-    }
-
-    .input-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      display: flex;
-      gap: 10px;
-      align-items: flex-end;
-    }
-
-    .input-field {
-      flex: 1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 13px 18px;
-      font-family: var(--font);
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--ink);
-      resize: none;
-      outline: none;
-      min-height: 54px;
-      max-height: 140px;
-      line-height: 1.5;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-    }
-
-    .input-field::placeholder { color: var(--ink3); }
-    .input-field:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px var(--accent-light), 0 2px 16px rgba(0,0,0,0.06);
-    }
-
-    .send-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: var(--ink);
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.18s ease;
-    }
-
-    .send-btn:hover { background: var(--accent); transform: scale(1.05); }
-    .send-btn:active { transform: scale(0.96); }
-
-    .send-btn svg {
-      width: 18px;
-      height: 18px;
-      fill: none;
-      stroke: var(--bg);
-      stroke-width: 2;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-    }
-
-    /* ── SCROLLBAR ── */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 600px) {
-      .center-stage { padding: 28px 16px 20px; }
-      .center-stage .sub { font-size: 14px; max-width: 340px; }
-      .icebreakers { gap: 6px; }
-      .ice-btn { font-size: 12px; padding: 7px 12px; }
-      .chat-wrap { padding: 0 10px 100px; }
-      .messages { padding-top: 20px; }
-      .msg { gap: 8px; margin-bottom: 14px; }
-      .avatar { width: 28px; height: 28px; font-size: 11px; }
-      .avatar.mu { font-size: 13px; }
-      .bubble { max-width: 92%; padding: 10px 14px; font-size: 14px; }
-      .project-card { width: 240px; }
-      .card-img img { height: auto; }
-      .carousel-arrow { width: 28px; height: 28px; }
-      .carousel-wrap { max-width: calc(100vw - 56px); }
-      .carousel-wrap::after { width: 20px; }
-      .carousel { padding-right: 16px; }
-      .input-area { padding: 12px 12px 20px; }
-      .input-field { min-height: 46px; padding: 11px 14px; font-size: 14px; }
-      .send-btn { width: 44px; height: 44px; }
-      .modal-overlay { padding: 0; background: var(--bg); }
-      .modal { border-radius: 0; height: 100%; max-width: 100%; width: 100%; box-shadow: none; }
-      .modal-header { padding: 12px 16px; }
+    /* ───────────────── RESPONSIVE ───────────────── */
+    @media (max-width: 700px) {
+      .hero-head { padding: 20px 20px 0; }
+      .hero-head h1 { font-size: clamp(24px, 7.2vw, 34px); }
+      .hero-head h1 .nowrap { white-space: normal; }   /* let the logo phrase wrap on phones instead of overflowing */
+      .hero-head .sub { font-size: 14px; }
+      .hero-head .sub-head { font-size: 19px; }
+      .cf { padding-top: 18px; }
+      .cf-track { height: calc(min(86vw, 360px) * 0.6133 + 34px); }   /* fits the single card (bview + chrome + breathing room) */
+      .cf-card { --cw: min(86vw, 360px); cursor: pointer; }           /* one card fills the viewport; neighbours pushed off-screen in JS */
+      .cf-card .browser { border-radius: 10px; }
+      .cf-card .bview { border-radius: 0 0 10px 10px; }
+      .modal-overlay { padding: 0; background: var(--mu-bg); }
+      .modal { border-radius: 0; height: 100dvh; max-width: 100%; box-shadow: none; }
     }
   </style>
 </head>
-<body class="on-landing">
+<body>
+  <script src="js/nav.js"></script>
 
-  <header>
-    <a class="logo" href="#" id="logoBtn">Mu<span>.</span></a>
-    <nav>
-      <a href="#" id="restartBtn" style="display:none">Restart</a>
-      <a href="index.html" class="active">Chat</a>
-      <a href="projects.html">Projects</a>
-      <a href="resume.html">About</a>
-      <a href="https://www.linkedin.com/in/mshie/" target="_blank">LinkedIn</a>
-    </nav>
-    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
-      <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-    </button>
-  </header>
+  <main class="fade-page">
 
-  <!-- Mobile slide-out menu -->
-  <div class="menu-backdrop" id="menuBackdrop"></div>
-  <div class="mobile-menu" id="mobileMenu">
-    <a href="index.html" class="active">Chat</a>
-    <a href="projects.html">Projects</a>
-    <a href="resume.html">About</a>
-    <a href="https://www.linkedin.com/in/mshie/" target="_blank">LinkedIn</a>
-  </div>
+    <!-- HERO · coverflow -->
+    <section class="hero">
+      <div class="hero-head">
+        <h1>Mu is a product designer with 8 years in <span class="nowrap">tech&nbsp;<img class="inline-logo" src="assets/logo/meta-logo.svg" alt="Meta" /><img class="inline-logo wa" src="assets/logo/whatsapp-official.svg" alt="WhatsApp" /><img class="inline-logo gg" src="assets/logo/google-g.svg" alt="Google" />,</span> based in Silicon Valley, focused on building products with user-focused craft, systems thinking, and business impact.</h1>
+        <span class="hero-rule"></span>
+        <h2 class="sub-head">Meta Business Suite, WhatsApp Manager</h2>
+        <p class="sub">Used by millions of messaging businesses, third-party partners, and developers.</p>
+      </div>
 
-  <!-- CENTER STAGE (landing) -->
-  <div class="center-stage" id="centerStage">
-    <p class="greeting">Hi&#x1F44B;&#x1F3FC; I'm <strong>Mu</strong>, Sr. Product Designer<br><span class="rotate-line active">8 years of working experience in product design</span><span class="rotate-line">Based in &#x1F1FA;&#x1F1F8;&#x1F334; San Francisco Bay Area</span><span class="rotate-line">Focused on monetization and business growth</span></p>
-    <p class="sub">What do you want to learn about Mu?</p>
-    <div class="icebreakers" id="landingIcebreakers"></div>
-  </div>
+      <div class="cf">
+        <div class="cf-track" id="cfTrack"></div>
+        <div class="focus-chrome" id="focusChrome"><span class="fc-dots"><i></i><i></i><i></i></span><span class="fc-url"></span></div>
+        <div class="focus-cap" id="focusCap"></div>
+      </div>
+    </section>
 
-  <!-- CHAT VIEW (hidden until first interaction) -->
-  <div class="chat-wrap" id="chatWrap" style="display:none">
-    <div class="messages" id="messages"></div>
-  </div>
+    <!-- INDEPENDENT / SIDE PROJECTS (dark band) -->
+    <div class="dark-zone">
+    <section class="side-head">
+      <span class="hero-rule"></span>
+      <img class="me-avatar" src="assets/avatar.svg" alt="" />
+      <h2 class="sub-head">Side project, apps and animation</h2>
+      <p class="sub">Apps and animations built for fun and everyday life.</p>
+    </section>
+    <section class="scf"><div class="scf-track" id="scfTrack"></div></section>
+    <div class="scf-cap" id="scfCap"></div>
 
-  <!-- INPUT BAR -->
-  <div class="input-area" id="inputArea" style="display:block">
-    <div class="input-inner">
-      <textarea class="input-field" id="userInput" placeholder="Ask me anything..." rows="1"></textarea>
-      <button class="send-btn" id="sendBtn" aria-label="Send">
-        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-      </button>
+    <span class="hero-rule foot-rule"></span>
+
+    <div class="ov-all"><a href="projects.html">View all projects</a></div>
     </div>
-  </div>
+
+  </main>
 
   <!-- PROJECT MODAL -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
       <div class="modal-header">
         <span class="modal-title" id="modalTitle"></span>
-        <button class="modal-close" id="modalClose"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" style="margin-top:-1px"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>
+        <button class="modal-close" id="modalClose" aria-label="Close"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" style="margin-top:-1px"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>
       </div>
       <div class="modal-body">
         <iframe id="modalIframe" src="" title="Project"></iframe>
@@ -736,432 +762,409 @@
     </div>
   </div>
 
-  <script src="js/projects-data.js"></script>
   <script>
-    const messagesEl    = document.getElementById('messages');
-    const chatWrap      = document.getElementById('chatWrap');
-    const centerStage   = document.getElementById('centerStage');
-    const inputField    = document.getElementById('userInput');
-    const sendBtn       = document.getElementById('sendBtn');
-    const landingIce    = document.getElementById('landingIcebreakers');
-    const modalOverlay  = document.getElementById('modalOverlay');
-    const modalTitle    = document.getElementById('modalTitle');
-    const modalIframe   = document.getElementById('modalIframe');
-    const modalClose    = document.getElementById('modalClose');
+    const SLIDES = [
+      { img: 'assets/p-activation.png', wire: 'assets/w-activation.png', embed: 'prototype/activation-guide/index.html#embed', url: 'projects/setupguide.html', company: 'Meta · Business Tool', title: 'Day 1 Adoption Guide', cap: 'Day-1 adoption for WhatsApp Business', capsub: 'A guided onboarding that drove +9% adoption and +19.7% revenue.',
+        context: 'A guided onboarding that gets new WhatsApp businesses to first value fast — turning a drop-off-heavy setup into a confident first week.',
+        metrics: [['+9%','Adoption'],['+19.7%','Revenue']] },
+      { img: 'assets/p-broadcast.png', wire: 'assets/w-broadcast.png', embed: 'prototype/broadcast/index.html#embed', url: 'projects/template-tool.html', company: 'Meta · Design System', title: 'Unified Setup Flows', cap: 'Re-engage with WhatsApp broadcasts', capsub: 'New tool with 7 configuration variants, 96% completion rate.',
+        context: 'Consolidated 7+ message-creation flows into one modular system, so teams ship faster and businesses finish setup more often.',
+        metrics: [['1.6×','Completion'],['7+','Flows unified']], noLink: true },
+      { img: 'assets/p-client-insight.png', wire: 'assets/w-client-insight.png', embed: 'prototype/client-insight/index.html#embed', url: 'projects/insight-table.html', company: 'Meta · Partner Tool', title: 'Client Account & Insight Table', cap: 'One surface for partner accounts', capsub: 'Track client status from onboarding to spend across the lifecycle.',
+        context: 'A unified surface to track client status from onboarding to spend, giving partners one place to diagnose and act across the lifecycle.',
+        metrics: [['1','Unified view'],['4','Lifecycle tasks']] },
+      { img: 'assets/p-developer.png', wire: 'assets/w-developer.png', embed: 'prototype/developer/index.html', url: 'projects/api-setup-flow.html', company: 'Meta · Developer Portal', title: 'WhatsApp API Setup Flow', cap: 'WhatsApp API setup, reimagined', capsub: 'Rebuilt the developer journey around clarity to a 3.4x completion rate.',
+        context: 'Rebuilt the API setup journey around clarity and trust — mapping the end-to-end path and removing the moments that lost developers.',
+        metrics: [['3.4×','Completion'],['$43–107M','Revenue potential']] },
+      { img: 'assets/p-ubi-inbox.png', wire: 'assets/w-ubi-inbox.png', embed: 'prototype/ubi-inbox/index.html#embed', url: 'projects/ig-inbox.html', company: 'Meta · Business Inbox', title: 'Bulk Reply Inbox', cap: 'Re-engage from one inbox', capsub: 'Bulk-reply to customers from a recent ad in a few clicks.',
+        context: 'Re-engage customers from a recent ad with a single bulk reply — audience targeting and personalized messaging built in.',
+        metrics: [['10','Chats / action'],['↑','Re-engagement']], noLink: true },
+    ];
 
-    let conversationStarted = false;
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.addEventListener('load', () => { if (!location.hash) window.scrollTo(0, 0); });
 
-    // ── MODAL ──
+    const track = document.getElementById('cfTrack');
+    let active = Math.floor(SLIDES.length / 2);   /* active centered; flat front view */
+
+    const cards = SLIDES.map((s, i) => {
+      const c = document.createElement('div');
+      c.className = 'cf-card';
+      const domain = s.url.includes('api-setup') ? 'developers.facebook.com' : 'business.facebook.com';
+      const wireImg = s.wire ? `<img class="bimg bwire" src="${s.wire}" alt="" loading="lazy" />` : '';
+      const embedEl = s.embed ? `<iframe class="bembed" src="${s.embed}" title="${s.title} prototype" loading="lazy" scrolling="yes"></iframe>` : '';
+      c.innerHTML = `<div class="browser"><div class="bchrome"><span class="bdots"><i></i><i></i><i></i></span><span class="burl">${domain}</span></div><div class="bview"><img class="bimg bpol" src="${s.img}" alt="${s.title}" loading="lazy" />${wireImg}${embedEl}</div></div>`;
+      c.addEventListener('click', () => {
+        stopAutoplay();
+        leftTop = false;   /* reset so a stale "scrolled down then up" state can't bounce us back to top */
+        if (isMobile()) { if (!s.noLink) openModal(s.url, s.title); return; }   /* phones: tap opens the project (skipped for no-link cards) */
+        if (i === active) {
+          if (!userSelected) { userSelected = true; render(); centerCarousel(); }  /* 1st click → zoom to focus; in focus the embed is interactive, project opens from the caption link */
+        } else {
+          const first = !userSelected;
+          userSelected = true;
+          go(i);
+          if (first) centerCarousel();
+        }
+      });
+      track.appendChild(c);
+      return c;
+    });
+
+    const EMBED_S = 0.3143;   /* must match .bembed scale in CSS */
+    function applyEmbedScroll(card){
+      const ifr = card.querySelector('.bembed'); if (!ifr) return;
+      const bvH = ifr.parentElement.clientHeight || 276;
+      const maxT = Math.max(0, (card._contentH || 0) * EMBED_S - bvH);
+      card._scrollV = Math.min(Math.max(0, card._scrollV || 0), maxT);
+      ifr.style.transform = `translateY(${-card._scrollV}px) scale(${EMBED_S})`;
+    }
+    /* Scroll the focused embed by translating the full-height scaled iframe. Safari won't scroll a
+       transformed iframe, but it repaints transform changes reliably. The iframe is sized to the
+       prototype's full content height (reported via postMessage) so everything is laid out, and
+       pointer-events:none routes the wheel to the card here. */
+    cards.forEach(c => {
+      c.addEventListener('wheel', (e) => {
+        if (!userSelected || !c.classList.contains('is-active')) return;
+        const ifr = c.querySelector('.bembed'); if (!ifr) return;
+        const bvH = ifr.parentElement.clientHeight || 276;
+        const maxT = (c._contentH || 0) * EMBED_S - bvH;
+        if (maxT <= 0) return;                              /* content fits → nothing to scroll */
+        const cardScale = c.getBoundingClientRect().height / c.offsetHeight || 2.4;
+        const dy = e.deltaY * (e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? bvH : 1));
+        c._scrollV = Math.min(Math.max(0, (c._scrollV || 0) + dy / cardScale), maxT);
+        ifr.style.transform = `translateY(${-c._scrollV}px) scale(${EMBED_S})`;
+        e.preventDefault();
+      }, { passive: false });
+    });
+    window.addEventListener('message', (e) => {
+      const d = e.data; if (!d) return;
+      const card = cards.find(c => { const f = c.querySelector('.bembed'); return f && f.contentWindow === e.source; });
+      if (!card) return;
+      const ifr = card.querySelector('.bembed');
+      if (d.mu === 'size') {
+        if (Math.abs((card._contentH || 0) - d.sh) < 2) return;   /* avoid resize thrash */
+        card._contentH = d.sh;
+        ifr.style.height = d.sh + 'px';                           /* lay out all content so translate reveals it */
+        applyEmbedScroll(card);
+      } else if (d.mu === 'wheel') {
+        /* wheel forwarded from inside the interactive iframe → translate the scaled iframe to scroll */
+        if (!userSelected || !card.classList.contains('is-active')) return;
+        const bvH = ifr.parentElement.clientHeight || 276;
+        const maxT = (card._contentH || 0) * EMBED_S - bvH;
+        if (maxT <= 0) return;
+        card._scrollV = Math.min(Math.max(0, (card._scrollV || 0) + d.dy * EMBED_S), maxT);
+        ifr.style.transform = `translateY(${-card._scrollV}px) scale(${EMBED_S})`;
+      }
+    });
+
+    let userSelected = false;   /* false = autoplay (scale 1.0, crisp), true = focus (scale 2.4, live iframe) */
+    const isMobile = () => window.matchMedia('(max-width: 700px)').matches;
+
+    /* circular offset of card i from active (−n/2 … n/2) → infinite loop */
+    function offsetOf(i) {
+      const n = cards.length;
+      let d = ((i - active) % n + n) % n;
+      if (d > n / 2) d -= n;
+      return d;
+    }
+
+    function render() {
+      const n = cards.length;
+      const mobile = isMobile();
+      const CW = cards[0].offsetWidth || 450;          /* actual (responsive) card width */
+      const activeScale = (userSelected && !mobile) ? 2.4 : 1.0;   /* no focus-zoom on mobile (tap opens the full modal) */
+      const sideScale = mobile ? 1.0 : 0.72;
+      const g = 12;                                    /* even gap between cards */
+      /* on mobile show ONE card: neighbours sit a full viewport away (off-screen, not cropped) */
+      const GAP  = mobile ? window.innerWidth : (CW / 2) * activeScale + g + (CW * sideScale / 2);
+      const STEP = mobile ? window.innerWidth : CW * sideScale + g;
+      cards.forEach((c, i) => {
+        const off = offsetOf(i);
+        const abs = Math.abs(off);
+        const sign = Math.sign(off);
+        const transform = off === 0
+          ? `translateX(0px) scale(${activeScale})`
+          : `translateX(${sign * (GAP + (abs - 1) * STEP)}px) scale(${sideScale})`;
+
+        /* if this card wrapped to the other side, teleport it (no fly-across) */
+        const prev = c._off;
+        const wrapped = prev !== undefined && Math.abs(off - prev) > n / 2;
+        if (wrapped) {
+          c.style.transition = 'none';
+          c.style.transform = transform;
+          void c.offsetWidth;            /* force reflow so the jump isn't animated */
+          c.style.transition = '';
+        } else {
+          c.style.transform = transform;
+        }
+        c._off = off;
+
+        c.style.transitionDelay = '0s';
+        c.style.zIndex = 100 - off;   /* leftmost card always on top, decreasing to the right */
+        c.classList.toggle('is-active', off === 0);
+        if (off !== 0) { c._scrollV = 0; const f = c.querySelector('.bembed'); if (f) f.style.transform = ''; }  /* reset embed scroll when not the focused card */
+        const scale = (off === 0) ? activeScale : sideScale;
+        const browser = c.querySelector('.browser');
+        if (browser) {
+          browser.style.borderWidth = (1 / scale) + 'px';       /* ~1px border at any scale */
+        }
+        const chrome = c.querySelector('.bchrome');
+        if (chrome) chrome.style.borderBottomWidth = (1 / scale) + 'px';  /* thin divider */
+      });
+      document.querySelector('.cf').classList.toggle('user-active', userSelected);
+      updateFocusCap();
+    }
+
+    /* focus caption lives OUTSIDE the scaled card (crisp on Safari); position it below the zoomed browser */
+    const focusCap = document.getElementById('focusCap');
+    const focusChrome = document.getElementById('focusChrome');
+    const cfEl = document.querySelector('.cf');
+    function positionFocusCap() {
+      const br = document.querySelector('.cf-card.is-active .browser');
+      if (!br || !userSelected) return;
+      const cfR = cfEl.getBoundingClientRect();
+      const brR = br.getBoundingClientRect();
+      focusCap.style.top = (brR.bottom - cfR.top + 16) + 'px';
+    }
+    /* crisp browser-bar overlay positioned over the focused browser's (blurry, scaled) chrome */
+    function positionFocusChrome() {
+      const card = document.querySelector('.cf-card.is-active');
+      if (!card || !userSelected) return;
+      const chromeEl = card.querySelector('.bchrome');
+      const urlEl = card.querySelector('.burl');
+      if (!chromeEl) return;
+      const cfR = cfEl.getBoundingClientRect();
+      const chR = chromeEl.getBoundingClientRect();
+      focusChrome.style.top = (chR.top - cfR.top) + 'px';
+      focusChrome.style.left = (chR.left - cfR.left) + 'px';
+      focusChrome.style.width = chR.width + 'px';
+      focusChrome.style.height = chR.height + 'px';
+      const k = chR.height / 10;   /* rendered chrome height ÷ its natural 10px = the scale factor */
+      const dots = focusChrome.querySelector('.fc-dots');
+      dots.style.left = (5 * k) + 'px';
+      dots.style.gap = (2.5 * k) + 'px';
+      focusChrome.querySelectorAll('.fc-dots i').forEach(i => { i.style.width = (3.2 * k) + 'px'; i.style.height = (3.2 * k) + 'px'; });
+      const url = focusChrome.querySelector('.fc-url');
+      url.textContent = urlEl ? urlEl.textContent : '';
+      url.style.fontSize = (3.2 * k) + 'px';   /* ~10px link text in focus */
+    }
+    function updateFocusCap() {
+      if (!userSelected) { focusCap.classList.remove('show'); focusChrome.classList.remove('show'); clearTimeout(focusCap._t); return; }
+      const s = SLIDES[active];
+      const linkHTML = s.noLink ? '' : ` <a class="bcap-link">View project &rarr;</a>`;
+      focusCap.innerHTML = `<span class="bcap-t">${s.cap}</span> &mdash; ${s.capsub}${linkHTML}`;
+      const link = focusCap.querySelector('.bcap-link');
+      if (link) link.onclick = (e) => { e.stopPropagation(); openModal(s.url, s.title); };
+      /* hide the crisp overlay during the zoom/switch slide so its dots+URL don't float statically
+         over the moving cards; fade it back in once the new active card settles at centre */
+      focusCap.classList.remove('show'); focusChrome.classList.remove('show');
+      /* re-measure + reveal once the zoom/slide settles (avoids a position jump during zoom-in) */
+      clearTimeout(focusCap._t);
+      focusCap._t = setTimeout(() => {
+        if (!userSelected) return;
+        positionFocusCap(); positionFocusChrome();
+        focusCap.classList.add('show'); focusChrome.classList.add('show');
+      }, 460);
+    }
+
+    function go(i) {
+      const n = SLIDES.length;
+      active = ((i % n) + n) % n;   /* wrap → infinite loop */
+      render();
+    }
+
+    /* ── autoplay (stops on user interaction) ── */
+    let autoplay = null;
+    function startAutoplay() {
+      if (autoplay) return;
+      autoplay = setInterval(() => go(active + 1), 3200);
+    }
+    function stopAutoplay() {
+      if (autoplay) { clearInterval(autoplay); autoplay = null; }
+    }
+
+    function centerCarousel() {
+      /* wait for the scale transition to settle, then center the focused browser in the viewport */
+      setTimeout(() => {
+        const el = document.querySelector('.cf-card.is-active .browser');
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        const target = window.scrollY + r.top + r.height / 2 - window.innerHeight / 2;
+        window.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+      }, 460);
+    }
+
+document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft')  { stopAutoplay(); userSelected = true; go(active - 1); }
+      if (e.key === 'ArrowRight') { stopAutoplay(); userSelected = true; go(active + 1); }
+    });
+
+    /* drag / swipe */
+    (function () {
+      const cf = document.querySelector('.cf');
+      let startX = null;
+      cf.addEventListener('pointerdown', e => { startX = e.clientX; });
+      cf.addEventListener('pointerup', e => {
+        if (startX === null) return;
+        const dx = e.clientX - startX;
+        if (Math.abs(dx) > 50) { stopAutoplay(); if (!isMobile()) userSelected = true; go(active + (dx < 0 ? 1 : -1)); }
+        startX = null;
+      });
+      cf.addEventListener('pointerleave', () => { startX = null; });
+    })();
+
+    render();
+    startAutoplay();
+
+    /* reflow on resize / orientation change; drop focus state when entering mobile one-card mode */
+    let _rz;
+    window.addEventListener('resize', () => {
+      clearTimeout(_rz);
+      _rz = setTimeout(() => { if (isMobile()) userSelected = false; render(); }, 120);
+    });
+
+    /* scroll back to the top → reset active to the small (1.25) autoplay state */
+    let leftTop = false;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 240) leftTop = true;            /* user has scrolled down */
+      if (window.scrollY < 40 && userSelected && leftTop) { /* and come back to the top */
+        userSelected = false;
+        leftTop = false;
+        render();
+        startAutoplay();
+      }
+    }, { passive: true });
+
+    /* ── MODAL ── */
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle   = document.getElementById('modalTitle');
+    const modalIframe  = document.getElementById('modalIframe');
+    const modalClose   = document.getElementById('modalClose');
+    const slugOf = url => url.split('/').pop().replace('.html', '');
+
     function openModal(url, title) {
       modalTitle.textContent = title;
       const sep = url.includes('?') ? '&' : '?';
       modalIframe.src = url + sep + 'embed=1';
       modalOverlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      const hdr = document.querySelector('header'); if (hdr) hdr.style.display = 'none';
+      history.replaceState(null, '', '#' + slugOf(url));
     }
-
-    // Hide side-nav inside iframe on mobile
-    modalIframe.addEventListener('load', () => {
-      try {
-        const iframeDoc = modalIframe.contentDocument;
-        if (iframeDoc && window.innerWidth <= 768) {
-          const style = iframeDoc.createElement('style');
-          style.textContent = '.side { display: none !important; }';
-          iframeDoc.head.appendChild(style);
-        }
-      } catch(e) {}
-    });
-
     function closeModal() {
       modalOverlay.classList.remove('open');
+      document.body.style.overflow = '';
+      const hdr = document.querySelector('header'); if (hdr) hdr.style.display = '';
       setTimeout(() => { modalIframe.src = ''; }, 250);
+      history.replaceState(null, '', location.pathname + location.search);
     }
-
     modalClose.addEventListener('click', closeModal);
-    modalOverlay.addEventListener('click', (e) => {
-      if (e.target === modalOverlay) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeModal();
+    modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    /* deep link #slug → center + open */
+    (function () {
+      const slug = decodeURIComponent(location.hash.replace('#', '')).trim();
+      if (!slug) return;
+      const i = SLIDES.findIndex(s => slugOf(s.url) === slug);
+      if (i >= 0) { go(i); openModal(SLIDES[i].url, SLIDES[i].title); }
+    })();
+
+    modalIframe.addEventListener('load', () => {
+      try {
+        const d = modalIframe.contentDocument;
+        if (d && window.innerWidth <= 768) {
+          const st = d.createElement('style');
+          st.textContent = '.side-nav { display: none !important; } .main-content { margin-left: 0 !important; width: 100% !important; max-width: 100% !important; padding: 0 16px !important; }';
+          d.head.appendChild(st);
+        }
+      } catch (e) {}
     });
 
-    // ── DATA (loaded from js/projects-data.js) ──
-
-    const ICEBREAKERS = [
-      { label: 'Works at Meta', topic: 'meta' },
-      { label: 'Superpower', topic: 'philosophy' },
-      { label: 'Business tools', topic: 'business'  },
-      { label: 'Insight Table', topic: 'insight'  },
-      { label: 'Framework', topic: 'framework'  },
-      { label: 'Get in touch', topic: 'contact'  },
+    /* ── SIDE PROJECTS — coverflow of the 3 fun videos (active bigger; click a card to read its description) ── */
+    const SIDE = [
+      { media: 'assets/fun/fun_a.mp4', ratio: 1, title: 'Sticker Day', cap: 'App for journaling on a note-taking canvas' },
+      { media: 'assets/fun/fun_b.mp4', ratio: 1, title: 'Piano Day',   cap: 'App for classical music sheet reading & practice' },
+      { media: 'assets/fun/fun_c.mp4', ratio: 1, title: 'Animation',   cap: 'Getting a green card approved' },
     ];
-
-    const RESPONSES = {
-      meta: {
-        text: `At Meta I'm a <strong>Senior Product Designer</strong> on <strong>Monetization and BizAI</strong> — I've delivered 20+ launches across Meta business inbox, ad tools, and partner platforms to grow Messenger, Instagram, and WhatsApp business messaging and unlock $400M+ annual revenue potential. Here's some of my work:`,
-        showProjects: [0, 1, 3, 2, 4, 5],
-      },
-      philosophy: {
-        text: `A few things that set me apart:\n\n<strong>Turning ambiguity into clarity</strong> — I use structured analysis (dogfooding, UXR, data) to cut through complexity and find the real problem to solve.\n\n<strong>Building simple systems for complex products</strong> — I create modular, scalable solutions that unify fragmented tools — like consolidating 7 WhatsApp flows into one system, boosting adoption 1.6x.\n\n<strong>Moving fast with high craft</strong> — I excel at rapid Figma prototyping and have contributed to 10+ design sprints. I ship MVPs while defining long-term strategy.\n\n<strong>Driving alignment across 10+ teams</strong> — I lead cross-functional efforts with engineering, PM, and design to connect dots and deliver bigger product impact.`,
-        showProjects: null,
-      },
-      business: {
-        text: `Enterprise and business-facing tools I've designed:`,
-        showProjects: [3, 4, 2, 1],
-      },
-      insight: {
-        text: `The Client Account & Insight Table — a unified surface to track client status from onboarding to spending:`,
-        showProjects: [5],
-      },
-      framework: {
-        text: `Here's a framework I use across projects — <strong>Design Systems for Everyone</strong>. It's a cross-company playbook covering token architecture, component governance, and how to drive adoption across engineering and PM teams.`,
-        showProjects: [2, 1, 0],
-      },
-      contact: {
-        text: `I'd love to connect — whether it's about new opportunities, collaborations, or just swapping notes on design challenges.\n\n<strong>Email</strong> → <a href="mailto:mujiunshie@gmail.com" style="color:var(--accent)">mujiunshie@gmail.com</a>\n<strong>LinkedIn</strong> → <a href="https://www.linkedin.com/in/mshie/" target="_blank" style="color:var(--accent)">linkedin.com/in/mshie</a>\n<strong>Resume</strong> → <a href="https://docs.google.com/document/d/1mhO_mh-6vCfPAqny4-cmR1dMHNSZcfHj/edit?usp=sharing&ouid=106499366159636919455&rtpof=true&sd=true" target="_blank" style="color:var(--accent)">View Resume</a>`,
-        showProjects: null,
-      },
-    };
-
-    // ── POPULATE LANDING ICEBREAKERS ──
-    ICEBREAKERS.forEach(ice => {
-      const btn = document.createElement('button');
-      btn.className = 'ice-btn';
-      btn.textContent = ice.label;
-      btn.addEventListener('click', () => {
-        transitionToChat();
-        setTimeout(() => handleIce(ice.topic, ice.label), 350);
-      });
-      landingIce.appendChild(btn);
+    const sTrack = document.getElementById('scfTrack');
+    const sCapEl = document.getElementById('scfCap');
+    const sCards = SIDE.map((s, i) => {
+      const c = document.createElement('div');
+      c.className = 'scf-card';
+      c.innerHTML = `<div class="scf-frame"><video src="${s.media}?v=full" muted loop autoplay playsinline preload="auto"></video></div>`;
+      c.addEventListener('click', () => onSClick(i));
+      sTrack.appendChild(c);
+      const v = c.querySelector('video'); if (v) v.play().catch(() => {});
+      return c;
     });
-
-    // ── TRANSITION: landing → chat ──
-    const restartBtn = document.getElementById('restartBtn');
-
-    function transitionToChat() {
-      if (conversationStarted) return;
-      conversationStarted = true;
-
-      centerStage.style.opacity = '0';
-      centerStage.style.transform = 'translateY(-12px)';
-
-      setTimeout(() => {
-        centerStage.style.display = 'none';
-        chatWrap.style.display = 'block';
-        document.body.classList.remove('on-landing');
-        restartBtn.style.display = '';
-      }, 300);
-    }
-
-    // ── RESTART: back to landing ──
-    function restartToLanding() {
-      conversationStarted = false;
-      messagesEl.innerHTML = '';
-      chatWrap.style.display = 'none';
-      centerStage.style.display = '';
-      centerStage.style.opacity = '';
-      centerStage.style.transform = '';
-      document.body.classList.add('on-landing');
-      restartBtn.style.display = 'none';
-      inputField.value = '';
-    }
-
-    restartBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      restartToLanding();
-    });
-
-    document.getElementById('logoBtn').addEventListener('click', (e) => {
-      e.preventDefault();
-      if (conversationStarted) restartToLanding();
-    });
-
-    // ── RENDER HELPERS ──
-    function renderAvatar(type) {
-      const el = document.createElement('div');
-      el.className = `avatar ${type}`;
-      el.textContent = type === 'mu' ? 'M' : 'you';
-      return el;
-    }
-
-    function renderBubble(html) {
-      const el = document.createElement('div');
-      el.className = 'bubble';
-      el.innerHTML = html.replace(/\n/g, '<br>');
-      return el;
-    }
-
-    function renderCarousel(indices) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'carousel-wrap';
-      const track = document.createElement('div');
-      track.className = 'carousel';
-
-      const list = indices ? indices.map(i => PROJECTS[i]) : PROJECTS;
-      list.forEach(p => {
-        const card = document.createElement('div');
-        card.className = p.comingSoon ? 'project-card coming-soon' : 'project-card';
-        if (!p.comingSoon) {
-          card.addEventListener('click', () => {
-            if (p.external) {
-              window.open(p.url, '_blank');
-            } else {
-              openModal(p.url, p.title);
-            }
-          });
+    let sActive = 0, sAuto = null;
+    const sOff = (i) => { const n = sCards.length; let d = ((i - sActive) % n + n) % n; if (d > n / 2) d -= n; return d; };
+    function renderS() {
+      const n = sCards.length;
+      const mobile = isMobile();
+      const HB = sCards[0].offsetHeight || 580;
+      const activeScale = mobile ? 0.94 : 1.0;
+      const sideScale = mobile ? 0.94 : 0.42;
+      const g = 22;
+      sCards.forEach((c, i) => {
+        const off = sOff(i);
+        const bw = Math.round(HB * SIDE[i].ratio);
+        c.style.width = bw + 'px';
+        c.style.marginLeft = (-Math.round(bw / 2)) + 'px';
+        let x = 0;
+        const scale = off === 0 ? activeScale : sideScale;
+        if (mobile) {
+          x = off === 0 ? 0 : Math.sign(off) * window.innerWidth;
+        } else if (off !== 0) {
+          const sign = Math.sign(off);
+          x = (HB * SIDE[sActive].ratio * activeScale) / 2;
+          for (let k = 1; k < Math.abs(off); k++) {
+            const idx = ((sActive + sign * k) % n + n) % n;
+            x += g + HB * SIDE[idx].ratio * sideScale;
+          }
+          x += g + (bw * sideScale) / 2;
+          x *= sign;
         }
-        const arrow = p.comingSoon ? '' : '<span class="card-arrow">&rarr;</span>';
-        const pill = p.comingSoon ? '<span class="coming-soon-pill">Coming Soon</span>' : '';
-        card.innerHTML = `
-          <div class="card-img">
-            ${pill}
-            <img src="${p.img}" alt="${p.title}" loading="lazy" />
-          </div>
-          <div class="card-body">
-            <div class="card-company">${p.company}</div>
-            <div class="card-title">${p.title} ${arrow}</div>
-            <div class="card-summary">${p.summary}</div>
-          </div>
-        `;
-        track.appendChild(card);
+        const tf = `translateX(${Math.round(x)}px) translateY(-50%) scale(${scale})`;
+        const prev = c._soff;
+        const wrapped = prev !== undefined && Math.abs(off - prev) > n / 2;
+        if (wrapped) { c.style.transition = 'none'; c.style.transform = tf; void c.offsetWidth; c.style.transition = ''; }
+        else c.style.transform = tf;
+        c._soff = off;
+        c.style.zIndex = 100 - Math.abs(off);
+        c.classList.toggle('is-active', off === 0);
       });
-
-      const leftArrow = document.createElement('button');
-      leftArrow.className = 'carousel-arrow carousel-arrow--left hidden';
-      leftArrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2L4 7l5 5"/></svg>';
-      leftArrow.addEventListener('click', () => { track.scrollBy({ left: -696, behavior: 'smooth' }); });
-
-      const rightArrow = document.createElement('button');
-      rightArrow.className = 'carousel-arrow carousel-arrow--right';
-      rightArrow.innerHTML = '<svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2l5 5-5 5"/></svg>';
-      rightArrow.addEventListener('click', () => { track.scrollBy({ left: 696, behavior: 'smooth' }); });
-
-      function updateArrows() {
-        leftArrow.classList.toggle('hidden', track.scrollLeft <= 0);
-        rightArrow.classList.toggle('hidden', track.scrollLeft >= track.scrollWidth - track.clientWidth - 1);
-      }
-      track.addEventListener('scroll', updateArrows);
-      setTimeout(updateArrows, 100);
-
-      wrapper.appendChild(track);
-      wrapper.appendChild(leftArrow);
-      wrapper.appendChild(rightArrow);
-      return wrapper;
+      updateSCap();
     }
-
-    function scrollToBottom() {
-      setTimeout(() => { window.scrollTo(0, document.body.scrollHeight); }, 50);
-      setTimeout(() => { window.scrollTo(0, document.body.scrollHeight); }, 400);
+    function updateSCap() {
+      const s = SIDE[sActive];
+      sCapEl.innerHTML = `<b>${s.title}</b> &mdash; ${s.cap}`;
     }
+    function onSClick(i) { stopSAuto(); if (i !== sActive) { sActive = i; renderS(); } }   /* click a side card → centre it + show its description */
+    function sGo(d) { const n = sCards.length; sActive = ((sActive + d) % n + n) % n; renderS(); }
+    function startSAuto() { stopSAuto(); sAuto = setInterval(() => sGo(1), 9500); }
+    function stopSAuto() { if (sAuto) { clearInterval(sAuto); sAuto = null; } }
+    (function () {
+      const el = document.querySelector('.scf');
+      let sx = null;
+      el.addEventListener('pointerdown', e => { sx = e.clientX; });
+      el.addEventListener('pointerup', e => { if (sx === null) return; const dx = e.clientX - sx; if (Math.abs(dx) > 50) { stopSAuto(); sGo(dx < 0 ? 1 : -1); } sx = null; });
+      el.addEventListener('pointerleave', () => { sx = null; });
+    })();
+    let _srz; window.addEventListener('resize', () => { clearTimeout(_srz); _srz = setTimeout(renderS, 120); });
+    renderS();
+    startSAuto();
 
-    function appendMsg(type, contentFn) {
-      const msg = document.createElement('div');
-      msg.className = `msg ${type}`;
-      const av = renderAvatar(type === 'ai' ? 'mu' : 'visitor');
-      const inner = document.createElement('div');
-      inner.className = 'msg-content';
-      inner.style.alignItems = type === 'user' ? 'flex-end' : 'flex-start';
-      contentFn(inner);
-      if (type === 'user') { msg.appendChild(inner); }
-      else { msg.appendChild(av); msg.appendChild(inner); }
-      messagesEl.appendChild(msg);
-      scrollToBottom();
-      return msg;
-    }
-
-    function showTyping() {
-      const msg = document.createElement('div');
-      msg.className = 'msg ai';
-      msg.id = 'typing';
-      const av = renderAvatar('mu');
-      const bubble = document.createElement('div');
-      bubble.className = 'bubble typing-indicator';
-      bubble.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
-      msg.appendChild(av);
-      msg.appendChild(bubble);
-      messagesEl.appendChild(msg);
-      scrollToBottom();
-    }
-
-    function hideTyping() {
-      const el = document.getElementById('typing');
-      if (el) el.remove();
-    }
-
-    // ── RENDER CHAT ICEBREAKERS (excludes current topic) ──
-    function renderChatIcebreakers(excludeTopic) {
-      const outer = document.createElement('div');
-      outer.style.marginTop = '14px';
-      const wrap = document.createElement('div');
-      wrap.className = 'icebreakers';
-      wrap.style.justifyContent = 'flex-start';
-      ICEBREAKERS.filter(ice => ice.topic !== excludeTopic).forEach(ice => {
-        const btn = document.createElement('button');
-        btn.className = 'ice-btn';
-        btn.textContent = ice.label;
-        btn.addEventListener('click', () => {
-          btn.classList.add('used');
-          handleIce(ice.topic, ice.label);
-        });
-        wrap.appendChild(btn);
-      });
-      outer.appendChild(wrap);
-      return outer;
-    }
-
-    // ── TRACK SHOWN PROJECTS ──
-    let lastShownIndices = [];
-
-    // ── HANDLE ICE BREAKER ──
-    function handleIce(topic, label) {
-      appendMsg('user', container => container.appendChild(renderBubble(label)));
-      showTyping();
-      setTimeout(() => {
-        hideTyping();
-        const resp = RESPONSES[topic];
-        appendMsg('ai', container => {
-          container.appendChild(renderBubble(resp.text));
-          if (resp.showProjects !== null) {
-            container.appendChild(renderCarousel(resp.showProjects));
-            lastShownIndices = resp.showProjects;
-          }
-          container.appendChild(renderChatIcebreakers(topic));
-        });
-      }, 900);
-    }
-
-    // ── HANDLE USER INPUT ──
-    function handleSend() {
-      const text = inputField.value.trim();
-      if (!text) return;
-      inputField.value = '';
-      inputField.style.height = 'auto';
-
-      if (!conversationStarted) {
-        transitionToChat();
-        setTimeout(() => doSend(text), 350);
-      } else {
-        doSend(text);
-      }
-    }
-
-    function doSend(text) {
-      appendMsg('user', container => container.appendChild(renderBubble(text)));
-      showTyping();
-
-      const lower = text.toLowerCase();
-      let topic = null;
-      if (/meta|instagram|whatsapp|ads manager|facebook|designed at/i.test(lower)) topic = 'meta';
-      else if (/stand out|superpower|strength|unique|special|differ/i.test(lower)) topic = 'philosophy';
-      else if (/business tool|enterprise|b2b|ads|monetiz/i.test(lower)) topic = 'business';
-      else if (/consumer|gov|public|portal|end.?user/i.test(lower)) topic = 'consumer';
-      else if (/contact|hire|work together|reach|email|opportunity|touch|connect/i.test(lower)) topic = 'contact';
-      else if (/project|case stud|portfolio|show|built|work/i.test(lower)) topic = 'business';
-
-      setTimeout(() => {
-        hideTyping();
-        if (topic) {
-          const resp = RESPONSES[topic];
-          appendMsg('ai', container => {
-            container.appendChild(renderBubble(resp.text));
-            if (resp.showProjects !== null) {
-              container.appendChild(renderCarousel(resp.showProjects));
-            }
-            container.appendChild(renderChatIcebreakers(topic));
-          });
-        } else {
-          appendMsg('ai', container => {
-            container.appendChild(renderBubble(`Good question! That one's best answered in person. Feel free to reach me at <a href="mailto:mujiunshie@gmail.com" style="color:var(--accent)">mujiunshie@gmail.com</a> or on <a href="https://www.linkedin.com/in/mshie/" target="_blank" style="color:var(--accent)">LinkedIn</a>.`));
-            container.appendChild(renderChatIcebreakers(null));
-          });
-        }
-      }, 1000);
-    }
-
-    // ── WIRE UP INPUT ──
-    sendBtn.addEventListener('click', handleSend);
-    inputField.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
-    });
-    inputField.addEventListener('input', () => {
-      inputField.style.height = 'auto';
-      inputField.style.height = Math.min(inputField.scrollHeight, 140) + 'px';
-    });
-
-    // ── MOBILE MENU ──
-    const menuToggle = document.getElementById('menuToggle');
-    const mobileMenu = document.getElementById('mobileMenu');
-    const menuBackdrop = document.getElementById('menuBackdrop');
-
-    function toggleMenu() {
-      const isOpen = mobileMenu.classList.contains('open');
-      mobileMenu.classList.toggle('open');
-      menuBackdrop.classList.toggle('open');
-    }
-
-    menuToggle.addEventListener('click', toggleMenu);
-    menuBackdrop.addEventListener('click', toggleMenu);
-
-    // ── TYPING ROTATION ──
-    (function() {
-      var lines = document.querySelectorAll('.rotate-line');
-      var texts = [];
-      lines.forEach(function(line) {
-        texts.push(line.textContent);
-        line.innerHTML = '<span class="typed-text"></span>';
-      });
-      var current = 0;
-      var TYPING_SPEED = 45;
-      var DELETE_SPEED = 25;
-      var PAUSE_AFTER_TYPE = 2000;
-      var PAUSE_AFTER_DELETE = 300;
-
-      function typeText(idx, cb) {
-        var span = lines[idx].querySelector('.typed-text');
-        var text = texts[idx];
-        var i = 0;
-        span.textContent = '';
-        span.classList.remove('done');
-        var interval = setInterval(function() {
-          span.textContent = text.slice(0, i + 1);
-          i++;
-          if (i >= text.length) {
-            clearInterval(interval);
-            setTimeout(function() { span.classList.add('done'); }, 100);
-            cb();
-          }
-        }, TYPING_SPEED);
-      }
-
-      function deleteText(idx, cb) {
-        var span = lines[idx].querySelector('.typed-text');
-        var text = span.textContent;
-        var i = text.length;
-        span.classList.remove('done');
-        var interval = setInterval(function() {
-          i--;
-          span.textContent = text.slice(0, i);
-          if (i <= 0) {
-            clearInterval(interval);
-            cb();
-          }
-        }, DELETE_SPEED);
-      }
-
-      function cycle() {
-        typeText(current, function() {
-          setTimeout(function() {
-            deleteText(current, function() {
-              lines[current].classList.remove('active');
-              current = (current + 1) % lines.length;
-              lines[current].classList.add('active');
-              setTimeout(cycle, PAUSE_AFTER_DELETE);
-            });
-          }, PAUSE_AFTER_TYPE);
-        });
-      }
-
-      lines[0].classList.add('active');
-      cycle();
+    /* Flip the whole page to dark mode while the side-projects section is around the viewport centre */
+    (function () {
+      const zone = document.querySelector('.dark-zone');
+      if (!zone || !('IntersectionObserver' in window)) return;
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => document.documentElement.classList.toggle('dark', e.isIntersecting));
+      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+      io.observe(zone);
     })();
   </script>
 </body>

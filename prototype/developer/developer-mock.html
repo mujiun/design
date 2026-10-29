@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta for Developers — WhatsApp (wireframe)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@300..800&display=block" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FFFFFF; --page-bg: #F0F2F5; --surface: #F5F6F7;
+      --ink: #1C2B33; --ink2: #465A69; --ink3: #6B7A85;
+      --accent: #0A78BE; --accent-light: #E7F0FD;
+      --border: #E4E6EB; --border-light: #ECEEF0;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+      /* wireframe tokens */
+      --card: #FFFFFF; --card-border: #EEF0F2;
+      --label: #9BA6AE; --fill: #E3E7EA; --fill-soft: #EAEDEF;
+    }
+    html, body {
+      min-height: 100%; font-family: var(--title);
+      background: var(--page-bg); background-image: url('../shared/bg.jpg');
+      background-size: cover; background-attachment: fixed; color: var(--ink);
+      -webkit-font-smoothing: antialiased; font-size: 14px; line-height: 1.5; letter-spacing: 0.1px;
+    }
+
+    /* ══ TOP NAV (real chrome) ══ */
+    .topnav { display: flex; align-items: center; justify-content: space-between; padding: 8px 16px; background: var(--bg); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; }
+    .topnav-left { display: flex; align-items: center; gap: 36px; }
+    .meta-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .meta-logo img { height: 14px; width: auto; }
+    .topnav-tabs { display: flex; gap: 8px; align-items: center; }
+    .topnav-tab { font-family: var(--title); font-size: 14px; font-weight: 500; color: var(--ink); text-decoration: none; padding: 6px 12px; display: flex; align-items: center; border-bottom: 3px solid transparent; transition: color 0.12s; cursor: pointer; }
+    .topnav-tab:hover { color: #0A78BE; }
+    .topnav-tab.active { color: #0A78BE; font-weight: 600; background: #E1EDF7; border-radius: 4px; border-bottom-color: transparent; }
+    .topnav-tab .caret { width: 12px; height: 12px; margin-left: 4px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+    .topnav-right { display: flex; align-items: center; gap: 12px; }
+    .search-box { display: flex; align-items: center; background: #fff; border: 1px solid var(--border-light); border-radius: 6px; padding: 6px 10px; gap: 6px; min-width: 160px; }
+    .search-icon { color: var(--ink3); flex-shrink: 0; }
+    .search-box input { border: none; outline: none; background: transparent; font-size: 14px; color: var(--ink); width: 100%; font-family: var(--title); }
+    .search-box input::placeholder { color: var(--ink3); }
+    .nav-icons { display: flex; gap: 8px; align-items: center; }
+    .nav-icon { width: 32px; height: 32px; border-radius: 50%; background: var(--surface); display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .nav-icon svg { width: 16px; height: 16px; color: var(--ink2); }
+
+    /* ══ LEFT SYSTEM SIDEBAR (real chrome) ══ */
+    .sys-sidebar { position: fixed; left: 0; top: 48px; bottom: 0; width: 46px; background: var(--bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; padding: 12px 0; gap: 4px; z-index: 90; }
+    .sys-sidebar-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.12s; color: var(--ink3); }
+    .sys-sidebar-icon:hover { background: var(--surface); color: var(--ink2); }
+    .sys-sidebar-icon.active { background: #E1EDF7; color: #0A78BE; }
+    .sys-sidebar-icon svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 1.4; }
+    .sys-sidebar-spacer { flex: 1; }
+
+    /* ══ BREADCRUMB (real chrome) ══ */
+    .breadcrumb { padding: 14px 24px 0; font-size: 13px; color: var(--ink3); }
+    .breadcrumb a { color: var(--ink2); text-decoration: none; }
+    .breadcrumb a:hover { text-decoration: underline; }
+    .breadcrumb .sep { margin: 0 8px; color: var(--ink3); font-size: 11px; }
+    .breadcrumb .current { color: var(--ink); font-weight: 600; }
+
+    /* ══ PAGE TITLE (real chrome) ══ */
+    .page-title-area { padding: 12px 24px 16px; }
+    .page-title-area h1 { font-family: var(--title); font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+    .page-title-area p { font-size: 13px; color: var(--ink2); }
+
+    /* ══ CONTENT LAYOUT ══ */
+    .content-layout { display: flex; gap: 16px; padding: 0 24px 0; align-items: flex-start; }
+
+    /* ══ LEFT NAV (real chrome) ══ */
+    .left-nav { width: 260px; flex-shrink: 0; position: sticky; top: 74px; background: var(--bg); border-radius: 8px; padding: 8px 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: width 0.18s ease; }
+    .nav-dropdown { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; margin: 4px 0px 8px 0px; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); font-family: var(--title); font-size: 14px; font-weight: 500; color: var(--ink); cursor: pointer; }
+    .nav-dropdown .dd-caret { width: 14px; height: 14px; stroke: var(--ink3); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+    .nav-link { display: block; font-family: var(--title); font-size: 14px; font-weight: 450; color: var(--ink); text-decoration: none; padding: 10px 12px; cursor: pointer; white-space: nowrap; transition: background 0.1s, color 0.1s; }
+    .nav-link:hover { background: var(--surface); color: var(--ink); }
+    .nav-link.active { color: #0A78BE; font-weight: 700; background: #E1EDF7; border-radius: 4px; }
+    .nav-group { margin-top: 2px; }
+    .nav-group-toggle { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; font-family: var(--title); font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; user-select: none; transition: background 0.1s; }
+    .nav-group-toggle:hover { background: var(--surface); }
+    .nav-group-toggle .chevron { width: 14px; height: 14px; stroke: var(--ink3); fill: none; stroke-width: 1.8; transition: transform 0.2s ease; flex-shrink: 0; transform: rotate(180deg); }
+    .nav-group.collapsed .chevron { transform: rotate(0deg); }
+    .nav-group-items { overflow: hidden; max-height: 300px; transition: max-height 0.25s ease; }
+    .nav-group.collapsed .nav-group-items { max-height: 0; }
+    .nav-link--sub { padding-left: 22px; font-size: 14px; font-weight: 450; }
+
+    /* ══ RIGHT CONTENT (wireframe shell) ══ */
+    .right-content { flex: 1; min-width: 0; background: var(--bg); border-radius: 8px; padding: 16px 24px 36px; min-height: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+    /* ══ BOTTOM BAR (real chrome) ══ */
+    .bottom-bar { position: fixed; bottom: 0; left: 0; right: 0; height: 36px; background: var(--surface); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; z-index: 50; }
+    .bottom-bar-left, .bottom-bar-right { display: flex; align-items: center; gap: 12px; }
+    .bottom-bar svg { width: 16px; height: 16px; color: var(--ink3); cursor: pointer; }
+    .bottom-bar svg:hover { color: var(--ink2); }
+    .bottom-bar-text { font-size: 11px; color: var(--ink3); }
+
+    /* Offset page content for sidebar */
+    .breadcrumb,
+    .page-title-area,
+    .content-layout { margin-left: 46px; padding-bottom: 16px; }
+
+    /* ══ WIREFRAME PRIMITIVES (from template) ══ */
+    .w-label { height: 11px; width: 84px; background: var(--label); border-radius: 6px; }
+    .w-label.sm { width: 60px; }
+    .w-label.lg { width: 108px; }
+    .w-label.xl { width: 180px; height: 13px; }
+    .w-fill { height: 16px; width: 100%; background: var(--fill); border-radius: 6px; }
+    .w-fill.sm { height: 11px; background: var(--fill-soft); }
+    .w-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--fill); flex-shrink: 0; }
+    .w-circle.sm { width: 18px; height: 18px; border: 2px solid var(--fill); background: var(--bg); }
+    .w-circle.green { width: 24px; height: 24px; background: var(--fill); border: none; }
+    .w-pill { height: 20px; width: 88px; border-radius: 999px; background: var(--fill); }
+    .w-pill.sm { height: 16px; width: 54px; }
+    .w-btn { width: 74px; height: 32px; background: var(--fill); border-radius: 6px; flex-shrink: 0; }
+
+    /* ══ RIGHT-CONTENT HEADER (wireframe) ══ */
+    .wire-head { margin-bottom: 14px; }
+    .wire-head .w-label.xl { margin-bottom: 10px; }
+    .wire-head .w-fill.sm { width: 70%; }
+    .section-divider { height: 1px; background: var(--border-light); margin: 16px 0; }
+    .wire-subhead { margin-bottom: 16px; }
+
+    /* ══ TABS (wireframe) ══ */
+    .wire-tabs { display: flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 6px; }
+    .wire-tab { flex: 1; padding: 10px 8px; display: flex; align-items: center; justify-content: center; background: var(--bg); }
+    .wire-tab + .wire-tab { border-left: 1px solid var(--border); }
+    .wire-tab.active { background: var(--accent); }
+    .wire-tab.active .w-label { background: rgba(255,255,255,0.75); }
+    .wire-tab .w-label { width: 90px; height: 10px; }
+
+    /* ══ TAB EXPLAINER (wireframe) ══ */
+    .wire-explainer { background: var(--surface); border-radius: 8px; padding: 14px 20px; margin-top: 6px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .wire-explainer .w-fill.sm { width: 100%; }
+    .wire-explainer .w-fill.sm.short { width: 55%; }
+
+    /* ══ STEP LIST (wireframe) ══ */
+    .step-list { display: flex; flex-direction: column; padding-left: 12px; }
+    .step-item { display: flex; gap: 14px; align-items: stretch; }
+    .step-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 24px; }
+    .step-item:first-child .step-left { padding-top: 4px; }
+    .step-dotted-line { width: 0; flex: 1; margin-top: 2px; border-left: 2.5px dashed var(--fill); border-image: repeating-linear-gradient(to bottom, var(--fill) 0, var(--fill) 3px, transparent 3px, transparent 7px) 1; }
+    .step-item:last-child .step-dotted-line { display: none; }
+    .step-body { flex: 1; padding-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .step-item:last-child .step-body { padding-bottom: 0; }
+    .step-name-row { display: flex; align-items: center; gap: 8px; }
+    .step-name-row .w-fill { width: 150px; height: 14px; }
+    .step-item .step-desc-lines { display: flex; flex-direction: column; gap: 6px; }
+    .step-item .step-desc-lines .w-fill.sm { width: 78%; }
+    .step-item .step-desc-lines .w-fill.sm.short { width: 50%; }
+    .step-circle-green { width: 24px; height: 24px; margin-left: -3px; }
+
+    /* ══ ASSETS TREE (wireframe) ══ */
+    .assets-h { margin: 40px 0 12px; }
+    .assets-h .w-label.xl { width: 200px; }
+    .assets-card { background: #F2F3F5; border-radius: 10px; padding: 18px 24px; }
+    .tree { list-style: none; margin: 0; padding: 0; max-width: 580px; }
+    .tree ul { list-style: none; margin: 0; padding-left: 22px; }
+    .tree li { position: relative; }
+    .tree ul li::before { content: ''; position: absolute; top: 0; left: -12px; height: 100%; border-left: 1px solid #C2C8CE; }
+    .tree ul li:last-child::before { height: 16px; }
+    .tree ul li::after { content: ''; position: absolute; top: 16px; left: -12px; width: 12px; border-top: 1px solid #C2C8CE; }
+    .node { display: flex; align-items: center; gap: 8px; padding: 6px 0 6px 8px; }
+    .node .w-fill { width: 130px; height: 12px; }
+    .node .w-fill.wide { width: 190px; }
+    .node .lead { flex: 1; border-bottom: 1px dotted #B4BAC1; margin: 0 8px; min-width: 16px; align-self: flex-end; margin-bottom: 4px; }
+    .node .w-label.sm { width: 48px; height: 9px; }
+
+    .left-nav .w-fill { display: inline-block; vertical-align: middle; }
+  </style>
+</head>
+<body>
+
+  <!-- ══ TOP NAV (real chrome) ══ -->
+  <div class="topnav">
+    <div class="topnav-left">
+      <a class="meta-logo" href="#"><img src="../shared/meta.svg" alt="Meta" /></a>
+      <div class="topnav-tabs">
+        <a class="topnav-tab active">My Apps</a>
+        <a class="topnav-tab">Required actions</a>
+        <a class="topnav-tab">Docs <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Tools <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="topnav-tab">Support <svg class="caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <div class="search-box">
+        <svg class="search-icon" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="4.5"/><path d="M9.5 9.5L13 13"/></svg>
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="nav-icons">
+        <div class="nav-icon"><svg viewBox="0 0 16 16" fill="currentColor"><circle cx="8" cy="5.5" r="3"/><path d="M2.5 14.5C2.5 11.5 5 9.5 8 9.5s5.5 2 5.5 5"/></svg></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ LEFT SYSTEM SIDEBAR (real chrome) ══ -->
+  <div class="sys-sidebar">
+    <div class="sys-sidebar-icon active"><svg viewBox="0 0 20 20"><path d="M3 5h14M3 10h14M3 15h14" stroke-linecap="round"/></svg></div>
+    <div class="sys-sidebar-icon"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg></div>
+    <div class="sys-sidebar-icon"><svg viewBox="0 0 20 20"><path d="M7 3L3 10l4 7M13 3l4 7-4 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div class="sys-sidebar-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2 2" stroke-linecap="round"/></svg></div>
+    <div class="sys-sidebar-spacer"></div>
+    <div class="sys-sidebar-icon"><svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="7"/><path d="M10 9v4M10 7v.01" stroke-linecap="round"/></svg></div>
+  </div>
+
+  <!-- ══ BREADCRUMB (real chrome) ══ -->
+  <div class="breadcrumb">
+    <a href="#">Use cases</a>
+    <span class="sep">›</span>
+    <span class="current">Customize</span>
+  </div>
+
+  <!-- ══ CONTENT ══ -->
+  <div class="content-layout">
+
+    <!-- LEFT NAV (real chrome) -->
+    <div class="left-nav">
+      <div class="nav-dropdown">
+        <span style="display:flex;align-items:center;gap:8px;"><span class="w-circle" style="width:16px;height:16px;"></span><span class="w-fill" style="width:116px;height:11px;"></span></span>
+        <svg class="dd-caret" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <a class="nav-link active"><span class="w-fill" style="width:62px;height:11px;background:var(--label);"></span></a>
+
+      <div class="nav-group" id="nav-api">
+        <div class="nav-group-toggle" onclick="toggleGrp(this)">
+          <span class="w-fill" style="width:72px;height:11px;"></span>
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:86px;height:10px;"></span></a>
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:112px;height:10px;"></span></a>
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:124px;height:10px;"></span></a>
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:60px;height:10px;"></span></a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-partner">
+        <div class="nav-group-toggle" onclick="toggleGrp(this)">
+          <span class="w-fill" style="width:94px;height:11px;"></span>
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:116px;height:10px;"></span></a>
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:60px;height:10px;"></span></a>
+        </div>
+      </div>
+
+      <div class="nav-group collapsed" id="nav-other">
+        <div class="nav-group-toggle" onclick="toggleGrp(this)">
+          <span class="w-fill" style="width:66px;height:11px;"></span>
+          <svg class="chevron" viewBox="0 0 12 12"><path d="M3 4.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="nav-group-items">
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:122px;height:10px;"></span></a>
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:70px;height:10px;"></span></a>
+          <a class="nav-link nav-link--sub"><span class="w-fill" style="width:104px;height:10px;"></span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT (wireframe) -->
+    <div class="right-content">
+
+      <!-- "Overview" heading + desc -->
+      <div class="wire-head">
+        <div class="w-label xl"></div>
+        <div class="w-fill sm"></div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <!-- "Select your integration path" subhead -->
+      <div class="wire-subhead"><div class="w-label lg"></div></div>
+
+      <!-- Tabs -->
+      <div class="wire-tabs">
+        <div class="wire-tab active"><div class="w-label"></div></div>
+        <div class="wire-tab"><div class="w-label"></div></div>
+      </div>
+
+      <!-- Tab explainer -->
+      <div class="wire-explainer">
+        <div class="w-fill sm"></div>
+        <div class="w-fill sm short"></div>
+      </div>
+
+      <!-- Step list -->
+      <div class="step-list">
+        <!-- Step 1 -->
+        <div class="step-item">
+          <div class="step-left"><div class="w-circle sm"></div><div class="step-dotted-line"></div></div>
+          <div class="step-body">
+            <div class="step-name-row"><div class="w-fill"></div><div class="w-pill sm"></div></div>
+            <div class="step-desc-lines"><div class="w-fill sm"></div><div class="w-fill sm short"></div></div>
+          </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="step-item">
+          <div class="step-left"><div class="w-circle sm"></div><div class="step-dotted-line"></div></div>
+          <div class="step-body">
+            <div class="step-name-row"><div class="w-fill"></div></div>
+            <div class="step-desc-lines"><div class="w-fill sm"></div><div class="w-fill sm short"></div></div>
+          </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="step-item">
+          <div class="step-left"><div class="w-circle sm"></div><div class="step-dotted-line"></div></div>
+          <div class="step-body">
+            <div class="step-name-row"><div class="w-fill"></div></div>
+            <div class="step-desc-lines"><div class="w-fill sm"></div><div class="w-fill sm short"></div></div>
+          </div>
+        </div>
+        <!-- Final (green check) -->
+        <div class="step-item">
+          <div class="step-left"><div class="w-circle green step-circle-green"></div></div>
+          <div class="step-body">
+            <div class="step-name-row"><div class="w-fill" style="width:220px;background:var(--fill-soft);"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Assets you'll need or create -->
+      <div class="assets-h"><div class="w-label xl"></div></div>
+      <div class="assets-card">
+        <ul class="tree">
+          <li><div class="node"><div class="w-fill"></div></div>
+            <ul>
+              <li><div class="node"><div class="w-fill"></div></div>
+                <ul>
+                  <li><div class="node"><div class="w-fill"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                </ul>
+              </li>
+              <li><div class="node"><div class="w-fill wide"></div></div>
+                <ul>
+                  <li><div class="node"><div class="w-fill wide"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                  <li><div class="node"><div class="w-fill wide"></div></div>
+                    <ul>
+                      <li><div class="node"><div class="w-fill"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                      <li><div class="node"><div class="w-fill"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                      <li><div class="node"><div class="w-fill"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="node"><div class="w-fill"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                  <li><div class="node"><div class="w-fill wide"></div><span class="lead"></span><div class="w-label sm"></div></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══ BOTTOM BAR (real chrome) ══ -->
+  <div class="bottom-bar">
+    <div class="bottom-bar-left">
+      <span class="bottom-bar-text">© 2026 Meta</span>
+    </div>
+    <div class="bottom-bar-right">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6.5"/><path d="M6.2 6.3a1.8 1.8 0 113 1.4c-.6.4-.9.7-.9 1.4M8 11.5v.01" stroke-linecap="round"/></svg>
+    </div>
+  </div>
+
+  <script>
+    function toggleGrp(toggle) {
+      toggle.closest('.nav-group').classList.toggle('collapsed');
+    }
+    function toggleNav() {
+      // no-op placeholder to mirror template API
+    }
+    if (location.hash === '#embed') {
+      document.body.classList.add('embed');
+    }
+  </script>
+</body>
+</html>

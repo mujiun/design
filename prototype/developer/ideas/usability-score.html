@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Usability Score — Developer Onboarding (SUS)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&family=IBM+Plex+Mono:wght@400;500;600;700&display=block" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #FFFFFF; --surface: #F5F6F7; --ink: #1C2B33; --ink2: #465A69;
+      --ink3: #6B7A85; --ink4: #8A949E; --border: #E4E6EB;
+      --accent: #0A78BE; --accent-light: #E7F0FD;
+      --green: #1E8E5A; --amber: #B8791A; --red: #C0392B; --grey: #B8C4CC;
+      --title: 'Commissioner', -apple-system, BlinkMacSystemFont, sans-serif;
+      --mono: 'IBM Plex Mono', ui-monospace, monospace;
+    }
+    html, body { background: var(--bg); color: var(--ink); font-family: var(--title); -webkit-font-smoothing: antialiased; line-height: 1.5; scrollbar-width: none; -ms-overflow-style: none; }
+    html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 56px 40px 100px; }
+
+    /* Header */
+    .chips { display: inline-flex; gap: 8px; margin-bottom: 14px; }
+    .chip { font-family: var(--mono); font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.3px; background: var(--accent-light); color: var(--accent); }
+    .chip.grey { background: var(--surface); color: var(--ink3); }
+    h1 { font-size: 32px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; margin-bottom: 12px; }
+    .intro { font-size: 15.5px; color: var(--ink3); line-height: 1.55; max-width: 680px; }
+    .intro b { color: var(--ink2); font-weight: 600; }
+
+    section { padding: 40px 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
+    .sec-title { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    .lead { font-size: 21px; font-weight: 400; color: var(--ink); line-height: 1.35; letter-spacing: -0.005em; }
+
+    /* Score summary */
+    .scores { display: grid; grid-template-columns: 1fr 1fr auto; gap: 14px; align-items: stretch; margin-top: 22px; }
+    .score-card { background: var(--surface); border-radius: 16px; padding: 24px 26px; }
+    .score-card.after { background: var(--accent-light); }
+    .score-k { font-family: var(--mono); font-size: 10.5px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink4); }
+    .score-card.after .score-k { color: var(--accent); }
+    .score-num { font-size: 56px; font-weight: 600; letter-spacing: -0.03em; line-height: 1; margin: 10px 0 4px; color: var(--ink); }
+    .score-card.after .score-num { color: var(--accent); }
+    .score-grade { font-size: 14px; font-weight: 600; color: var(--ink2); }
+    .score-sub { font-size: 12.5px; color: var(--ink3); margin-top: 6px; line-height: 1.4; }
+    .lift { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--ink); color: #fff; border-radius: 16px; padding: 24px 28px; }
+    .lift-num { font-size: 40px; font-weight: 600; letter-spacing: -0.02em; line-height: 1; }
+    .lift-k { font-family: var(--mono); font-size: 10px; letter-spacing: 0.5px; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 8px; }
+    .bench { font-size: 13px; color: var(--ink3); margin-top: 16px; }
+    .bench b { color: var(--ink2); font-weight: 600; }
+
+    /* Old pages thumbs */
+    .thumbs { display: flex; gap: 10px; margin-top: 18px; }
+    .thumb { flex: 1; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: var(--surface); }
+    .thumb img { width: 100%; height: 120px; object-fit: cover; object-position: top; display: block; }
+    .thumb p { font-family: var(--mono); font-size: 10px; color: var(--ink4); padding: 7px 10px; letter-spacing: 0.3px; }
+
+    /* SUS item table */
+    .items { margin-top: 22px; display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+    .ihead, .irow { display: grid; grid-template-columns: 28px 1fr 132px 132px 56px; gap: 14px; align-items: center; padding: 13px 18px; border-bottom: 1px solid var(--border); }
+    .ihead { background: var(--surface); }
+    .irow:last-child { border-bottom: none; }
+    .ihead span { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase; color: var(--ink4); }
+    .ihead span.r { text-align: left; }
+    .inum { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink3); }
+    .itext { font-size: 14px; color: var(--ink); line-height: 1.35; }
+    .itag { display: inline-block; font-family: var(--mono); font-size: 9px; font-weight: 600; letter-spacing: 0.3px; padding: 1px 6px; border-radius: 10px; margin-left: 6px; vertical-align: middle; }
+    .itag.pos { background: rgba(30,142,90,0.12); color: var(--green); }
+    .itag.neg { background: rgba(192,57,43,0.1); color: var(--red); }
+    .rate { display: flex; align-items: center; gap: 8px; }
+    .dots { display: flex; gap: 3px; }
+    .dot { width: 14px; height: 7px; border-radius: 3px; background: #E0E4E8; }
+    .dot.on.before { background: var(--grey); }
+    .dot.on.after { background: var(--accent); }
+    .rval { font-family: var(--mono); font-size: 11.5px; font-weight: 600; color: var(--ink3); width: 24px; }
+    .idelta { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--green); text-align: right; }
+    .idelta.flat { color: var(--ink4); }
+    .irow.itotal { background: var(--surface); border-top: 1px solid var(--border); border-bottom: none; }
+    .tscore { font-family: var(--title); font-size: 24px; font-weight: 600; color: var(--ink2); letter-spacing: -0.01em; }
+    .tscore.after { color: var(--accent); }
+
+    /* Suggestions */
+    .sug { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+    .sug-item { background: var(--surface); border-radius: 12px; padding: 16px 20px; display: flex; gap: 14px; }
+    .sug-n { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--accent); flex-shrink: 0; padding-top: 1px; }
+    .sug-b h4 { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+    .sug-b p { font-size: 13.5px; color: var(--ink3); line-height: 1.5; }
+
+    @media (max-width: 720px) {
+      .scores { grid-template-columns: 1fr; }
+      .ihead, .irow { grid-template-columns: 24px 1fr; }
+      .ihead .r, .irow .rate { display: none; }
+      .wrap { padding: 40px 22px 80px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <span class="chips"><span class="chip">Validation</span><span class="chip grey">All-positive SUS</span></span>
+    <h1>Usability score — developer onboarding</h1>
+    <p class="intro">We compared the <b>old basic setup flow</b> (the fragmented Quickstart / API Testing / Configuration pages) against the <b>new guided flow</b> using the <b>System Usability Scale (SUS)</b> — a 10-item questionnaire scored 0–100. We used the <b>all-positive SUS variant</b> (Sauro &amp; Lewis, 2011), which keeps the standard 10 items but phrases every one positively — easier to read and less error-prone to score, so higher is always better.</p>
+
+    <!-- Summary -->
+    <section>
+      <p class="sec-title">Result</p>
+      <p class="lead">SUS more than doubled — from a failing score to excellent.</p>
+      <div class="scores">
+        <div class="score-card">
+          <p class="score-k">Before · old flow</p>
+          <p class="score-num" id="scoreBefore">35</p>
+          <p class="score-grade">Grade F · Poor</p>
+          <p class="score-sub">Below the 68 industry average — users found setup complex and cumbersome.</p>
+        </div>
+        <div class="score-card after">
+          <p class="score-k">After · new flow</p>
+          <p class="score-num" id="scoreAfter">85</p>
+          <p class="score-grade">Grade A · Excellent</p>
+          <p class="score-sub">Well above average — clear path, try-first, and in-context guidance.</p>
+        </div>
+        <div class="lift">
+          <p class="lift-num" id="scoreLift">+50</p>
+          <p class="lift-k">SUS points</p>
+        </div>
+      </div>
+      <p class="bench"><b>Reference:</b> SUS average ≈ 68. Above 80 is top-tier (A); below 51 is a failing grade (F).</p>
+      <div class="thumbs">
+        <div class="thumb"><img src="../../img_project/13/11-1.png" alt=""><p>Old — page 1</p></div>
+        <div class="thumb"><img src="../../img_project/13/11-2.png" alt=""><p>Old — page 2</p></div>
+        <div class="thumb"><img src="../../img_project/13/11-3.png" alt=""><p>Old — page 3</p></div>
+      </div>
+    </section>
+
+    <!-- SUS breakdown -->
+    <section>
+      <p class="sec-title">SUS breakdown</p>
+      <p class="lead">Every item improved — the biggest gains in ease of use and learnability.</p>
+      <p class="sub" style="font-size:13.5px;color:var(--ink3);margin-top:8px;">Each statement rated <b style="color:var(--ink2);font-weight:600;">1 (disagree) to 5 (agree)</b> — <b style="color:var(--ink2);font-weight:600;">higher is better</b>. Bars show the rating; the Gain column is the before→after change.</p>
+      <div class="items" id="items">
+        <div class="ihead">
+          <span>#</span><span>Statement</span><span class="r">Before</span><span class="r">After</span><span class="r" style="text-align:right;">Gain</span>
+        </div>
+        <!-- rows injected by JS -->
+      </div>
+    </section>
+
+    <!-- Suggestions -->
+    <section>
+      <p class="sec-title">Suggestions for improvement</p>
+      <p class="lead">Where the new flow still has room to grow.</p>
+      <div class="sug">
+        <div class="sug-item"><span class="sug-n">01</span><div class="sug-b"><h4>Build confidence at the riskiest step</h4><p>"Confident using it" rose but didn't top out — number registration still causes hesitation. Add inline validation, a progress indicator, and a clear success confirmation after each task.</p></div></div>
+        <div class="sug-item"><span class="sug-n">02</span><div class="sug-b"><h4>Lighten the remaining heavy steps</h4><p>"Cumbersome" and "complex" improved but aren't fully resolved — business verification and payment setup still feel like gates. Explore async/parallel verification so users aren't blocked.</p></div></div>
+        <div class="sug-item"><span class="sug-n">03</span><div class="sug-b"><h4>Add a returning-user fast path</h4><p>"Would use frequently" is naturally capped for a one-time setup. Offer a quick path for developers adding a second number or app, skipping steps they've done before.</p></div></div>
+        <div class="sug-item"><span class="sug-n">04</span><div class="sug-b"><h4>Keep reducing upfront learning</h4><p>"Lots to learn first" dropped sharply but persists for first-timers. Lead with the trial number and defer advanced concepts (webhooks, tokens) until they're needed.</p></div></div>
+      </div>
+    </section>
+
+    <p style="font-family:var(--mono);font-size:11px;color:var(--ink4);letter-spacing:0.2px;margin-top:28px;line-height:1.6;">Method: all-positive SUS (Sauro, J. &amp; Lewis, J. R., 2011, "When designing usability questionnaires, does it hurt to be positive?", CHI). Scores are illustrative sample data.</p>
+  </div>
+
+  <script>
+    // SUS responses, all statements framed positively (1 disagree .. 5 agree). Higher = better.
+    var ITEMS = [
+      { t: 'I think that I would like to use this system frequently', b: 2, a: 3 },
+      { t: 'I found the system to be simple', b: 2, a: 3 },
+      { t: 'I thought the system was easy to use', b: 2, a: 5 },
+      { t: 'I think that I could use the system without the support of a technical person', b: 2, a: 3 },
+      { t: 'I found the various functions in the system were well integrated', b: 3, a: 5 },
+      { t: 'I thought there was a lot of consistency in the system', b: 3, a: 5 },
+      { t: 'I would imagine that most people would learn to use the system very quickly', b: 3, a: 5 },
+      { t: 'I found the system very intuitive', b: 2, a: 5 },
+      { t: 'I felt very confident using the system', b: 3, a: 4 },
+      { t: 'I could use the system without having to learn anything new', b: 2, a: 4 }
+    ];
+    function susScore(key){ var s = 0; ITEMS.forEach(function(it){ s += it[key] - 1; }); return Math.round(s * 2.5); }
+    function bars(r, phase){
+      var h = '<div class="dots">';
+      for (var i = 1; i <= 5; i++) h += '<span class="dot ' + (i <= r ? 'on ' + phase : '') + '"></span>';
+      return h + '</div>';
+    }
+    var box = document.getElementById('items');
+    ITEMS.forEach(function(it, i){
+      var d = it.a - it.b;
+      var row = document.createElement('div');
+      row.className = 'irow';
+      row.innerHTML = '<span class="inum">' + (i+1) + '</span>'
+        + '<span class="itext">' + it.t + '</span>'
+        + '<span class="rate">' + bars(it.b, 'before') + '</span>'
+        + '<span class="rate">' + bars(it.a, 'after') + '</span>'
+        + '<span class="idelta' + (d === 0 ? ' flat' : '') + '">' + (d > 0 ? '+' + d : (d === 0 ? '0' : d)) + '</span>';
+      box.appendChild(row);
+    });
+    (function(){
+      var tb = susScore('b'), ta = susScore('a');
+      var tr = document.createElement('div');
+      tr.className = 'irow itotal';
+      tr.innerHTML = '<span></span><span class="itext" style="font-weight:600;">Total SUS score <span style="font-family:var(--mono);font-size:11px;color:var(--ink4);font-weight:500;">(0–100)</span></span>'
+        + '<span class="tscore">' + tb + '</span>'
+        + '<span class="tscore after">' + ta + '</span>'
+        + '<span class="idelta">+' + (ta - tb) + '</span>';
+      box.appendChild(tr);
+    })();
+    var b = susScore('b'), a = susScore('a');
+    document.getElementById('scoreBefore').textContent = b;
+    document.getElementById('scoreAfter').textContent = a;
+    document.getElementById('scoreLift').textContent = '+' + (a - b);
+  </script>
+</body>
+</html>
