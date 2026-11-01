@@ -1086,14 +1086,14 @@ document.addEventListener('keydown', (e) => {
     const SIDE = [
       { media: 'assets/fun/fun_a.mp4', ratio: 1, title: 'Sticker Day', cap: 'App for journaling on a note-taking canvas' },
       { media: 'assets/fun/fun_b.mp4', ratio: 1, title: 'Piano Day',   cap: 'App for classical music sheet reading & practice' },
-      { media: 'assets/fun/fun_c.mp4', ratio: 1, title: 'Animation',   cap: 'Getting a green card approved' },
+      { media: 'assets/fun/fun_c.mp4', ratio: 1, title: 'Animation & Gaming', cap: 'Path to green card' },
     ];
     const sTrack = document.getElementById('scfTrack');
     const sCapEl = document.getElementById('scfCap');
     const sCards = SIDE.map((s, i) => {
       const c = document.createElement('div');
       c.className = 'scf-card';
-      c.innerHTML = `<div class="scf-frame"><video src="${s.media}?v=full" muted loop autoplay playsinline preload="auto"></video></div>`;
+      c.innerHTML = `<div class="scf-frame"><video src="${s.media}?v=full2" muted loop autoplay playsinline preload="auto"></video></div>`;
       c.addEventListener('click', () => onSClick(i));
       sTrack.appendChild(c);
       const v = c.querySelector('video'); if (v) v.play().catch(() => {});
