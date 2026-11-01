@@ -1,0 +1,2450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="icon" type="image/png" href="../portfolio/projects/favicons/mu.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Design System — WhatsApp Broadcast Tool</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@100..900&family=IBM+Plex+Mono:wght@400;500;600;700&display=block" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    /* Keep this page on the old orange accent (overrides shared.css teal) */
+    :root { --accent: #D56C00; }
+    /* ── MAIN ── */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .doc {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 80px 64px 120px;
+    }
+
+    /* ── PAGE SWITCHING ── */
+    .page { display: none; }
+    .page.active {
+      display: block;
+      animation: pageIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HEADER ── */
+    .ds-eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    .ds-h1 {
+      font-size: 56px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .ds-lead {
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.55;
+      letter-spacing: -0.01em;
+      max-width: 750px;
+    }
+
+    /* ── OVERVIEW META ── */
+    .ds-overview-meta {
+      display: flex;
+      gap: 56px;
+      margin-top: 36px;
+      padding-top: 28px;
+      border-top: 1px solid var(--border);
+    }
+    .ds-overview-meta .ds-meta-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: var(--ink4);
+      margin-bottom: 8px;
+    }
+    .ds-overview-meta .ds-meta-value {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    .ds-meta-link {
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .ds-meta-link:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── SECTION HEADINGS ── */
+    .ds-section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    .ds-h2 {
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+    .ds-crumb-sep { color: var(--ink); font-weight: 400; margin: 0 14px; }
+    #comp-crumb { color: var(--ink); font-weight: 400; }
+
+    .ds-section-desc {
+      font-size: 17px;
+      color: var(--ink);
+      line-height: 1.55;
+      margin-bottom: 36px;
+    }
+
+    .ds-block-title {
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin: 48px 0 16px;
+    }
+
+    /* ── IMAGE PLACEHOLDER ── */
+    .ph {
+      width: 100%;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink4);
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .ph-hero { aspect-ratio: 16 / 7; margin-bottom: 40px; }
+    .ph-wide { aspect-ratio: 16 / 9; }
+    .ph-square { aspect-ratio: 4 / 3; }
+
+    /* ── PRINCIPLE / GENERIC CARDS ── */
+    .ds-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+    }
+    .ds-card {
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .ds-card-visual {
+      aspect-ratio: 1 / 1;
+      background: #FDF8F2;
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .ds-card-visual svg { width: 100%; height: 100%; display: block; }
+
+    .ds-card-stat {
+      margin-top: auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+    .ds-card-stat-num {
+      display: block;
+      font-size: 21px;
+      font-weight: 500;
+      color: var(--ink2);
+      letter-spacing: -0.01em;
+    }
+    .ds-card-stat-label {
+      display: block;
+      font-size: 13px;
+      color: var(--ink4);
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .ds-card-num {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .ds-card-title {
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin-bottom: 10px;
+    }
+    .ds-card-body {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.4;
+      flex: 1;
+      padding-bottom: 24px;
+    }
+
+    /* ── ANATOMY ROWS ── */
+    .ds-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .ds-row {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 20px 0;
+      border-top: 1px solid var(--border);
+    }
+    .ds-row:last-child { border-bottom: 1px solid var(--border); }
+    .ds-row-index {
+      font-family: var(--mono);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--accent);
+      padding-top: 2px;
+    }
+    .ds-row-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .ds-row-head:has(+ .ds-row-body) { margin-bottom: 4px; }
+    .ds-row-body {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+    .ds-row-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+    }
+    .tag-shared {
+      background: var(--surface);
+      color: var(--ink4);
+      border: 1px solid var(--border);
+    }
+    .tag-editable {
+      background: var(--accent-light);
+      color: var(--accent);
+      border: 1px solid rgba(213,108,0,0.2);
+    }
+    .ds-legend {
+      margin-top: 24px;
+    }
+    .ds-legend-item {
+      font-size: 13px;
+      color: var(--ink4);
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    /* ── ANATOMY LAYOUT ── */
+    .anatomy-layout {
+      display: grid;
+      grid-template-columns: 35fr 65fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .anatomy-diagram {
+      position: sticky;
+      top: 0;
+      order: 2;
+    }
+    .anatomy-diagram img { width: 100%; height: auto; display: block; }
+    .anatomy-layout .ds-row { padding: 16px 0; }
+    #anatomy .ds-section-desc { max-width: none; }
+
+    /* ── COMPONENTS LAYOUT ── */
+    .comp-layout {
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: 48px;
+      align-items: start;
+    }
+    .comp-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      position: sticky;
+      top: 0;
+    }
+    .comp-list-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: var(--font);
+      transition: all 0.15s ease;
+    }
+    .comp-list-item:hover { background: var(--surface); }
+    .comp-list-item.active { background: var(--surface); border-color: var(--border); }
+    .comp-list-name { font-size: 15px; font-weight: 500; color: var(--ink); }
+    .comp-list-item.active .comp-list-name { color: var(--accent); }
+    .comp-list-count { font-family: var(--mono); font-size: 11px; color: var(--ink4); }
+    .comp-detail { display: none; }
+    .comp-detail.active { display: block; }
+    .comp-overview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .comp-ov-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      text-decoration: none;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .comp-ov-card:hover { border-color: var(--ink4); transform: translateY(-2px); }
+    .comp-ov-visual {
+      aspect-ratio: 4 / 3;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 6px;
+      position: relative;
+    }
+    .comp-ov-visual > svg { width: 100%; height: 100%; display: block; }
+    .comp-ov-mini {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      width: 420px;
+      transform: scale(0.75);
+      transform-origin: top left;
+      pointer-events: none;
+    }
+    .comp-ov-mini--mid {
+      top: 50%;
+      transform: translateY(-50%) scale(0.75);
+      transform-origin: left center;
+    }
+    .comp-ov-mini--full {
+      top: 16px;
+      left: 16px;
+      width: calc((100% - 32px) / 0.75);
+      transform: scale(0.75);
+      transform-origin: top left;
+    }
+    .comp-ov-num { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--accent); padding: 0 6px; }
+    .comp-ov-card .comp-ov-name { padding: 0 6px; }
+    .comp-ov-card .comp-ov-desc { padding: 0 6px; }
+    .comp-ov-name { font-size: 17px; font-weight: 500; color: var(--ink); letter-spacing: -0.01em; }
+    .comp-ov-desc { font-size: 13px; color: var(--ink4); line-height: 1.4; }
+    @media (max-width: 768px) {
+      .comp-overview-grid { grid-template-columns: 1fr; }
+    }
+    .comp-variant-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .comp-variant-grid--3 { grid-template-columns: 1fr 1fr 1fr; }
+    .comp-variant-preview {
+      aspect-ratio: 4 / 3;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--ink4);
+      margin-bottom: 10px;
+    }
+    .comp-variant-cap { font-size: 13px; font-weight: 500; color: var(--ink); }
+    .comp-variant > .comp-variant-cap:first-child { margin-bottom: 10px; }
+    .pv-media { display: block; width: calc(100% + 16px); border-radius: 8px; margin: -6px -8px 8px; }
+    @media (max-width: 768px) {
+      .comp-layout { grid-template-columns: 1fr; }
+      .comp-list { position: static; }
+    }
+
+    /* ── NAV: EXPANDABLE COMPONENTS GROUP ── */
+    .nav-row { display: flex; align-items: center; }
+    .nav-row .nav-item { flex: 1; }
+    .nav-expand {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      color: var(--ink4);
+      font-size: 16px;
+      line-height: 1;
+      border-radius: 4px;
+    }
+    .nav-expand:hover { background: var(--surface); color: var(--ink); }
+    .nav-row:has(.nav-item.active) { background: var(--surface); border-radius: 6px; }
+    .nav-row:has(.nav-item.active) .nav-item.active { background: transparent; }
+    .nav-sublist { display: none; flex-direction: column; margin: 2px 0 4px; }
+    .nav-group.open .nav-sublist { display: flex; }
+    .nav-subitem {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--ink4);
+      text-decoration: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      margin-bottom: 1px;
+    }
+    .nav-subnum {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--ink4);
+      flex-shrink: 0;
+    }
+    .nav-subnum::after { content: ' •'; }
+    .nav-subitem:hover { color: var(--ink); background: var(--surface); }
+    .nav-subitem.active { color: #745839; background: var(--surface); font-weight: 500; }
+    .nav-subitem.active .nav-subnum { color: #745839; }
+
+    /* ── COMPONENT SECTION + DESIGN/CODE TABS ── */
+    .comp-section {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--surface);
+    }
+    .comp-tabs {
+      display: flex;
+      gap: 4px;
+      padding: 8px 28px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .comp-tab {
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 10px 4px;
+      margin-bottom: -1px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink4);
+      cursor: pointer;
+      margin-right: 16px;
+    }
+    .comp-tab:hover { color: var(--ink); }
+    .comp-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+    .a11y { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 64px; padding-top: 6px; }
+    .a11y-h { font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink3); margin: 0 0 4px; }
+    .a11y-item { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--border); font-size: 14px; }
+    .a11y-item svg { width: 16px; height: 16px; flex: 0 0 auto; color: #2DA44E; }
+    .a11y-k { color: var(--ink); }
+    .a11y-v { margin-left: auto; font-family: var(--mono); font-size: 11.5px; font-weight: 500; color: var(--ink4); background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; white-space: nowrap; }
+    .a11y-right { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+    .a11y-ratio { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--ink); margin-right: 2px; }
+    .a11y-lv { font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.3px; border-radius: 5px; padding: 2px 6px; border: 1px solid; }
+    .a11y-lv.on { color: #2DA44E; border-color: rgba(45,164,78,0.35); background: rgba(45,164,78,0.1); }
+    .a11y-lv.off { color: var(--ink3); border-color: var(--border); background: transparent; opacity: 0.55; }
+    .comp-panel { display: none; padding: 28px; }
+    .comp-panel.active { display: block; }
+    .comp-panels { display: grid; }
+    .comp-panels > .comp-panel { display: block; grid-area: 1 / 1; visibility: hidden; }
+    .comp-panels > .comp-panel.active { visibility: visible; }
+    .comp-code {
+      background: #2b2b2b;
+      color: #e6e6e6;
+      border-radius: 10px;
+      padding: 18px 20px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.6;
+    }
+    .comp-code-empty { font-size: 14px; color: var(--ink4); font-family: var(--mono); }
+
+    /* ── TEMPLATE NAME COMPONENT (coded) ── */
+    .tn-card { background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; padding: 24px; font-family: var(--font); }
+    .tn-card-title { font-size: 18px; font-weight: 600; color: #1c1c1e; margin-bottom: 20px; }
+    .tn-fields { display: grid; grid-template-columns: 1fr 220px; gap: 8px; align-items: end; }
+    .tn-label { display: block; font-size: 14px; font-weight: 500; color: #1c1c1e; margin-bottom: 8px; }
+    .tn-input {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      border: 1px solid #C9D0D8; border-radius: 4px; padding: 8px 14px; background: #fff;
+    }
+    .tn-input.focused { border-color: #1f6fd6; box-shadow: 0 0 0 3px rgba(31,111,214,0.12); }
+    .tn-placeholder { font-size: 15px; color: #8a8f98; }
+    .tn-value { font-size: 15px; color: #1c1c1e; }
+    .tn-count { font-size: 13px; color: #8a8f98; flex-shrink: 0; }
+    .tn-select {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      border: 1px solid #C9D0D8; border-radius: 4px; padding: 8px 14px; background: #fff;
+      font-size: 15px; color: #1c1c1e;
+    }
+    .tn-select svg { color: #5a5f68; flex-shrink: 0; }
+    @media (max-width: 600px) { .tn-fields { grid-template-columns: 1fr; } }
+
+    /* ── CONTENT: MEDIA DROPDOWN (coded) ── */
+    .ct-field { font-family: var(--font); max-width: 300px; }
+    .ct-label { display: block; font-size: 14px; font-weight: 500; color: #1c1c1e; margin-bottom: 8px; }
+    .ct-optional { font-weight: 400; color: #9aa0a8; }
+    .ct-optional::before { content: '·'; margin: 0 6px; }
+    .ct-select {
+      display: flex; align-items: center; justify-content: space-between;
+      border: 1px solid #C9D0D8; border-radius: 4px; padding: 8px 14px;
+      background: #fff; font-size: 14px; color: #1c1c1e;
+    }
+    .ct-select svg { color: #303E45; flex-shrink: 0; }
+    .ct-menu {
+      margin-top: 8px; background: #fff; border: 1px solid #E3E3E6;
+      border-radius: 10px; padding: 6px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    }
+    .ct-option {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 10px; border-radius: 8px; font-size: 15px; color: #1c1c1e; cursor: pointer;
+    }
+    .ct-option:hover { background: #F5F6F8; }
+    .ct-option.selected { background: #E8F1FD; }
+    .ct-radio {
+      width: 18px; height: 18px; flex-shrink: 0; border-radius: 50%;
+      border: 2px solid #C9D0D8; background: #fff; position: relative;
+    }
+    .ct-radio.checked { border-color: #3b6fb5; }
+    .ct-radio.checked::after {
+      content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 8px; height: 8px; border-radius: 50%; background: #3b6fb5;
+    }
+    .ct-icon {
+      width: 22px; height: 22px; flex-shrink: 0; color: #2d3340;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .ct-opt-label { font-weight: 400; }
+    .ct-card { background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; padding: 24px; font-family: var(--font); width: 100%; }
+    .ct-dropdown { position: relative; width: 220px; }
+    .ct-dropdown .ct-menu { display: none; position: absolute; left: 0; right: 0; top: calc(100% + 6px); margin-top: 0; z-index: 20; }
+    .ct-dropdown.open .ct-menu { display: block; }
+    .ct-select { cursor: pointer; }
+    .ct-card-title { font-size: 18px; font-weight: 600; color: #1c1c1e; margin-bottom: 8px; }
+    .ct-card-desc { font-size: 14px; color: #1C2B33; line-height: 1.5; margin-bottom: 22px; }
+    .ct-link { color: #1f6fd6; cursor: pointer; }
+    .ct-block { margin-bottom: 20px; }
+    .ct-block:last-child { margin-bottom: 0; }
+    .ct-select-sm { width: 220px; }
+    .ct-input { display: flex; align-items: center; justify-content: space-between; gap: 10px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 8px 14px; background: #fff; }
+    .ct-input .ct-placeholder { font-size: 14px; color: #8a8f98; }
+    .ct-count { font-size: 13px; color: #8a8f98; flex-shrink: 0; }
+    .ct-textarea { position: relative; border: 1px solid #C9D0D8; border-radius: 4px; padding: 12px 14px; min-height: 100px; background: #fff; }
+    .ct-textarea .ct-value { font-size: 14px; color: #1c1c1e; }
+    .ct-count-tr { position: absolute; top: 12px; right: 14px; }
+    .ct-meta-row { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-top: 8px; }
+    .ct-add-var { display: inline-flex; align-items: center; gap: 6px; font-size: 13.5px; font-weight: 500; color: #1c1c1e; cursor: pointer; }
+    .ct-info { width: 15px; height: 15px; border-radius: 50%; background: #2d3340; color: #fff; font-family: Georgia, 'Times New Roman', serif; font-size: 9.5px; font-style: italic; font-weight: 500; line-height: 1; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ct-toolbar { display: inline-flex; align-items: center; gap: 12px; color: #3a3f48; }
+    .ct-toolbar svg { width: 16px; height: 16px; }
+    .ct-toolbar b, .ct-toolbar i, .ct-toolbar s { font-size: 16px; line-height: 1; }
+    .ct-code-icon { font-family: var(--mono); font-size: 14px; line-height: 1; }
+    .ct-var-panel { background: #F6F6F6; border-radius: 10px; padding: 20px 22px; margin-top: 18px; }
+    .ct-var-title { font-size: 16px; font-weight: 500; color: #1c1c1e; margin-bottom: 8px; }
+    .ct-var-desc { font-size: 13.5px; color: #5a5f68; line-height: 1.5; margin-bottom: 16px; }
+    .ct-var-label { font-size: 14px; font-weight: 500; color: #1c1c1e; margin-bottom: 10px; }
+    .ct-var-row { display: flex; gap: 14px; }
+    .ct-var-key { width: 150px; flex-shrink: 0; background: #ECEFF3; border: 1px solid #E3E3E6; border-radius: 4px; padding: 12px 14px; font-size: 14px; color: #5a5f68; }
+    .ct-var-val { flex: 1; background: #fff; border: 1px solid #C9D0D8; border-radius: 4px; padding: 12px 14px; font-size: 14px; color: #1c1c1e; }
+
+    /* ── ADDITIONAL SETUP: VALIDITY PERIOD (coded) ── */
+    .as-card { background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; padding: 22px 24px; font-family: var(--font); }
+    .as-title { font-size: 18px; font-weight: 600; color: #1c1c1e; margin-bottom: 8px; }
+    .as-desc { font-size: 14px; color: #1C2B33; line-height: 1.5; margin-bottom: 18px; }
+    .as-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+    .as-row-title { font-size: 14px; font-weight: 500; color: #1c1c1e; margin-bottom: 4px; }
+    .as-row-sub { font-size: 13px; color: #5b6770; line-height: 1.5; max-width: 520px; }
+    .as-toggle {
+      flex-shrink: 0; width: 40px; height: 22px; border-radius: 11px;
+      background: #fff; border: 1px solid #d1d5db; position: relative; margin-top: 2px; transition: background 0.15s, border-color 0.15s;
+    }
+    .as-toggle::after {
+      content: ''; position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; border-radius: 50%; background: #1C2B33;
+      transition: left 0.15s, background 0.15s;
+    }
+    .as-toggle.on { background: #E7F0FD; border-color: #d1d5db; }
+    .as-toggle.on::after { left: 20px; background: #0A78BE; }
+    .as-field { margin-top: 8px; }
+    .as-field-label { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #1c1c1e; margin-bottom: 8px; }
+    .as-field-label .ct-info { width: 15px; height: 15px; }
+    .as-select {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 8px 14px; border: 1px solid #E3E3E6; border-radius: 4px;
+      font-size: 14px; color: #1c1c1e; background: #fff; cursor: pointer;
+    }
+    .as-select svg { width: 12px; height: 12px; color: #303E45; flex-shrink: 0; }
+
+    /* ── CONDITIONAL SETUP (coded) ── */
+    .cs-card { background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; padding: 22px 24px; font-family: var(--font); }
+    .cs-title { font-size: 18px; font-weight: 600; color: #1c1c1e; margin-bottom: 2px; }
+    .cs-desc { font-size: 14px; color: #1C2B33; line-height: 1.5; margin-bottom: 20px; max-width: 760px; }
+    .cs-desc a { color: #0A78BE; text-decoration: none; }
+    .cs-opt { display: flex; gap: 12px; margin-bottom: 16px; }
+    .cs-opt:last-child { margin-bottom: 0; }
+    .cs-radio { flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: 1px solid #C9D0D8; margin-top: 1px; position: relative; }
+    .cs-radio.on::after { content: ''; position: absolute; inset: 5px; border-radius: 50%; background: #0A78BE; }
+    .cs-opt-body { flex: 1; min-width: 0; }
+    .cs-opt-title { display: flex; align-items: center; gap: 7px; font-size: 15px; font-weight: 500; color: #1c1c1e; margin-bottom: 4px; }
+    .cs-opt-sub { font-size: 13px; color: #5b6770; line-height: 1.5; max-width: 620px; }
+    .cs-note { background: #F6F6F6; border-radius: 10px; padding: 18px 20px; display: flex; gap: 14px; margin-top: 14px; }
+    .cs-check { flex-shrink: 0; width: 22px; height: 22px; border-radius: 4px; background: #fff; border: 1.5px solid #0A78BE; display: flex; align-items: center; justify-content: center; }
+    .cs-check svg { width: 15px; height: 15px; color: #0A78BE; }
+    .cs-note-text { font-size: 13px; color: #1c1c1e; line-height: 1.6; }
+    .cs-note-text a { color: #0A78BE; text-decoration: none; }
+    .cs-note-link { display: inline-block; margin-top: 10px; color: #0A78BE; font-size: 13px; text-decoration: none; }
+    .cs-divider { height: 1px; background: #E3E3E6; margin: 24px -24px; }
+    .cs-app-title { font-size: 18px; font-weight: 600; color: #1c1c1e; margin-bottom: 6px; }
+    .cs-app-desc { font-size: 14px; color: #1C2B33; margin-bottom: 16px; }
+    .cs-grid { display: flex; gap: 8px; }
+    .cs-field { flex: 1; min-width: 0; }
+    .cs-field-label { font-size: 14px; font-weight: 500; color: #1c1c1e; margin-bottom: 8px; }
+    .cs-input { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 14px; border: 1px solid #E3E3E6; border-radius: 4px; font-size: 14px; color: #1c1c1e; }
+    .cs-input .cs-count { color: #9aa0a8; font-size: 13px; flex-shrink: 0; }
+    .cs-add-app { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; color: #1c1c1e; cursor: pointer; margin-top: 16px; }
+    .cs-btn { display: inline-flex; align-items: center; background: #0A78BE; color: #fff; border-radius: 4px; padding: 10px 16px; font-size: 14px; font-weight: 500; cursor: pointer; margin-top: 12px; }
+    .cs-stack { display: flex; flex-direction: column; gap: 8px; }
+    .cs-guide { background: #EEF4FB; border: 1px solid #D3E2F2; border-radius: 10px; padding: 16px 18px; margin-bottom: 24px; }
+    .cs-guide-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 6px; }
+    .cs-guide-text { font-size: 13px; color: #1C2B33; line-height: 1.6; }
+
+    /* ── BUTTON (coded) ── */
+    .bt-wrap { background: #fff; border: 1px solid #E3E3E6; border-radius: 4px; padding: 24px; font-family: var(--font); }
+    .bt-wrap-title { font-size: 18px; font-weight: 600; color: #1c1c1e; margin-bottom: 8px; }
+    .bt-wrap-title .bt-opt { font-size: 14px; font-weight: 400; color: #1C2B33A6; }
+    .bt-wrap-title .bt-opt::before { content: '·'; margin: 0 8px; }
+    .bt-wrap-desc { font-size: 14px; color: #1C2B33; line-height: 1.5; margin-bottom: 18px; max-width: 760px; }
+    .bt-add { display: inline-flex; align-items: center; gap: 10px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 11px 16px; font-size: 14px; font-weight: 500; color: #1c1c1e; cursor: pointer; margin-bottom: 8px; }
+    .bt-add svg { width: 14px; height: 14px; flex-shrink: 0; }
+    .bt-add .bt-add-caret { width: 11px; height: 11px; color: #303E45; }
+    .bt-add-wrap { position: relative; display: inline-block; margin-bottom: 8px; }
+    .bt-add-wrap .bt-add { margin-bottom: 0; }
+    .bt-add-menu { display: none; position: absolute; top: calc(100% + 6px); left: 0; min-width: 250px; background: #fff; border: 1px solid #E3E3E6; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); padding: 8px; z-index: 30; }
+    .bt-add-wrap.open .bt-add-menu { display: block; }
+    .bt-add-opt { display: flex; align-items: center; gap: 14px; padding: 11px 12px; font-size: 15px; color: #1c1c1e; border-radius: 8px; cursor: pointer; }
+    .bt-add-opt:hover { background: #F6F6F6; }
+    .bt-add-opt svg { width: 20px; height: 20px; flex-shrink: 0; color: #2d3340; }
+    .bt-add-opt-txt { display: flex; flex-direction: column; line-height: 1.3; }
+    .bt-add-opt-sub { font-size: 13px; color: #5b6770; margin-top: 2px; }
+    .bt-add-opt.disabled { color: #9aa0a8; cursor: default; }
+    .bt-add-opt.disabled:hover { background: transparent; }
+    .bt-add-opt.disabled svg { color: #9aa0a8; }
+    .bt-section { margin-bottom: 28px; }
+    .bt-section:last-child { margin-bottom: 0; }
+    .bt-section-label { font-size: 15px; font-weight: 500; color: #1c1c1e; margin-bottom: 10px; }
+    .bt-section-label .bt-opt { font-weight: 400; color: #9aa0a8; }
+    .bt-section-label .bt-opt::before { content: '·'; margin: 0 6px; }
+    .bt-card { background: #F6F6F6; border: none; border-radius: 4px; padding: 18px; font-family: var(--font); }
+    .bt-row { display: flex; gap: 14px; align-items: flex-start; background: #fff; border: none; border-radius: 4px; padding: 18px 20px; }
+    .bt-row + .bt-row { margin-top: 16px; }
+    .bt-handle { display: grid; grid-template-columns: repeat(2, 3px); gap: 3px; align-self: center; flex-shrink: 0; cursor: grab; }
+    .bt-handle i { width: 3px; height: 3px; border-radius: 50%; background: #C9D0D8; }
+    .bt-main { flex: 1; min-width: 0; }
+    .bt-fields { display: flex; gap: 10px; flex-wrap: wrap; }
+    .bt-field { display: flex; flex-direction: column; gap: 6px; min-width: 140px; }
+    .bt-field--grow { flex: 1; min-width: 190px; }
+    .bt-field--type { flex: 0 0 200px; width: 200px; min-width: 200px; }
+    .bt-field--narrow { flex: 0 0 110px; width: 110px; min-width: 110px; }
+    .bt-field-label { display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #1c1c1e; }
+    .bt-select, .bt-input { display: flex; align-items: center; justify-content: space-between; gap: 8px; border: 1px solid #C9D0D8; border-radius: 4px; padding: 8px 13px; background: #fff; font-size: 14px; color: #1c1c1e; }
+    .bt-select { cursor: pointer; }
+    .bt-select svg { width: 12px; height: 12px; color: #303E45; flex-shrink: 0; }
+    .bt-input .bt-count { font-size: 13px; color: #8a8f98; flex-shrink: 0; }
+    .bt-input .bt-ph { color: #8a8f98; }
+    .bt-input.bt-disabled { background: #F2F4F7; color: #8a8f98; }
+    .bt-input.bt-error { border-color: #c4314b; }
+    .bt-block { width: 16px; height: 16px; color: #c4314b; flex-shrink: 0; }
+    .bt-close { align-self: center; cursor: pointer; color: #1c1c1e; flex-shrink: 0; }
+    .bt-close svg { width: 18px; height: 18px; }
+    .bt-error-msg { font-size: 12.5px; color: #c4314b; line-height: 1.4; margin-top: 6px; }
+    .bt-check { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 14px; color: #5a5f68; }
+    .bt-checkbox { width: 18px; height: 18px; border: 1.5px solid #C9D0D8; border-radius: 4px; flex-shrink: 0; background: #fff; display: flex; align-items: center; justify-content: center; }
+    .bt-checkbox.checked { border-color: #3b6fb5; }
+    .bt-checkbox.checked::after { content: ''; width: 5px; height: 10px; border: solid #3b6fb5; border-width: 0 1.5px 1.5px 0; transform: translateY(-1px) rotate(45deg); }
+    .bt-info-box { display: flex; gap: 10px; background: #F5F6F7; border-radius: 4px; padding: 14px 16px; margin-top: 14px; font-size: 13.5px; color: #1c1c1e; line-height: 1.5; }
+    .bt-info-box svg { width: 18px; height: 18px; flex-shrink: 0; color: #2d3340; margin-top: 1px; }
+    .bt-info-box a { color: #1f6fd6; }
+
+    /* ── OVERVIEW COMPONENT (coded) ── */
+    .comp-variant-stack { display: flex; flex-direction: column; gap: 28px; }
+    .comp-variant-row .comp-variant-cap { margin-bottom: 10px; }
+    .oc-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      border: 1px solid #E3E3E6;
+      border-radius: 4px;
+      padding: 18px 20px;
+      font-family: var(--font);
+      flex-wrap: wrap;
+    }
+    .oc-icon {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .oc-icon img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .oc-text { flex: 1; min-width: 180px; }
+    .oc-title { font-size: 16px; font-weight: 600; color: #1c1c1e; letter-spacing: -0.01em; }
+    .oc-sub { font-size: 13px; color: #6b6b70; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .oc-badge {
+      display: inline-block;
+      background: #E3F3E8;
+      color: #1f7a4d;
+      font-size: 12px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .oc-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+    .oc-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid #D2D2D7;
+      border-radius: 4px;
+      padding: 9px 14px;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: #1c1c1e;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .oc-btn-outline:hover { background: #F5F5F7; }
+    .oc-btn-icon {
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      border: 1px solid #D2D2D7;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #1c1c1e;
+      font-size: 16px;
+    }
+    .oc-date {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #D2D2D7;
+      border-radius: 4px;
+      padding: 9px 12px;
+      font-size: 13px;
+      color: #1c1c1e;
+      white-space: nowrap;
+    }
+    .oc-date svg { color: #6b6b70; }
+
+    /* ── PREVIEW COMPONENT (coded) ── */
+    .pv-card {
+      background: #fff;
+      border: 1px solid #E3E3E6;
+      border-radius: 4px;
+      overflow: hidden;
+      font-family: var(--font);
+      margin-bottom: 10px;
+    }
+    .pv-head {
+      padding: 16px 18px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #1c1c1e;
+      border-bottom: 1px solid #ECECEE;
+    }
+    .pv-chat {
+      background-color: #E4DCCF;
+      background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.03'%3E%3Ccircle cx='8' cy='8' r='2'/%3E%3Ccircle cx='28' cy='20' r='2'/%3E%3Ccircle cx='16' cy='32' r='2'/%3E%3C/g%3E%3C/svg%3E");
+      padding: 22px 18px;
+      min-height: 150px;
+    }
+    .pv-bubble {
+      background: #fff;
+      border-radius: 10px;
+      border-top-left-radius: 2px;
+      padding: 10px 12px 8px;
+      max-width: 85%;
+      box-shadow: 0 1px 1px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .pv-text { font-size: 14px; color: #1c1c1e; line-height: 1.45; }
+    .pv-time { display: block; text-align: right; font-size: 11px; color: #8a8a8e; margin-top: 4px; }
+    .pv-actions { margin: 8px -12px -8px; border-top: 1px solid #ECECEE; }
+    .pv-action { display: flex; align-items: center; justify-content: center; gap: 7px; text-align: center; font-size: 14px; font-weight: 500; color: #1f7a9c; padding: 10px 0; }
+    .pv-action svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .pv-action + .pv-action { border-top: 1px solid #ECECEE; }
+    @media (max-width: 768px) {
+      .anatomy-layout { grid-template-columns: 1fr; }
+      .anatomy-diagram { position: static; }
+    }
+
+    /* ── COMPONENTS GRID ── */
+    .ds-comp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    .ds-comp-card {
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg);
+    }
+    .ds-comp-preview {
+      aspect-ratio: 4 / 3;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ink4);
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+    }
+    .ds-comp-meta { padding: 16px 18px; }
+    .ds-comp-name {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .ds-comp-variants {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink4);
+    }
+
+    /* ── PAGE TEMPLATES GRID ── */
+    .ds-template-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .ds-template-card {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 16px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .ds-template-card:hover { border-color: var(--ink4); transform: translateY(-2px); }
+    .ds-template-visual {
+      aspect-ratio: 4 / 3;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .ds-template-visual img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+    .ds-template-cap {
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      padding: 0 6px;
+    }
+    .ds-template-figma {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      align-self: flex-start;
+      margin: 10px 6px 0;
+      padding: 8px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--ink);
+      text-decoration: none;
+      transition: border-color 0.15s ease;
+    }
+    .ds-template-figma:hover { border-color: var(--ink4); }
+    .ds-template-figma svg { width: 14px; height: 14px; }
+    @media (max-width: 768px) { .ds-template-grid { grid-template-columns: 1fr; } }
+
+    /* ── GOVERNANCE DECISION ── */
+    .ds-decision {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .ds-decision-col {
+      border: 1px solid var(--border2);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .ds-decision-col.expand { background: var(--surface); }
+    .ds-decision-col.new { background: var(--surface); }
+    .ds-decision-head {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      margin-bottom: 12px;
+    }
+    .ds-decision-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .ds-decision-list li {
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.5;
+      padding-left: 18px;
+      position: relative;
+    }
+    .ds-decision-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ink);
+    }
+
+    .ds-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 8px;
+      padding: 14px 24px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 8px;
+      transition: background 0.15s ease;
+    }
+    .ds-cta:hover { background: #b85c00; }
+    .ds-cta svg { width: 16px; height: 16px; }
+    .ds-oh-form { display: flex; flex-wrap: wrap; gap: 16px; margin: 4px 0 20px; }
+    .ds-oh-field { display: flex; flex-direction: column; gap: 6px; min-width: 260px; flex: 1; }
+    .ds-oh-label { font-size: 13px; font-weight: 500; color: var(--ink2); }
+    .ds-oh-select {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 11px 36px 11px 13px;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a5f68' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 13px center;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--ink);
+      cursor: pointer;
+    }
+    .ds-oh-select option { font-family: var(--font); }
+    .ds-gov-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+    .ds-oh-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; display: flex; flex-direction: column; }
+    .ds-oh-card .ds-block-title { margin-top: 0; }
+    .ds-gov-left .ds-decision { grid-template-columns: 1fr; gap: 0; margin-bottom: 0; }
+    .ds-gov-left .ds-decision-col { background: transparent; border: none; border-radius: 0; padding: 20px 0; }
+    .ds-gov-left .ds-decision-col.new { border-top: 1px solid var(--border); }
+    .ds-gov-left .ds-decision-col.expand { padding-top: 0; }
+    .ds-oh-card .ds-oh-form { flex-direction: column; gap: 6px; margin-bottom: 0; }
+    .ds-oh-card .ds-oh-field { min-width: 0; }
+    .ds-oh-poc { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .ds-oh-poc-label { font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink4); margin-bottom: 6px; }
+    .ds-oh-poc-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .ds-oh-poc-sub { font-size: 13px; color: var(--ink4); margin-top: 2px; }
+    @media (max-width: 720px) { .ds-gov-grid { grid-template-columns: 1fr; } }
+
+    /* ── HELPFUL LINKS ── */
+    .ds-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .ds-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 4px;
+      border-top: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--ink);
+      transition: padding-left 0.15s ease, color 0.15s ease;
+    }
+    .ds-links .ds-link:last-child { border-bottom: 1px solid var(--border); }
+    .ds-link:hover { padding-left: 10px; color: var(--accent); }
+    .ds-link-name {
+      font-size: 17px;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+    .ds-link svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--ink4);
+    }
+    .ds-link:hover svg { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .doc { padding: 56px 28px 80px; }
+      .ds-h1 { font-size: 32px; }
+      .ds-overview-meta { flex-wrap: wrap; gap: 24px; }
+      .ds-row { grid-template-columns: 36px 1fr; }
+      .ds-row .tag { grid-column: 2; }
+      .ds-decision { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- ── LEFT NAV ── -->
+    <nav class="side">
+      <div class="side-section">
+        <p class="side-label">Design Guidelines &amp; Resources</p>
+        <a class="nav-item" data-target="overview" href="#overview">Overview</a>
+        <a class="nav-item" data-target="principles" href="#principles">Principles</a>
+        <a class="nav-item" data-target="anatomy" href="#anatomy">Anatomy</a>
+        <div class="nav-group" id="comp-nav-group">
+          <div class="nav-row">
+            <a class="nav-item" data-target="components" href="#components">Components</a>
+            <button class="nav-expand" type="button" aria-expanded="false" aria-label="Toggle components">+</button>
+          </div>
+          <div class="nav-sublist">
+            <a class="nav-subitem active" data-comp="overview" data-slug="overview" href="#components-overview"><span class="nav-subnum">1</span>Overview</a>
+            <a class="nav-subitem" data-comp="name" data-slug="template-name" href="#components-template-name"><span class="nav-subnum">2</span>Template Name</a>
+            <a class="nav-subitem" data-comp="conditional" data-slug="conditional-setup" href="#components-conditional-setup"><span class="nav-subnum">3</span>Conditional Setup</a>
+            <a class="nav-subitem" data-comp="content" data-slug="content" href="#components-content"><span class="nav-subnum">4</span>Content</a>
+            <a class="nav-subitem" data-comp="button" data-slug="button" href="#components-button"><span class="nav-subnum">5</span>Button</a>
+            <a class="nav-subitem" data-comp="additional" data-slug="additional-setup" href="#components-additional-setup"><span class="nav-subnum">6</span>Additional Setup</a>
+            <a class="nav-subitem" data-comp="preview" data-slug="preview" href="#components-preview"><span class="nav-subnum">7</span>Preview</a>
+          </div>
+        </div>
+        <a class="nav-item" data-target="templates" href="#templates">Page Templates</a>
+        <a class="nav-item" data-target="governance" href="#governance">Governance</a>
+      </div>
+    </nav>
+
+    <!-- ── MAIN ── -->
+    <main class="main">
+      <div class="doc">
+
+        <!-- ═══ OVERVIEW ═══ -->
+        <section class="page" id="overview">
+          <img src="cover.jpg" alt="Message Builder design system" style="width:100%;height:auto;display:block;border-radius:var(--radius);margin-bottom:40px;" />
+          <h1 class="ds-h1">Design System for<br>WhatsApp Broadcast Tool</h1>
+          <p class="ds-lead">A shared framework, component library, and set of principles for building messages across the platform — built to keep the experience consistent, usable, and easy to scale to new offers</p>
+
+          <div class="ds-overview-meta">
+            <div class="ds-meta-item">
+              <p class="ds-meta-label">Shared Patterns</p>
+              <p class="ds-meta-value">1 page anatomy<br>7 components<br>7 page templates</p>
+            </div>
+            <div class="ds-meta-item">
+              <p class="ds-meta-label">Latest update</p>
+              <p class="ds-meta-value">Sep 16, 2023</p>
+            </div>
+            <div class="ds-meta-item">
+              <p class="ds-meta-label">Owners</p>
+              <p class="ds-meta-value">Mu Jiun Shie (PD)<br>Lu Wang (Eng)</p>
+            </div>
+            <div class="ds-meta-item">
+              <p class="ds-meta-label">Helpful Links</p>
+              <p class="ds-meta-value">
+                <a href="designsystem.html" class="ds-meta-link">Geodesic 2.0 Library</a><br>
+                <a href="designsystem.html" class="ds-meta-link">Figma</a><br>
+                <a href="designsystem.html" class="ds-meta-link">Tool Link</a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ PRINCIPLES ═══ -->
+        <section class="page" id="principles">
+          <h2 class="ds-h2">Principles</h2>
+          <p class="ds-section-desc">These rules keep the experience learnable across offerings, while speeding growth and lowering cost</p>
+          <div class="ds-cards">
+            <div class="ds-card">
+              <div class="ds-card-visual">
+                <svg viewBox="0 0 240 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M44 96 C 96 96, 110 56, 196 48" stroke="#D56C00" stroke-width="3" stroke-linecap="round" opacity="0.3" fill="none"/>
+                  <circle cx="44" cy="96" r="12" fill="#D56C00"/>
+                  <path d="M38.5 96l4 4 7-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="120" cy="70" r="12" fill="#D56C00"/>
+                  <path d="M114.5 70l4 4 7-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="196" cy="48" r="12" fill="#D56C00"/>
+                  <path d="M190.5 48l4 4 7-7" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <p class="ds-card-title">Learnability</p>
+              <p class="ds-card-body">A predictable structure and clear hierarchy make building a message easy to learn and quick to complete</p>
+              <div class="ds-card-stat">
+                <span class="ds-card-stat-num">60% &rarr; 96%</span>
+                <span class="ds-card-stat-label">submission rate</span>
+              </div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-card-visual">
+                <svg viewBox="0 0 240 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g>
+                    <rect x="29" y="25" width="54" height="74" rx="6" fill="#D56C00"/>
+                    <rect x="38" y="37" width="36" height="7" rx="3.5" fill="#fff"/>
+                    <rect x="38" y="53" width="26" height="5" rx="2.5" fill="#fff" opacity="0.5"/>
+                    <rect x="38" y="64" width="32" height="5" rx="2.5" fill="#fff" opacity="0.5"/>
+                    <rect x="38" y="81" width="22" height="9" rx="4.5" fill="#fff" opacity="0.9"/>
+                  </g>
+                  <g>
+                    <rect x="93" y="25" width="54" height="74" rx="6" fill="#D56C00"/>
+                    <rect x="102" y="37" width="36" height="7" rx="3.5" fill="#fff"/>
+                    <rect x="102" y="53" width="26" height="5" rx="2.5" fill="#fff" opacity="0.5"/>
+                    <rect x="102" y="64" width="32" height="5" rx="2.5" fill="#fff" opacity="0.5"/>
+                    <rect x="102" y="81" width="22" height="9" rx="4.5" fill="#fff" opacity="0.9"/>
+                  </g>
+                  <g>
+                    <rect x="157" y="25" width="54" height="74" rx="6" fill="#D56C00"/>
+                    <rect x="166" y="37" width="36" height="7" rx="3.5" fill="#fff"/>
+                    <rect x="166" y="53" width="26" height="5" rx="2.5" fill="#fff" opacity="0.5"/>
+                    <rect x="166" y="64" width="32" height="5" rx="2.5" fill="#fff" opacity="0.5"/>
+                    <rect x="166" y="81" width="22" height="9" rx="4.5" fill="#fff" opacity="0.9"/>
+                  </g>
+                </svg>
+              </div>
+              <p class="ds-card-title">Consistency</p>
+              <p class="ds-card-body">Reuse shared patterns and components so every message page feels like part of the same product and make experience predictable</p>
+              <div class="ds-card-stat">
+                <span class="ds-card-stat-num">7 &rarr; 1</span>
+                <span class="ds-card-stat-label">experiences unified into one</span>
+              </div>
+            </div>
+            <div class="ds-card">
+              <div class="ds-card-visual">
+                <svg viewBox="0 0 240 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="40" y="84" width="34" height="24" rx="6" fill="#D56C00" opacity="0.4"/>
+                  <rect x="82" y="66" width="34" height="42" rx="6" fill="#D56C00" opacity="0.6"/>
+                  <rect x="124" y="48" width="34" height="60" rx="6" fill="#D56C00" opacity="0.8"/>
+                  <rect x="166" y="30" width="34" height="78" rx="6" fill="#D56C00"/>
+                </svg>
+              </div>
+              <p class="ds-card-title">Scalability</p>
+              <p class="ds-card-body">Design for current and future needs, leaving room for new message types and setups without a redesign</p>
+              <div class="ds-card-stat">
+                <span class="ds-card-stat-num">75% lower cost</span>
+                <span class="ds-card-stat-label">faster growth, reduced scaling cost</span>
+              </div>
+            </div>
+          </div>
+
+
+        </section>
+
+        <!-- ═══ ANATOMY ═══ -->
+        <section class="page" id="anatomy">
+          <h2 class="ds-h2">Anatomy</h2>
+          <p class="ds-section-desc">The page is built from 7 components in a defined sequence. Understand which components are standard vs. customizable when building your page</p>
+
+          <div class="anatomy-layout">
+          <div class="anatomy-diagram">
+            <img src="8a.png" alt="Page anatomy" />
+          </div>
+
+          <div class="anatomy-list">
+          <div class="ds-rows">
+            <div class="ds-row">
+              <div class="ds-row-index">1</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Overview</p><span class="tag tag-shared">Standard</span></div>
+              </div>
+            </div>
+            <div class="ds-row">
+              <div class="ds-row-index">2</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Template Name</p><span class="tag tag-shared">Standard</span></div>
+              </div>
+            </div>
+            <div class="ds-row">
+              <div class="ds-row-index">3</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Conditional Setup</p><span class="tag tag-editable">Customizable</span></div>
+                <p class="ds-row-body">Add for additional setup that affects content or buttons</p>
+              </div>
+            </div>
+            <div class="ds-row">
+              <div class="ds-row-index">4</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Content</p><span class="tag tag-shared">Standard</span></div>
+              </div>
+            </div>
+            <div class="ds-row">
+              <div class="ds-row-index">5</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Button</p><span class="tag tag-shared">Standard</span></div>
+              </div>
+            </div>
+            <div class="ds-row">
+              <div class="ds-row-index">6</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Additional Setup</p><span class="tag tag-editable">Customizable</span></div>
+                <p class="ds-row-body">Add for additional setup or legal compliance that won't affect the configuration above</p>
+              </div>
+            </div>
+            <div class="ds-row">
+              <div class="ds-row-index">7</div>
+              <div>
+                <div class="ds-row-head"><p class="ds-row-title">Preview</p><span class="tag tag-shared">Standard</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ds-legend">
+            <p class="ds-legend-item">*<b>Standard:</b> Uses the shared design and existing variants as-is. <b>Customizable:</b> Can be adapted for specific needs</p>
+          </div>
+          </div>
+          </div>
+        </section>
+
+        <!-- ═══ COMPONENTS ═══ -->
+        <section class="page" id="components">
+          <h2 class="ds-h2">Components<span id="comp-crumb-tail"><span class="ds-crumb-sep">/</span><span id="comp-crumb">Overview</span></span></h2>
+          <p class="ds-section-desc" id="comp-lead">The page is built from these 7 components. Select one to see its design and code</p>
+          <div class="comp-overview-grid" id="comp-overview-grid">
+            <a class="comp-ov-card" href="#components-overview">
+              <div class="comp-ov-visual"><div class="comp-ov-mini comp-ov-mini--mid"><div class="oc-card"><div class="oc-icon"><img src="marketing.png" alt="Marketing" /></div><div class="oc-text"><p class="oc-title">marketing_template_1 · English</p><p class="oc-sub">Marketing · Default</p></div></div></div></div>
+              <p class="comp-ov-name">Overview</p><p class="comp-ov-desc">Preview of template name and category — a shared component across multiple tool pages</p>
+            </a>
+            <a class="comp-ov-card" href="#components-template-name">
+              <div class="comp-ov-visual"><div class="comp-ov-mini comp-ov-mini--mid"><div class="tn-card"><p class="tn-card-title">Template name and language</p><div class="tn-fields"><div class="tn-field"><label class="tn-label">Name your template</label><div class="tn-input"><span class="tn-value">marketing_template_1</span><span class="tn-count">20/512</span></div></div><div class="tn-field"><label class="tn-label">Select language</label><div class="tn-select"><span>English</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></div></div></div></div></div></div>
+              <p class="comp-ov-name">Template Name</p><p class="comp-ov-desc">Editing fields for template name and category</p>
+            </a>
+            <a class="comp-ov-card" href="#components-conditional-setup">
+              <div class="comp-ov-visual"><div class="comp-ov-mini"><div class="cs-card"><p class="cs-title">Catalog format</p><p class="cs-desc">Choose the message format that best fits your needs.</p><div class="cs-opt"><span class="cs-radio on"></span><div class="cs-opt-body"><p class="cs-opt-title">Catalog message</p><p class="cs-opt-sub">Include the entire catalog to give your users a comprehensive view of all your products.</p><div class="cs-btn">Connect Catalog</div></div></div><div class="cs-opt"><span class="cs-radio"></span><div class="cs-opt-body"><p class="cs-opt-title">Multi-product message</p><p class="cs-opt-sub">Include up to 30 products from the catalog.</p></div></div></div></div></div>
+              <p class="comp-ov-name">Conditional Setup</p><p class="comp-ov-desc">Editing fields for additional settings — like selecting a sub-type or opening a configuration modal — before setting the content and buttons</p>
+            </a>
+            <a class="comp-ov-card" href="#components-content">
+              <div class="comp-ov-visual"><div class="comp-ov-mini"><div class="ct-card"><p class="ct-card-title">Content</p><p class="ct-card-desc">Add a header, body and footer for your template. <span class="ct-link">About templates</span></p><div class="ct-block"><label class="ct-label">Media sample<span class="ct-optional">Optional</span></label><div class="ct-dropdown"><div class="ct-select ct-select-sm"><span>None</span><svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div></div><div class="ct-block"><label class="ct-label">Header<span class="ct-optional">Optional</span></label><div class="ct-input"><span class="ct-placeholder">Add a short line of text to the header</span><span class="ct-count">0/60</span></div></div></div></div></div>
+              <p class="comp-ov-name">Content</p><p class="comp-ov-desc">Editing fields for message content, including media, header, body, and footer</p>
+            </a>
+            <a class="comp-ov-card" href="#components-button">
+              <div class="comp-ov-visual"><div class="comp-ov-mini"><div class="bt-wrap"><p class="bt-wrap-title">Buttons<span class="bt-opt">Optional</span></p><p class="bt-wrap-desc">Create buttons that let customers respond to your message or take action. You can add up to 10 buttons. If you add more than 3 buttons, they will appear in a list.</p><div class="bt-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add button <svg class="bt-add-caret" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div></div></div>
+              <p class="comp-ov-name">Button</p><p class="comp-ov-desc">Editing fields for message buttons — when adding multiple buttons, users can reorder them</p>
+            </a>
+            <a class="comp-ov-card" href="#components-additional-setup">
+              <div class="comp-ov-visual"><div class="comp-ov-mini"><div class="as-card"><p class="as-title">Message validity period</p><p class="as-desc">You can set a custom validity period that your utility message must be delivered by before it expires.</p><div class="as-row"><div class="as-row-text"><p class="as-row-title">Set custom validity period for your message</p><p class="as-row-sub">If you don't set a custom validity period, the standard 10 minutes WhatsApp message validity period will be applied.</p></div><span class="as-toggle on"></span></div></div></div></div>
+              <p class="comp-ov-name">Additional Setup</p><p class="comp-ov-desc">Editing fields for additional settings — like legal compliance or any setup that doesn't impact the content configuration</p>
+            </a>
+            <a class="comp-ov-card" href="#components-preview">
+              <div class="comp-ov-visual"><div class="comp-ov-mini comp-ov-mini--full"><div class="pv-card"><div class="pv-head">Template preview</div><div class="pv-chat"><div class="pv-bubble"><p class="pv-text">Welcome! Here's your offer: use code <b>WELCOME</b> for 10% off your first purchase.</p><span class="pv-time">6:40 PM</span><div class="pv-actions"><span class="pv-action">Copy code</span></div></div></div></div></div></div>
+              <p class="comp-ov-name">Preview</p><p class="comp-ov-desc">Preview of template message and buttons</p>
+            </a>
+          </div>
+          <div class="comp-detail-wrap">
+
+            <div class="comp-detail active" id="comp-overview">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="comp-variant-stack">
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Default</p>
+                      <div class="oc-card">
+                        <div class="oc-icon">
+                          <img src="marketing.png" alt="Marketing" />
+                        </div>
+                        <div class="oc-text">
+                          <p class="oc-title">marketing_template_1 · English</p>
+                          <p class="oc-sub">Marketing · Default</p>
+                        </div>
+                      </div>
+                      <p style="font-size:13px;color:var(--ink4);line-height:1.4;margin-top:8px;">Use a pre-filled template name that updates dynamically as users finish typing</p>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Edit template</p>
+                      <div class="oc-card">
+                        <div class="oc-icon">
+                          <img src="marketing.png" alt="Marketing" />
+                        </div>
+                        <div class="oc-text">
+                          <p class="oc-title">marketing_template_1 · English</p>
+                          <p class="oc-sub">Marketing · Default</p>
+                        </div>
+                        <div class="oc-actions">
+                          <button class="oc-btn-outline">Delete template</button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Template insights</p>
+                      <div class="oc-card">
+                        <div class="oc-icon">
+                          <img src="marketing.png" alt="Marketing" />
+                        </div>
+                        <div class="oc-text">
+                          <p class="oc-title">marketing_template · English</p>
+                          <p class="oc-sub"><span class="oc-badge">Active</span> Updated Nov 28, 2025</p>
+                        </div>
+                        <div class="oc-actions">
+                          <span class="oc-date">
+                            Auto-detected: May 26 – Jun 24, 2026
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                          </span>
+                          <button class="oc-btn-outline">Edit template</button>
+                          <button class="oc-btn-icon">⋯</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="oc-card"&gt;
+  &lt;div class="oc-icon"&gt;&lt;svg&gt;…megaphone…&lt;/svg&gt;&lt;/div&gt;
+  &lt;div class="oc-text"&gt;
+    &lt;p class="oc-title"&gt;marketing_template_1 · English&lt;/p&gt;
+    &lt;p class="oc-sub"&gt;Marketing · Default&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;!-- optional: .oc-actions with Delete / Edit / date / ⋯ --&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Icon</span><span class="a11y-right"><span class="a11y-ratio">6.8</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Title</span><span class="a11y-right"><span class="a11y-ratio">8.9</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Subtext</span><span class="a11y-right"><span class="a11y-ratio">5.4</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Enter / Space</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-detail" id="comp-name">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="comp-variant-stack">
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Default</p>
+                      <div class="tn-card">
+                        <p class="tn-card-title">Template name and language</p>
+                        <div class="tn-fields">
+                          <div class="tn-field">
+                            <label class="tn-label">Name your template</label>
+                            <div class="tn-input">
+                              <span class="tn-value">marketing_template_1</span>
+                              <span class="tn-count">20/512</span>
+                            </div>
+                          </div>
+                          <div class="tn-field">
+                            <label class="tn-label">Select language</label>
+                            <div class="tn-select">
+                              <span>English</span>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <p style="font-size:13px;color:var(--ink4);line-height:1.4;margin-top:8px;">Pre-filled the template name and pre-selected the language based on the user's system settings</p>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Empty</p>
+                      <div class="tn-card">
+                        <p class="tn-card-title">Template name and language</p>
+                        <div class="tn-fields">
+                          <div class="tn-field">
+                            <label class="tn-label">Name your template</label>
+                            <div class="tn-input">
+                              <span class="tn-placeholder">Enter a template name</span>
+                              <span class="tn-count">0/512</span>
+                            </div>
+                          </div>
+                          <div class="tn-field">
+                            <label class="tn-label">Select language</label>
+                            <div class="tn-select">
+                              <span>English</span>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="tn-card"&gt;
+  &lt;p class="tn-card-title"&gt;Template name and language&lt;/p&gt;
+  &lt;div class="tn-fields"&gt;
+    &lt;div class="tn-field"&gt;
+      &lt;label class="tn-label"&gt;Name your template&lt;/label&gt;
+      &lt;div class="tn-input"&gt;
+        &lt;span class="tn-placeholder"&gt;Enter a template name&lt;/span&gt;
+        &lt;span class="tn-count"&gt;0/512&lt;/span&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="tn-field"&gt;
+      &lt;label class="tn-label"&gt;Select language&lt;/label&gt;
+      &lt;div class="tn-select"&gt;English &lt;svg&gt;▾&lt;/svg&gt;&lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Field label</span><span class="a11y-right"><span class="a11y-ratio">9.2</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Input text</span><span class="a11y-right"><span class="a11y-ratio">8.1</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Placeholder</span><span class="a11y-right"><span class="a11y-ratio">4.6</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>
+                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Click / Enter</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-detail" id="comp-conditional">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="cs-guide">
+                    <p class="cs-guide-title">Conditional setup vs. additional setup</p>
+                    <p class="cs-guide-text">Use conditional setup when an action changes the message format itself — like showing a catalog preview or a button that opens a flow. If the action doesn't affect the format, use additional setup instead. Owner teams can book office hours to customize a conditional setup component and have flexibility to evolve it as the feature grows.</p>
+                    <p class="cs-guide-title" style="margin-top:14px">Pre-select an option when there are multiple</p>
+                    <p class="cs-guide-text">On the landing state, default to one option rather than leaving everything unselected. Pick the most common use case, or the path you want users to take.</p>
+                  </div>
+                  <div class="comp-variant-stack">
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Catalog</p>
+                      <div class="cs-card">
+                        <p class="cs-title">Catalog format</p>
+                        <p class="cs-desc">Choose the message format that best fits your needs.</p>
+                        <div class="cs-opt">
+                          <span class="cs-radio on"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">Catalog message</p>
+                            <p class="cs-opt-sub">Include the entire catalog to give your users a comprehensive view of all your products.</p>
+                            <div class="cs-btn">Connect Catalog</div>
+                          </div>
+                        </div>
+                        <div class="cs-opt">
+                          <span class="cs-radio"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">Multi-product message</p>
+                            <p class="cs-opt-sub">Include up to 30 products from the catalog. Useful for showcasing new collection or a specific product category. You will need to specify which products via the API.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Flow</p>
+                      <div class="cs-card">
+                        <p class="cs-title">Flow setup</p>
+                        <p class="cs-desc">Choose how customers complete a task — like booking or signing up — without leaving the chat.</p>
+                        <div class="cs-opt">
+                          <span class="cs-radio on"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">Connect a flow</p>
+                            <p class="cs-opt-sub">Link an existing flow you've already published to attach it to this template.</p>
+                            <div class="cs-btn">Use existing</div>
+                          </div>
+                        </div>
+                        <div class="cs-opt">
+                          <span class="cs-radio"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">Build a new flow</p>
+                            <p class="cs-opt-sub">Create a flow from scratch in the Flow builder, then return to attach it to this template.</p>
+                            <div class="cs-btn">Create new</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Authentication</p>
+                      <div class="cs-stack">
+                      <div class="cs-card">
+                        <p class="cs-title">Code delivery setup</p>
+                        <p class="cs-desc">Choose how customers send the code from WhatsApp to your app. Edits to this section won't require review or count towards edit limits. Learn how to send <a href="#">authentication message templates.</a></p>
+                        <div class="cs-opt">
+                          <span class="cs-radio on"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">Zero-tap autofill <span class="ct-info">i</span></p>
+                            <p class="cs-opt-sub">This is recommended as the easiest option for your customers. Zero-tap will automatically send code without requiring your customer to tap a button. An autofill or copy code message will be sent if zero-tap and autofill aren't possible.</p>
+                            <div class="cs-note">
+                              <span class="cs-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+                              <div class="cs-note-text">By selecting zero-tap, I understand that Coon Buffet's use of zero-tap authentication is subject to the <a href="#">WhatsApp Business Terms of Service</a>. It's Coon Buffet's responsibility to ensure its customers expect that the code will be automatically filled-in on their behalf when they choose to receive the zero-tap code through WhatsApp.<a class="cs-note-link" href="#">Learn more and review best practices.</a></div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="cs-opt">
+                          <span class="cs-radio"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">One-tap autofill <span class="ct-info">i</span></p>
+                            <p class="cs-opt-sub">The code sends to your app when customers tap the button. A copy code message will be sent if autofill isn't possible.</p>
+                          </div>
+                        </div>
+                        <div class="cs-opt">
+                          <span class="cs-radio"></span>
+                          <div class="cs-opt-body">
+                            <p class="cs-opt-title">Copy code <span class="ct-info">i</span></p>
+                            <p class="cs-opt-sub">Basic authentication with quick setup. Your customers copy and paste the code into your app.</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="cs-card">
+                        <p class="cs-app-title">App setup</p>
+                        <p class="cs-app-desc">You can add up to 5 apps.</p>
+                        <div class="cs-grid">
+                          <div class="cs-field">
+                            <p class="cs-field-label">Package name</p>
+                            <div class="cs-input"><span>application.com</span><span class="cs-count">15/224</span></div>
+                          </div>
+                          <div class="cs-field">
+                            <p class="cs-field-label">App signature hash</p>
+                            <div class="cs-input"><span>app12345678</span><span class="cs-count">11/11</span></div>
+                          </div>
+                        </div>
+                        <div class="cs-add-app"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add another app</div>
+                      </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="cs-card"&gt;
+  &lt;p class="cs-title"&gt;Code delivery setup&lt;/p&gt;
+  &lt;div class="cs-opt"&gt;
+    &lt;span class="cs-radio on"&gt;&lt;/span&gt;
+    &lt;div class="cs-opt-body"&gt;
+      &lt;p class="cs-opt-title"&gt;Zero-tap autofill&lt;/p&gt;
+      &lt;p class="cs-opt-sub"&gt;This is recommended…&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Option label</span><span class="a11y-right"><span class="a11y-ratio">8.9</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Helper note</span><span class="a11y-right"><span class="a11y-ratio">5.1</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Link</span><span class="a11y-right"><span class="a11y-ratio">4.8</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>
+                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Space / Enter</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-detail" id="comp-content">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="comp-variant-stack">
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Default</p>
+                      <div class="ct-card">
+                        <p class="ct-card-title">Content</p>
+                        <p class="ct-card-desc">Add a header, body and footer for your template. Cloud API hosted by Meta will review the template variables and content to protect the security and integrity of our services. <a class="ct-link">About templates</a></p>
+
+                        <div class="ct-block">
+                          <label class="ct-label">Media sample<span class="ct-optional">Optional</span></label>
+                          <div class="ct-dropdown">
+                            <div class="ct-select ct-select-sm">
+                              <span>None</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg>
+                            </div>
+                            <div class="ct-menu">
+                              <div class="ct-option selected"><span class="ct-radio checked"></span><span class="ct-opt-label">None</span></div>
+                              <div class="ct-option">
+                                <span class="ct-radio"></span>
+                                <span class="ct-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg></span>
+                                <span class="ct-opt-label">Image</span>
+                              </div>
+                              <div class="ct-option">
+                                <span class="ct-radio"></span>
+                                <span class="ct-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg></span>
+                                <span class="ct-opt-label">Video</span>
+                              </div>
+                              <div class="ct-option">
+                                <span class="ct-radio"></span>
+                                <span class="ct-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg></span>
+                                <span class="ct-opt-label">Document</span>
+                              </div>
+                              <div class="ct-option">
+                                <span class="ct-radio"></span>
+                                <span class="ct-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg></span>
+                                <span class="ct-opt-label">Location</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="ct-block">
+                          <label class="ct-label">Header<span class="ct-optional">Optional</span></label>
+                          <div class="ct-input">
+                            <span class="ct-placeholder">Add a short line of text to the header of your message in English</span>
+                            <span class="ct-count">0/60</span>
+                          </div>
+                          <div class="ct-meta-row">
+                            <span class="ct-add-var"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add variable</span>
+                            <span class="ct-info">i</span>
+                          </div>
+                        </div>
+
+                        <div class="ct-block">
+                          <label class="ct-label">Body</label>
+                          <div class="ct-textarea">
+                            <span class="ct-value">Hello</span>
+                            <span class="ct-count ct-count-tr">5/1024</span>
+                          </div>
+                          <div class="ct-meta-row">
+                            <span class="ct-toolbar">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>
+                              <b>B</b><i>I</i><s>S</s>
+                              <span class="ct-code-icon">&lt;/&gt;</span>
+                            </span>
+                            <span class="ct-add-var"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add variable</span>
+                            <span class="ct-info">i</span>
+                          </div>
+                        </div>
+
+                        <div class="ct-block" style="margin-top:16px">
+                          <label class="ct-label">Footer<span class="ct-optional">Optional</span></label>
+                          <div class="ct-input">
+                            <span class="ct-placeholder">Add a short line of text to the bottom of your message in English</span>
+                            <span class="ct-count">0/60</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">With variable</p>
+                      <div class="ct-card">
+                        <p class="ct-card-title">Content</p>
+                        <p class="ct-card-desc">Add a header, body and footer for your template. Cloud API hosted by Meta will review the template variables and content to protect the security and integrity of our services. <a class="ct-link">About templates</a></p>
+
+                        <div class="ct-block">
+                          <label class="ct-label">Media sample<span class="ct-optional">Optional</span></label>
+                          <div class="ct-dropdown">
+                            <div class="ct-select ct-select-sm">
+                              <span>None</span>
+                              <svg width="11" height="11" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="ct-block">
+                          <label class="ct-label">Header<span class="ct-optional">Optional</span></label>
+                          <div class="ct-input">
+                            <span class="ct-placeholder">Add a short line of text to the header of your message in English</span>
+                            <span class="ct-count">0/60</span>
+                          </div>
+                          <div class="ct-meta-row">
+                            <span class="ct-add-var"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add variable</span>
+                            <span class="ct-info">i</span>
+                          </div>
+                        </div>
+
+                        <div class="ct-block">
+                          <label class="ct-label">Body</label>
+                          <div class="ct-textarea">
+                            <span class="ct-value">Hello &#123;&#123;1&#125;&#125;<br>Check our sales</span>
+                            <span class="ct-count ct-count-tr">27/1028</span>
+                          </div>
+                          <div class="ct-meta-row">
+                            <span class="ct-toolbar">
+                              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01M15 9h.01"/></svg>
+                              <b>B</b><i>I</i><s>S</s>
+                              <span class="ct-code-icon">&lt;/&gt;</span>
+                            </span>
+                            <span class="ct-add-var"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add variable</span>
+                            <span class="ct-info">i</span>
+                          </div>
+                        </div>
+
+                        <div class="ct-var-panel">
+                          <p class="ct-var-title">Variable Samples</p>
+                          <p class="ct-var-desc">Include samples of all variables in your message to help Meta review your template. Remember not to include any customer information to protect your customer's privacy.</p>
+                          <p class="ct-var-label">Body</p>
+                          <div class="ct-var-row">
+                            <span class="ct-var-key">&#123;&#123;1&#125;&#125;</span>
+                            <span class="ct-var-val">Jane</span>
+                          </div>
+                        </div>
+
+                        <div class="ct-block" style="margin-top:16px">
+                          <label class="ct-label">Footer<span class="ct-optional">Optional</span></label>
+                          <div class="ct-input">
+                            <span class="ct-placeholder">Add a short line of text to the bottom of your message in English</span>
+                            <span class="ct-count">0/60</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="ct-card"&gt;
+  &lt;p class="ct-card-title"&gt;Content&lt;/p&gt;
+  &lt;p class="ct-card-desc"&gt;Add a header, body and footer… &lt;a&gt;About templates&lt;/a&gt;&lt;/p&gt;
+  &lt;div class="ct-block"&gt;… Media sample (ct-select) …&lt;/div&gt;
+  &lt;div class="ct-block"&gt;… Header (ct-input + 0/60 + Add variable) …&lt;/div&gt;
+  &lt;div class="ct-block"&gt;… Body (ct-textarea + toolbar) …&lt;/div&gt;
+  &lt;div class="ct-block"&gt;… Footer (ct-input) …&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Field label</span><span class="a11y-right"><span class="a11y-ratio">9.0</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Body text</span><span class="a11y-right"><span class="a11y-ratio">8.3</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Variable chip</span><span class="a11y-right"><span class="a11y-ratio">5.6</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Char counter</span><span class="a11y-right"><span class="a11y-ratio">4.7</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>
+                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Click / Enter</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-detail" id="comp-button">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="comp-variant-stack">
+                  <div class="comp-variant-row">
+                  <p class="comp-variant-cap">Default</p>
+                  <div class="bt-wrap">
+                  <p class="bt-wrap-title">Buttons<span class="bt-opt">Optional</span></p>
+                  <p class="bt-wrap-desc">Create buttons that let customers respond to your message or take action. You can add up to 10 buttons. If you add more than 3 buttons, they will appear in a list.</p>
+                  <div class="bt-add-wrap" style="margin-bottom:0">
+                  <div class="bt-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add button <svg class="bt-add-caret" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                  <div class="bt-add-menu">
+                    <div class="bt-add-opt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span class="bt-add-opt-txt">Visit website</span></div>
+                    <div class="bt-add-opt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="bt-add-opt-txt">Call on WhatsApp</span></div>
+                    <div class="bt-add-opt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="bt-add-opt-txt">Call phone number</span></div>
+                    <div class="bt-add-opt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="bt-add-opt-txt">Copy offer code</span></div>
+                  </div>
+                  </div>
+                  </div>
+                  </div>
+                  <div class="comp-variant-row">
+                  <p class="comp-variant-cap">Editing</p>
+                  <div class="bt-wrap">
+                  <p class="bt-wrap-title">Buttons<span class="bt-opt">Optional</span></p>
+                  <p class="bt-wrap-desc">Create buttons that let customers respond to your message or take action. You can add up to 10 buttons. If you add more than 3 buttons, they will appear in a list.</p>
+                  <div class="bt-add-wrap">
+                  <div class="bt-add"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg> Add button <svg class="bt-add-caret" viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                  <div class="bt-add-menu">
+                    <div class="bt-add-opt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg><span class="bt-add-opt-txt">Visit website</span></div>
+                    <div class="bt-add-opt disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span class="bt-add-opt-txt">Call on WhatsApp<span class="bt-add-opt-sub">1 button maximum</span></span></div>
+                    <div class="bt-add-opt disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span class="bt-add-opt-txt">Call phone number<span class="bt-add-opt-sub">1 button maximum</span></span></div>
+                    <div class="bt-add-opt disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="bt-add-opt-txt">Copy offer code<span class="bt-add-opt-sub">1 button maximum</span></span></div>
+                  </div>
+                  </div>
+                  <div class="bt-section">
+                    <div class="bt-card">
+                      <div class="bt-row">
+                        <div class="bt-handle"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="bt-main">
+                          <div class="bt-fields">
+                            <div class="bt-field bt-field--type"><label class="bt-field-label">Type of Action</label><div class="bt-select"><span>Visit website</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                            <div class="bt-field bt-field--grow"><label class="bt-field-label">Button Text</label><div class="bt-input"><span>Visit website</span><span class="bt-count">13/40</span></div></div>
+                            <div class="bt-field bt-field--narrow"><label class="bt-field-label">URL Type</label><div class="bt-select"><span>Static</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                            <div class="bt-field bt-field--grow"><label class="bt-field-label">Website URL</label><div class="bt-input"><span class="bt-ph">https://www.example</span><span class="bt-count">0/2000</span></div></div>
+                          </div>
+                          <div class="bt-check"><span class="bt-checkbox checked"></span>Track app conversions (Marketing Messages API for WhatsApp only) <span class="ct-info">i</span></div>
+                        </div>
+                        <div class="bt-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+                      </div>
+                      <div class="bt-row">
+                        <div class="bt-handle"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="bt-main">
+                          <div class="bt-fields">
+                            <div class="bt-field bt-field--type"><label class="bt-field-label">Type of Action</label><div class="bt-select"><span>Call on WhatsApp</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                            <div class="bt-field bt-field--grow"><label class="bt-field-label">Active for <span class="ct-info">i</span></label><div class="bt-select"><span>7 days</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                          </div>
+                          <div class="bt-info-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg><span>Turn on calling in the <a>WhatsApp Manager portal</a>. Alternatively, you can use the Phone Number Settings API.<br><a>About calling on WhatsApp</a></span></div>
+                        </div>
+                        <div class="bt-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+                      </div>
+                      <div class="bt-row">
+                        <div class="bt-handle"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="bt-main">
+                          <div class="bt-fields">
+                            <div class="bt-field bt-field--type"><label class="bt-field-label">Type of Action</label><div class="bt-select"><span>Call phone number</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                            <div class="bt-field"><label class="bt-field-label">Country</label><div class="bt-select"><span>US +1</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                            <div class="bt-field bt-field--grow"><label class="bt-field-label">Phone number</label><div class="bt-input"><span class="bt-ph">Enter phone number</span><span class="bt-count">0/20</span></div></div>
+                          </div>
+                        </div>
+                        <div class="bt-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+                      </div>
+                      <div class="bt-row">
+                        <div class="bt-handle"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                        <div class="bt-main">
+                          <div class="bt-fields">
+                            <div class="bt-field bt-field--type"><label class="bt-field-label">Type of Action</label><div class="bt-select"><span>Copy offer code</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div></div>
+                            <div class="bt-field bt-field--grow"><label class="bt-field-label">Offer code</label><div class="bt-input"><span class="bt-ph">Enter sample</span><span class="bt-count">0/20</span></div></div>
+                          </div>
+                        </div>
+                        <div class="bt-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+                  </div>
+                  <div class="comp-variant-row">
+                  <p class="comp-variant-cap">Fixed (single button)</p>
+                  <div class="bt-wrap">
+                  <p class="bt-wrap-title">Button</p>
+                  <div class="bt-info-box" style="margin-top:0;margin-bottom:20px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="7" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><span>This message type supports only one button, which isn't editable.</span></div>
+                  <div class="bt-field bt-field--grow"><label class="bt-field-label">Button Text</label><div class="bt-input bt-disabled"><span class="bt-ph">View catalog</span><span class="bt-count">12/25</span></div></div>
+                  </div>
+                  </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="bt-wrap"&gt;
+  &lt;p class="bt-wrap-title"&gt;Buttons&lt;span class="bt-opt"&gt;Optional&lt;/span&gt;&lt;/p&gt;
+  &lt;p class="bt-wrap-desc"&gt;Create buttons that let customers respond or take action…&lt;/p&gt;
+
+  &lt;div class="bt-item"&gt;                     &lt;!-- one per added button --&gt;
+    &lt;span class="bt-drag"&gt;⋮⋮&lt;/span&gt;          &lt;!-- reorder handle --&gt;
+    &lt;div class="bt-field bt-field--grow"&gt;
+      &lt;label class="bt-field-label"&gt;Button Text&lt;/label&gt;
+      &lt;div class="bt-input"&gt;&lt;span&gt;Visit website&lt;/span&gt;&lt;span class="bt-count"&gt;13/40&lt;/span&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;!-- variant fields by type: + URL / phone number / offer code --&gt;
+  &lt;/div&gt;
+
+  &lt;div class="bt-add"&gt;+ Add button&lt;/div&gt;
+  &lt;!-- .bt-add-menu: Visit website · Call on WhatsApp · Call phone number · Copy offer code · Complete flow --&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Primary label</span><span class="a11y-right"><span class="a11y-ratio">7.4</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Secondary label</span><span class="a11y-right"><span class="a11y-ratio">8.5</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Icon</span><span class="a11y-right"><span class="a11y-ratio">4.9</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>
+                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Enter / Space</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-detail" id="comp-additional">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="cs-guide">
+                    <p class="cs-guide-title">Conditional setup vs. additional setup</p>
+                    <p class="cs-guide-text">Use conditional setup when an action changes the message format itself — like showing a catalog preview or a button that opens a flow. If the action doesn't affect the format, use additional setup instead. Owner teams can book office hours to customize a conditional setup component and have flexibility to evolve it as the feature grows.</p>
+                  </div>
+                  <div class="comp-variant-stack">
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Default (off)</p>
+                      <div class="as-card">
+                        <p class="as-title">Message validity period</p>
+                        <p class="as-desc">You can set a custom validity period that your utility message must be delivered by before it expires. If a message is not delivered within this timeframe, you will not be charged and your customer will not see the message.</p>
+                        <div class="as-row">
+                          <div class="as-row-text">
+                            <p class="as-row-title">Set custom validity period for your message</p>
+                            <p class="as-row-sub">If you don't set a custom validity period, the standard 10 minutes WhatsApp message validity period will be applied.</p>
+                          </div>
+                          <span class="as-toggle"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant-row">
+                      <p class="comp-variant-cap">Enabled (on)</p>
+                      <div class="as-card">
+                        <p class="as-title">Message validity period</p>
+                        <p class="as-desc">You can set a custom validity period that your utility message must be delivered by before it expires. If a message is not delivered within this timeframe, you will not be charged and your customer will not see the message.</p>
+                        <div class="as-row">
+                          <div class="as-row-text">
+                            <p class="as-row-title">Set custom validity period for your message</p>
+                            <p class="as-row-sub">If you don't set a custom validity period, the standard 10 minutes WhatsApp message validity period will be applied.</p>
+                          </div>
+                          <span class="as-toggle on"></span>
+                        </div>
+                        <div class="as-field">
+                          <p class="as-field-label">Validity period <span class="ct-info">i</span></p>
+                          <div class="as-select"><span>10 minutes</span><svg viewBox="0 0 12 12" fill="currentColor"><path d="M2.2 4h7.6a.6.6 0 0 1 .46 1L6.46 9.2a.6.6 0 0 1-.92 0L1.74 5A.6.6 0 0 1 2.2 4z"/></svg></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="as-card"&gt;
+  &lt;p class="as-title"&gt;Message validity period&lt;/p&gt;
+  &lt;p class="as-desc"&gt;You can set a custom validity period…&lt;/p&gt;
+  &lt;div class="as-row"&gt;
+    &lt;div class="as-row-text"&gt;
+      &lt;p class="as-row-title"&gt;Set custom validity period for your message&lt;/p&gt;
+      &lt;p class="as-row-sub"&gt;If you don't set a custom validity period…&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;span class="as-toggle"&gt;&lt;/span&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Field label</span><span class="a11y-right"><span class="a11y-ratio">9.1</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Helper text</span><span class="a11y-right"><span class="a11y-ratio">5.3</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Link</span><span class="a11y-right"><span class="a11y-ratio">4.8</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>
+                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Space / Enter</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="comp-detail" id="comp-preview">
+              <div class="comp-section">
+                <div class="comp-tabs">
+                  <button class="comp-tab active" data-tab="design">Design</button>
+                  <button class="comp-tab" data-tab="code">Code</button>
+                  <button class="comp-tab" data-tab="accessibility">Accessibility</button>
+                </div>
+                <div class="comp-panel active" data-panel="design">
+                  <div class="comp-variant-grid comp-variant-grid--3">
+                    <div class="comp-variant">
+                      <p class="comp-variant-cap">Text only</p>
+                      <div class="pv-card">
+                        <div class="pv-head">Template preview</div>
+                        <div class="pv-chat">
+                          <div class="pv-bubble">
+                            <p class="pv-text">Join us tonight at 6pm for our Summer Event. Free gift when you purchase new launch item.</p>
+                            <span class="pv-time">6:40 PM</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant">
+                      <p class="comp-variant-cap">With action button</p>
+                      <div class="pv-card">
+                        <div class="pv-head">Template preview</div>
+                        <div class="pv-chat">
+                          <div class="pv-bubble">
+                            <p class="pv-text">Join us tonight at 6pm for our Summer Event. Free gift when you purchase new launch item.</p>
+                            <span class="pv-time">6:40 PM</span>
+                            <div class="pv-actions">
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Visit website</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant">
+                      <p class="comp-variant-cap">More than 3 buttons</p>
+                      <div class="pv-card">
+                        <div class="pv-head">Template preview</div>
+                        <div class="pv-chat">
+                          <div class="pv-bubble">
+                            <p class="pv-text">Join us tonight at 6pm for our Summer Event. Free gift when you purchase new launch item.</p>
+                            <span class="pv-time">6:40 PM</span>
+                            <div class="pv-actions">
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy offer code</span>
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Visit website</span>
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>See all options</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant">
+                      <p class="comp-variant-cap">With image</p>
+                      <div class="pv-card">
+                        <div class="pv-head">Template preview</div>
+                        <div class="pv-chat">
+                          <div class="pv-bubble">
+                            <img class="pv-media" src="image.png" alt="Image media">
+                            <p class="pv-text">Join us tonight at 6pm for our Summer Event. Free gift when you purchase new launch item.</p>
+                            <span class="pv-time">6:40 PM</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant">
+                      <p class="comp-variant-cap">Image with button</p>
+                      <div class="pv-card">
+                        <div class="pv-head">Template preview</div>
+                        <div class="pv-chat">
+                          <div class="pv-bubble">
+                            <img class="pv-media" src="image.png" alt="Image media">
+                            <p class="pv-text">Join us tonight at 6pm for our Summer Event. Free gift when you purchase new launch item.</p>
+                            <span class="pv-time">6:40 PM</span>
+                            <div class="pv-actions">
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Visit website</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="comp-variant">
+                      <p class="comp-variant-cap">Image, more than 3 buttons</p>
+                      <div class="pv-card">
+                        <div class="pv-head">Template preview</div>
+                        <div class="pv-chat">
+                          <div class="pv-bubble">
+                            <img class="pv-media" src="image.png" alt="Image media">
+                            <p class="pv-text">Join us tonight at 6pm for our Summer Event. Free gift when you purchase new launch item.</p>
+                            <span class="pv-time">6:40 PM</span>
+                            <div class="pv-actions">
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy offer code</span>
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>Visit website</span>
+                              <span class="pv-action"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>See all options</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="comp-panel" data-panel="code">
+                  <pre class="comp-code"><code>&lt;div class="pv-card"&gt;
+  &lt;div class="pv-head"&gt;Template preview&lt;/div&gt;
+  &lt;div class="pv-chat"&gt;
+    &lt;div class="pv-bubble"&gt;
+      &lt;p class="pv-text"&gt;Join us tonight at 6pm…&lt;/p&gt;
+      &lt;span class="pv-time"&gt;6:40 PM&lt;/span&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                </div>
+                <div class="comp-panel" data-panel="accessibility">
+                  <div class="a11y">
+                    <div class="a11y-col">
+                      <p class="a11y-h">Contrast</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Message text</span><span class="a11y-right"><span class="a11y-ratio">10.2</span><span class="a11y-lv on">AA</span><span class="a11y-lv on">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Timestamp</span><span class="a11y-right"><span class="a11y-ratio">4.6</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Action link</span><span class="a11y-right"><span class="a11y-ratio">5.9</span><span class="a11y-lv on">AA</span><span class="a11y-lv off">AAA</span></span></div>
+                    </div>
+                    <div class="a11y-col">
+                      <p class="a11y-h">Focus / Keyboard</p>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Focus ring</span><span class="a11y-v">Visible</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Tab order</span><span class="a11y-v">Logical</span></div>
+                      <div class="a11y-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg><span class="a11y-k">Activation</span><span class="a11y-v">Enter</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ═══ PAGE TEMPLATES ═══ -->
+        <section class="page" id="templates">
+          <h2 class="ds-h2">Page Templates</h2>
+          <p class="ds-section-desc">Full-page layouts assembled from the framework, one per message type</p>
+          <div class="ds-template-grid">
+            <div class="ds-template-card">
+              <div class="ds-template-visual"><img src="14a.jpg" alt="Marketing template" /></div>
+              <span class="comp-ov-num">1</span>
+              <p class="ds-template-cap">Marketing Template</p>
+              <p class="comp-ov-desc" style="padding:0 6px;">3 variants</p>
+              <a class="ds-template-figma" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/></svg>
+                Open in Figma
+              </a>
+            </div>
+            <div class="ds-template-card">
+              <div class="ds-template-visual"><img src="14b.jpg" alt="Utility template" /></div>
+              <span class="comp-ov-num">2</span>
+              <p class="ds-template-cap">Utility Template</p>
+              <p class="comp-ov-desc" style="padding:0 6px;">3 variants</p>
+              <a class="ds-template-figma" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/></svg>
+                Open in Figma
+              </a>
+            </div>
+            <div class="ds-template-card">
+              <div class="ds-template-visual"><img src="14c.jpg" alt="Authentication template" /></div>
+              <span class="comp-ov-num">3</span>
+              <p class="ds-template-cap">Authentication Template</p>
+              <p class="comp-ov-desc" style="padding:0 6px;">1 variant</p>
+              <a class="ds-template-figma" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE"/><path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83"/><path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262"/><path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E"/><path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF"/></svg>
+                Open in Figma
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══ GOVERNANCE ═══ -->
+        <section class="page" id="governance">
+          <h2 class="ds-h2">Governance</h2>
+          <p class="ds-section-desc">Guidelines for evolving the system responsibly and getting support when you need it</p>
+
+          <div class="ds-gov-grid">
+            <div class="ds-oh-card ds-gov-left">
+              <p class="ds-block-title">When to add a new message type vs. expand an existing one</p>
+              <div class="ds-decision">
+                <div class="ds-decision-col expand">
+                  <p class="ds-decision-head">Expand an existing type</p>
+                  <ul class="ds-decision-list">
+                    <li>The goal and core flow match an existing message type</li>
+                    <li>The need can be met by adding a variant or setting</li>
+                    <li>Users would expect it to live alongside the current type</li>
+                    <li>It reuses the same shared components and sequence</li>
+                  </ul>
+                </div>
+                <div class="ds-decision-col new">
+                  <p class="ds-decision-head">Add a new message type</p>
+                  <ul class="ds-decision-list">
+                    <li>It serves a distinct goal or audience</li>
+                    <li>The flow or required components differ meaningfully</li>
+                    <li>Expanding an existing type would overload or confuse it</li>
+                    <li>It needs its own template and configuration sequence</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="ds-oh-card ds-gov-right">
+              <p class="ds-block-title">Book a slot at our office hours for design consultation or support</p>
+              <div class="ds-oh-form">
+                <div class="ds-oh-field">
+                  <select class="ds-oh-select">
+                    <option value="" disabled selected>Select a time slot</option>
+                    <option>Wed, Jul 8 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Jul 15 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Jul 22 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Jul 29 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Aug 5 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Aug 12 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Aug 19 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Aug 26 · 2:00–2:30 PM PST</option>
+                    <option>Wed, Sep 2 · 2:00–2:30 PM PST</option>
+                  </select>
+                </div>
+                <div class="ds-oh-field">
+                  <select class="ds-oh-select">
+                    <option value="" disabled selected>Select a topic</option>
+                    <option>General feedback</option>
+                    <option>Consult on a new component</option>
+                    <option>Change to an existing product</option>
+                    <option>Contribution or extension request</option>
+                    <option>Something else</option>
+                  </select>
+                </div>
+              </div>
+              <a class="ds-cta" href="#" target="_blank" rel="noopener" style="padding:10px 16px;align-self:flex-start;">
+                Sign up
+              </a>
+              <div class="ds-oh-poc">
+                <p class="ds-oh-poc-label">Point of contact</p>
+                <p class="ds-oh-poc-name">Mu Jiun Shie (PD) · Lu Wang (Eng)</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const main = document.querySelector('.main');
+    const navItems = Array.from(document.querySelectorAll('.nav-item'));
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const ids = navItems.map(n => n.dataset.target);
+
+    // Components nav group
+    const compGroup = document.getElementById('comp-nav-group');
+    const compExpand = compGroup.querySelector('.nav-expand');
+    const subItems = [...document.querySelectorAll('.nav-subitem')];
+    function setExpanded(open) {
+      compGroup.classList.toggle('open', open);
+      compExpand.textContent = open ? '–' : '+';
+      compExpand.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+    const compLeads = {
+      overview: 'Preview of template name and category — a shared component across multiple tool pages',
+      name: 'Editing fields for template name and category',
+      conditional: 'Editing fields for additional settings — like selecting a sub-type or opening a configuration modal — before setting the content and buttons',
+      content: 'Editing fields for message content, including media, header, body, and footer',
+      button: 'Editing fields for message buttons — when adding multiple buttons, users can reorder them',
+      additional: 'Editing fields for additional settings — like legal compliance or any setup that doesn\'t impact the content configuration',
+      preview: 'Preview of template message and buttons'
+    };
+    const compCrumb = document.getElementById('comp-crumb');
+    const compCrumbTail = document.getElementById('comp-crumb-tail');
+    const compLead = document.getElementById('comp-lead');
+    const compOverviewGrid = document.getElementById('comp-overview-grid');
+    const compDetailWrap = document.querySelector('.comp-detail-wrap');
+    const compGridLead = 'The page is built from these 7 components. Select one to see its design and code';
+    function showCompGrid() {
+      compOverviewGrid.style.display = 'grid';
+      compDetailWrap.style.display = 'none';
+      compCrumbTail.style.display = 'none';
+      compLead.textContent = compGridLead;
+      subItems.forEach(s => s.classList.remove('active'));
+    }
+    function selectComp(id) {
+      compOverviewGrid.style.display = 'none';
+      compDetailWrap.style.display = 'block';
+      compCrumbTail.style.display = '';
+      subItems.forEach(s => s.classList.toggle('active', s.dataset.comp === id));
+      document.querySelectorAll('.comp-detail').forEach(d => d.classList.toggle('active', d.id === 'comp-' + id));
+      const item = subItems.find(s => s.dataset.comp === id);
+      if (item) {
+        const num = item.querySelector('.nav-subnum').textContent.trim();
+        const name = item.textContent.replace(num, '').trim();
+        compCrumb.textContent = name;
+      }
+      if (compLeads[id]) compLead.textContent = compLeads[id];
+    }
+
+    function showPage(id) {
+      if (!ids.includes(id)) id = ids[0];
+      pages.forEach(p => p.classList.toggle('active', p.id === id));
+      navItems.forEach(n => n.classList.toggle('active', n.dataset.target === id));
+      main.scrollTop = 0;
+      // Override the browser's native anchor jump so the page keeps its top spacing
+      requestAnimationFrame(() => { main.scrollTop = 0; });
+    }
+
+    function fromHash() {
+      const h = (location.hash || '').replace('#', '');
+      if (h.indexOf('components-') === 0) {
+        const slug = h.slice('components-'.length);
+        const item = subItems.find(s => s.dataset.slug === slug);
+        showPage('components');
+        setExpanded(true);
+        if (item) selectComp(item.dataset.comp);
+        return;
+      }
+      if (h === 'components') {
+        showPage('components');
+        showCompGrid();
+        return;
+      }
+      showPage(h);
+    }
+
+    window.addEventListener('hashchange', fromHash);
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+      const current = (location.hash || '').replace('#', '');
+      let i = ids.indexOf(current);
+      if (i === -1) i = 0;
+      const next = e.key === 'ArrowDown'
+        ? Math.min(i + 1, ids.length - 1)
+        : Math.max(i - 1, 0);
+      if (next !== i) {
+        e.preventDefault();
+        location.hash = ids[next];
+      }
+    });
+
+    // Toggle the Components group open/closed
+    compExpand.addEventListener('click', (e) => {
+      e.preventDefault();
+      setExpanded(!compGroup.classList.contains('open'));
+    });
+
+    // Stack both panels in one cell so the box keeps the same height
+    document.querySelectorAll('.comp-section').forEach(section => {
+      const panels = section.querySelectorAll('.comp-panel');
+      if (!panels.length) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'comp-panels';
+      panels[0].parentNode.insertBefore(wrap, panels[0]);
+      panels.forEach(p => wrap.appendChild(p));
+    });
+
+    // Design / Code tabs within each component section
+    document.querySelectorAll('.comp-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const section = tab.closest('.comp-section');
+        section.querySelectorAll('.comp-tab').forEach(t => t.classList.toggle('active', t === tab));
+        section.querySelectorAll('.comp-panel').forEach(p => p.classList.toggle('active', p.dataset.panel === tab.dataset.tab));
+      });
+    });
+
+    // Interactive media-sample dropdown
+    document.querySelectorAll('.ct-dropdown').forEach(dd => {
+      const select = dd.querySelector('.ct-select');
+      const labelEl = select.querySelector('span');
+      select.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dd.classList.contains('open');
+        document.querySelectorAll('.ct-dropdown.open').forEach(o => o.classList.remove('open'));
+        dd.classList.toggle('open', !isOpen);
+      });
+      dd.querySelectorAll('.ct-option').forEach(opt => {
+        opt.addEventListener('click', (e) => {
+          e.stopPropagation();
+          dd.querySelectorAll('.ct-option').forEach(o => {
+            o.classList.remove('selected');
+            const r = o.querySelector('.ct-radio');
+            if (r) r.classList.remove('checked');
+          });
+          opt.classList.add('selected');
+          const radio = opt.querySelector('.ct-radio');
+          if (radio) radio.classList.add('checked');
+          const optLabel = opt.querySelector('.ct-opt-label');
+          if (labelEl && optLabel) labelEl.textContent = optLabel.textContent.trim();
+          dd.classList.remove('open');
+        });
+      });
+    });
+    document.querySelectorAll('.bt-add-wrap').forEach(dd => {
+      const btn = dd.querySelector('.bt-add');
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = dd.classList.contains('open');
+        document.querySelectorAll('.bt-add-wrap.open').forEach(o => o.classList.remove('open'));
+        dd.classList.toggle('open', !isOpen);
+      });
+    });
+    document.addEventListener('click', () => {
+      document.querySelectorAll('.ct-dropdown.open').forEach(o => o.classList.remove('open'));
+      document.querySelectorAll('.bt-add-wrap.open').forEach(o => o.classList.remove('open'));
+    });
+
+    fromHash();
+</script>
+</body>
+</html>

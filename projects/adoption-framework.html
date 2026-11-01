@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+<head>
+  <link rel="icon" type="image/png" href="favicons/mu.png">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="UTF-8">
+    <title>Day-1 Adoption Framework</title>
+
+    <!-- All -->
+    <meta property="og:title" content="Mujiun | UX Designer" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://mu-jn.com/" />
+    <meta property="og:image" content="http://mu-jn.com/images/og.jpg" />
+    <meta property="og:description" content="CMU MIIPS, Web/App Design" />
+    <link rel="apple-touch-icon" sizes="76x76" href="favicons/apple-icon-76x76.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="manifest" href="favicons/manifest.json">
+    <link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#000">
+    <meta name="theme-color" content="#000">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112748057-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-158583225-1', {
+          'page_title' : 'adoption-framework.html',
+          'page_path': '/adoption-framework.html'
+        });
+    </script>
+    <!-- All -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="css/mu.css">
+    <link rel="stylesheet" href="css/venobox.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="js/mumu.js"></script>
+    <script src="js/venobox.js"></script>
+    <script>
+        $(function(){
+            $('.gallery').venobox();
+        });
+    </script>
+    <style>
+      /* ── NEW PROJECT LAYOUT ── */
+      body.new-layout {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      body.new-layout .progress-container { display: none; }
+
+      /* Left nav */
+      body.new-layout .side-nav {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 240px;
+        height: 100vh;
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        z-index: 100;
+      }
+
+      body.new-layout .side-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 12px;
+        font-weight: 400;
+        color: #35363A;
+        opacity: 0.5;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 0;
+        line-height: 1.2;
+        transition: opacity 0.15s ease;
+      }
+
+      body.new-layout .side-nav a::before { display: none; }
+
+      body.new-layout .side-nav a:hover { opacity: 1; }
+
+      body.new-layout .side-nav a.active { opacity: 1; color: #35363A; }
+
+      body.new-layout .side-nav a.active::before { display: none; }
+
+      /* Hide old shortcut */
+      body.new-layout .shortcut { display: none !important; }
+
+      /* Main content area */
+      body.new-layout .main-content {
+        flex: 1;
+        max-width: 800px;
+        margin-left: calc(280px + (100vw - 280px - 800px) / 2);
+      }
+
+      body.new-layout .top {
+        margin: 0;
+        margin-bottom: 20px;
+      }
+
+      body.new-layout .top img {
+        max-height: none;
+        width: 100%;
+        display: block;
+        object-fit: cover;
+      }
+
+      body.new-layout .head {
+        text-align: left;
+      }
+
+      body.new-layout .head .text {
+        max-width: none;
+        text-align: left;
+      }
+
+      body.new-layout.article h1,
+      body.new-layout.article h2,
+      body.new-layout.article h3,
+      body.new-layout.article h5,
+      body.new-layout.article h6,
+      body.new-layout.article p,
+      body.new-layout.article .block,
+      body.new-layout.article .block-box,
+      body.new-layout.article ul,
+      body.new-layout.article ol,
+      body.new-layout.article table,
+      body.new-layout.article .head,
+      body.new-layout.article .head .text {
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        text-align: left;
+      }
+
+      body.new-layout .main-content .head {
+        padding: 0;
+        padding-top: 30px;
+      }
+
+      body.new-layout .main-content .head .text {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+      }
+
+      body.new-layout .top {
+        margin: 0;
+      }
+
+      body.new-layout .top img {
+        margin: 0;
+      }
+
+      /* Override all centering from mu.css */
+      body.new-layout.article .content .g-0,
+      body.new-layout.article .content .g-1,
+      body.new-layout.article .content .g-1w,
+      body.new-layout.article .content .g-2,
+      body.new-layout.article .content .g-3,
+      body.new-layout.article .content .g-4,
+      body.new-layout.article .content .g-wide {
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+        max-width: none;
+      }
+
+      body.new-layout.article .content {
+        margin-top: 40px;
+      }
+
+      body.new-layout.article .content .g-0 a,
+      body.new-layout.article .content .g-1 a,
+      body.new-layout.article .content .g-1w a {
+        display: block;
+      }
+
+      body.new-layout.article .g-1w,
+      body.new-layout.article .content .g-1w {
+        width: 115%;
+        max-width: none;
+        margin-left: -4%;
+        padding: 0;
+        border-radius: 12px;
+        overflow: hidden;
+      }
+
+      body.new-layout .divide {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+      }
+
+      body.new-layout .divide.divbg1 {
+        background-color: transparent;
+        padding: 0;
+        border-radius: 12px;
+        font-family: 'IBM Plex Mono', monospace;
+      }
+
+      body.new-layout .divide.divbg1 .block-box span,
+      body.new-layout .divide.divbg1 .block-box div,
+      body.new-layout .divide.divbg1 .block-w1 span,
+      body.new-layout .divide.divbg1 .block-w1 div,
+      body.new-layout .divide.divbg1 .block-w2 span,
+      body.new-layout .divide.divbg1 .block-w2 div {
+        font-size: 13px;
+      }
+
+      body.new-layout .part {
+        margin-bottom: 80px;
+      }
+
+      body.new-layout.article .block-box {
+        padding: 0;
+        background-color: #F6F6F6;
+        border-radius: 12px;
+        display: flex;
+        gap: 20px;
+        font-family: 'IBM Plex Mono', monospace;
+      }
+
+      body.new-layout.article .block-box .block-w1,
+      body.new-layout.article .block-box .block-w2 {
+        width: 50%;
+        margin-right: 0;
+      }
+
+      body.new-layout.article table {
+        margin-left: 0;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 14px;
+        line-height: 1.5;
+        margin-top: 12px;
+        margin-bottom: 28px;
+        border: 1px solid #E7E7E7;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      body.new-layout.article table th,
+      body.new-layout.article table td {
+        padding: 12px 16px;
+        text-align: left;
+        border-bottom: 1px solid rgba(67,67,67,0.1);
+        vertical-align: top;
+        font-weight: 400;
+        font-size: 14px;
+      }
+
+      body.new-layout.article table th:first-child,
+      body.new-layout.article table td:first-child {
+        width: 100px;
+        white-space: nowrap;
+      }
+
+      body.new-layout.article table th:nth-child(2),
+      body.new-layout.article table td:nth-child(2),
+      body.new-layout.article table th:nth-child(3),
+      body.new-layout.article table td:nth-child(3) {
+        width: calc((100% - 100px) / 2);
+      }
+
+      body.new-layout.article table th,
+      body.new-layout.article table tr:first-child th {
+        font-size: 14px;
+        font-weight: 600;
+        color: #35363A;
+        padding-bottom: 12px;
+      }
+
+      body.new-layout.article table tr:last-child td {
+        border-bottom: none;
+      }
+
+      body.new-layout.article table td b {
+        font-weight: 600;
+        color: #35363A;
+      }
+
+      body.new-layout p,
+      body.new-layout li,
+      body.new-layout .block-w1 div,
+      body.new-layout .block-w1 span,
+      body.new-layout .block-w2 div,
+      body.new-layout .block-w2 span {
+        font-size: 17px;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      body.new-layout .part ul {
+        list-style: disc;
+        padding-left: 1.5em;
+        padding-bottom: 20px;
+      }
+
+      body.new-layout.article p:has(+ ul) {
+        padding-bottom: 6px;
+      }
+
+      body.new-layout .block-box .box-label {
+        font-size: 12px;
+        font-weight: 700;
+        font-family: 'IBM Plex Mono', monospace;
+        color: #1d1d1f;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 6px;
+      }
+
+      body.new-layout .block-box .box-text,
+      body.new-layout .block-box p {
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: -0.2px;
+        line-height: 1.4;
+        margin-bottom: 40px;
+      }
+
+      body.new-layout .block-box .box-text li {
+        font-size: 13px;
+        font-weight: 400;
+        letter-spacing: -0.2px;
+        line-height: 1.4;
+        margin-bottom: 0;
+      }
+
+      body.new-layout .box-text:last-child {
+        margin-bottom: 0;
+      }
+
+      body.new-layout b,
+      body.new-layout .mark {
+        font-weight: 600;
+        color: #1d1d1f;
+      }
+
+      body.new-layout h3 {
+        font-family: 'Fraunces', Georgia, serif;
+        color: #35363A;
+        padding-top: 16px;
+        font-weight: 600;
+      }
+
+      body.new-layout h1 {
+        font-family: 'Fraunces', Georgia, serif;
+        font-weight: 600;
+        font-size: 40px;
+        line-height: 1.2em;
+        letter-spacing: -0.01em;
+        padding-bottom: 12px;
+      }
+
+      body.new-layout .part-title {
+        font-family: 'Fraunces', Georgia, serif;
+        font-weight: 600;
+        margin-bottom: 36px;
+        color: #35363A;
+      }
+
+      body.new-layout p.feedback {
+        padding: 0;
+        padding-bottom: 12px;
+        font-size: 14px;
+        color: #1d1d1f;
+      }
+
+      body.new-layout.article .block {
+        padding-top: 32px;
+      }
+
+      body.new-layout .part1 .block-box {
+        background-color: transparent;
+      }
+
+      body.new-layout .box-text ul {
+        list-style: disc;
+        padding-left: 1.2em;
+        padding-bottom: 0;
+      }
+
+      body.new-layout h6 {
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.6em;
+        color: #888;
+      }
+
+      body.new-layout .content {
+        text-align: left;
+      }
+
+      body.new-layout .g-1w,
+      body.new-layout .g-0,
+      body.new-layout .g-1 {
+        text-align: left;
+      }
+
+      body.new-layout .g-1w .gallery,
+      body.new-layout .g-0 .gallery,
+      body.new-layout .g-1 .gallery {
+        position: relative;
+        display: block;
+      }
+
+      body.new-layout .g-1w .gallery::after,
+      body.new-layout .g-0 .gallery::after,
+      body.new-layout .g-1 .gallery::after {
+        content: '';
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        width: 32px;
+        height: 32px;
+        background: rgba(0,0,0,0.5);
+        border-radius: 6px;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 1h5a.5.5 0 0 1 0 1H2.707l3.147 3.146a.5.5 0 1 1-.708.708L2 2.707V6.5a.5.5 0 0 1-1 0v-5a.5.5 0 0 1 .5-.5zm13 14h-5a.5.5 0 0 1 0-1h3.793l-3.147-3.146a.5.5 0 0 1 .708-.708L14 13.293V9.5a.5.5 0 0 1 1 0v5a.5.5 0 0 1-.5.5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+
+      body.new-layout .g-1w .gallery:hover::after,
+      body.new-layout .g-0 .gallery:hover::after,
+      body.new-layout .g-1 .gallery:hover::after {
+        opacity: 1;
+      }
+
+      body.new-layout .g-1w img,
+      body.new-layout .g-0 img,
+      body.new-layout .g-1 img {
+        display: block;
+        cursor: zoom-in;
+      }
+
+      body.new-layout .part-title {
+        text-align: left;
+      }
+
+      body.new-layout .divide {
+        text-align: left;
+      }
+
+      body.new-layout footer {
+        text-align: left;
+        margin-left: 0;
+      }
+
+      /* Responsive: mobile styles moved to css/mu.css */
+
+      /* ── auto-switching image slideshow (Context) ── */
+      .ss-wrap { position: relative; line-height: 0; }
+      .ss-wrap img { display: block; width: 100%; }
+      .ss-wrap img:not(:first-child) { position: absolute; top: 0; left: 0; }
+      .ss-wrap img { opacity: 0; transition: opacity 0.8s ease; }
+      .ss-wrap img.on { opacity: 1; }
+
+      /* ── before / after, side by side (full-bleed like .g-1w) ── */
+      body.new-layout.article .ba { display: flex; gap: 12px; width: 115%; max-width: none; margin: 10px 0 4px -4%; }
+      .ba-col { flex: 1; min-width: 0; }
+      .ba-col a { display: block; background: #F6F6F6; border-radius: 12px; padding: 34px; box-sizing: border-box; }
+      .ba-col img { width: 100%; display: block; border-radius: 6px; }
+      .ba-tag {
+        display: inline-block; font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase;
+        color: #9a9a9a; margin-bottom: 10px;
+      }
+      .ba-tag.is-after { color: #006387; }
+      body.new-layout.article .ba-cap {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 12px; font-weight: 400; line-height: 1.55; color: #35363A; margin: 12px 0 0;
+      }
+      body.new-layout.article .ba-cap b { font-weight: 600; color: #35363A; }
+      body.new-layout.article .ba-cap .is-after { color: #006387; }
+      @media (max-width: 640px) { .ba { flex-direction: column; gap: 24px; } }
+
+    </style>
+</head>
+
+<body class="article module new-layout">
+<div class="progress-container"><div class="progress-bar" id="myBar"></div></div>
+
+    <!-- Left side navigation -->
+    <nav class="side-nav">
+        <a href="#01">Overview</a>
+        <a href="#02">Context</a>
+        <a href="#03">Discover Problems</a>
+        <a href="#04">Clarify Ambiguity</a>
+        <a href="#05">Shape Solutions</a>
+        <a href="#06">Measurement</a>
+        <a href="#07">Impact &amp; Learning</a>
+        <a href="#08">Scale</a>
+    </nav>
+
+    <!-- Hide old shortcut -->
+    <div class="shortcut" style="display:none"></div>
+
+    <!-- Main content -->
+    <div class="main-content">
+    <div class="head">
+        <div class="text">
+            <h1>Day-1 Adoption Framework</h1>
+            <h6>Growth Strategy, Scaled across 3 products, Framework to Impact</h6>
+        </div>
+        <div class="block"><div class="part-title">Overview</div></div>
+        <div class="g-1w"><a class="gallery" href="images/11/1a.jpg"><img src="images/11/1a.jpg"></a></div>
+    </div>
+
+
+    <!-- content -->
+    <div class="content fadeup">
+        <!-- Overview -->
+        <div class="part1" id="01">
+            <div class="part brief">
+                <div class="block-box">
+                <div class="block-w1">
+                    <span class="box-label">Problems</span>
+                    <div class="box-text">WhatsApp paid adoption on partner platforms regressed from <b>11% to 9%</b> despite 10+ launches in 2024 &mdash; a large, stalled revenue opportunity.</div>
+
+                    <span class="box-label">Solutions</span>
+                    <div class="box-text">Defined a <b>Day 1 adoption framework</b> &mdash; 4 sequenced tasks that get businesses to value fast &mdash; and scaled it across <b>3 products</b>: a guided activation flow, a partner account tool, and a developer portal.</div>
+                </div>
+                <div class="block-w2">
+                    <div class="box-label">My Role</div>
+                    <div class="box-text">
+                    <ul>
+                        <li>Led as PM &amp; designer with Eng, UXR, and Data Science</li>
+                        <li>Partnered across 5 teams; secured leadership backing</li>
+                        <li>Defined the framework, 2 MVPs, roadmap, and metrics</li>
+                    </ul>
+                  </div>
+
+                    <span class="box-label">Impact</span>
+                    <div class="box-text">
+                      <ul>
+                        <li>40% guidance usage (goal 5%)</li>
+                        <li>+19.7% revenue lift in A/B test (goal &gt;0%)</li>
+                        <li>~$43M/year, est. ~$250M by 2030</li>
+                      </ul>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Context -->
+        <div class="part2" id="02">
+            <div class="part">
+                <div class="block"><div class="part-title">Context</div></div>
+                <h3>WhatsApp Business and Revenue Driver</h3>
+                <p>WhatsApp Business is a fast-growing ecosystem &mdash; businesses on WhatsApp grew <b>+30% YoY</b>, reaching <b>$1.5B</b> in annual revenue. But <b>80% of paid messaging revenue</b> flows through partner platforms like Twilio, AiSensy, and Manychat, where we owned little of the experience.</p>
+                <p>Despite <b>10+ launches in 2024</b>, paid adoption regressed from <b>11% to 9%</b>. My team was assigned to find opportunities to <b>grow paid adoption on partner platforms</b>.</p>
+                <div class="g-1w"><div class="ss-wrap" id="ctxShow">
+                    <img src="images/11/2-2.jpg" class="on">
+                    <img src="images/11/2-3.jpg">
+                    <img src="images/11/2-4.jpg">
+                </div></div>
+            </div>
+        </div>
+
+        <!-- Discover Problems -->
+        <div class="part3" id="03">
+            <div class="part">
+                <div class="block"><div class="part-title">Discover Problems</div></div>
+                <h3>Study 1 &mdash; Journey mapping with Eng and 5 teams</h3>
+                <p>I led journey mapping across the ecosystem, pulling data and findings from <b>5 teams</b> and auditing <b>10 partner platforms</b> with Eng. I found <b>16 tools</b> spread across teams, each tracking its own adoption goal.</p>
+                <p><b>Takeaway:</b> our data was fragmented and tool-focused. It showed <b>what</b> businesses used &mdash; not <b>why</b> they paid or dropped off.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/disc-journey.png"><img src="images/11/disc-journey.png"></a></div>
+                <br>
+                <h3>Study 2 &mdash; User study on convert vs. drop-off</h3>
+                <p>I pushed for a user study and partnered with UXR on the approach: <b>12 businesses, 2 top markets, a 30-day journey</b>. We mapped the successful and unsuccessful paths to uncover why users convert to paid vs. drop off.</p>
+                <p><b>Takeaway:</b> on Day 1, <b>two use cases</b> &mdash; service and marketing message &mdash; drive paid adoption, but users get blocked by <b>2 account tasks</b> (account creation, business verification) and often try the <b>wrong tools first</b>.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/disc-study.png"><img src="images/11/disc-study.png"></a></div>
+                <br>
+                <div class="g-1w"><a class="gallery" href="images/11/disc-study-2.png"><img src="images/11/disc-study-2.png"></a></div>
+            </div>
+        </div>
+
+        <!-- Clarify Ambiguity -->
+        <div class="part4" id="04">
+            <div class="part">
+                <div class="block"><div class="part-title">Clarify Ambiguity</div></div>
+                <h3>Research findings</h3>
+                <p>Users didn&rsquo;t need more or better tools &mdash; they needed guidance to get past blockers and try the right tools first.</p>
+                <h3>The Day 1 adoption framework</h3>
+                <p>I combined learnings from the successful and unsuccessful paths into one sequenced path, ordered by user needs and dependencies. It aligned every stakeholder &mdash; businesses got a clear setup path, partners grew their clients, teams got clear priorities, and Meta grew revenue.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/framework.png"><img src="images/11/framework.png"></a></div>
+            </div>
+        </div>
+
+        <!-- Shape Solutions -->
+        <div class="part5" id="05">
+            <div class="part">
+                <div class="block"><div class="part-title">Shape Solutions</div></div>
+                <h3>Defined 2 MVPs</h3>
+                <p>To validate whether the framework lifts paid adoption, I scoped two MVPs &mdash; a guided flow for businesses to <b>complete</b> the 4 tasks, and an account table for partners to <b>track</b> and <b>support</b> them.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/mvps.png"><img src="images/11/mvps.png"></a></div>
+                <br>
+                <h3>Alignment</h3>
+                <p>Not everyone agreed at first, so I took it to <b>leadership forums</b> &mdash; securing lead backing to bring the PM and 5 teams on board.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/18.jpg"><img src="images/11/18.jpg"></a></div>
+                <br>
+                <h3>The Day 1 adoption guide</h3>
+                <div class="ba">
+                    <div class="ba-col">
+                        <a class="gallery" href="images/11/a1.jpg"><img src="images/11/a1.jpg"></a>
+                        <p class="ba-cap"><b>Before</b> &mdash; Businesses were overwhelmed by tools with no linear guidance. They tried the wrong tools first or got blocked by account issues.</p>
+                    </div>
+                    <div class="ba-col">
+                        <a class="gallery" href="images/11/a2.jpg"><img src="images/11/a2.jpg"></a>
+                        <p class="ba-cap"><b class="is-after">After</b> &mdash; Businesses completed 4 key tasks on Day 1 with a linear guide. They tried the right tools, found value, and converted to paid.</p>
+                    </div>
+                </div>
+                <br>
+                <h3>Dynamic status &amp; action items</h3>
+                <p>Introduced dynamic status and action items to support account issues.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/12.jpg"><img src="images/11/12.jpg"></a></div>
+                <br>
+                <h3>Page design</h3>
+                <p>Introduced new patterns for a time-sensitive, sequential journey.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/15.jpg"><img src="images/11/15.jpg"></a></div>
+                <br>
+                <h3>Speed &amp; scale</h3>
+                <p>Built on Meta&rsquo;s surface to ship fast and stay easy to scale.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/16.jpg"><img src="images/11/16.jpg"></a></div>
+                <br>
+                <h3>Entry points</h3>
+                <p>Connected the guide to <b>4 entry points</b> and tracked conversion.</p>
+                <div class="g-1w"><a class="gallery" href="images/11/17.jpg"><img src="images/11/17.jpg"></a></div>
+            </div>
+        </div>
+
+        <!-- Measurement -->
+        <div class="part6" id="06">
+            <div class="part">
+                <div class="block"><div class="part-title">Measurement</div></div>
+                <table>
+                    <tr>
+                        <th style="width:50%;white-space:normal;border-right:1px solid rgba(67,67,67,0.1);font-weight:600;line-height:1.2;">Ship goals<span style="display:block;font-weight:400;font-size:12px;color:#8a8a90;margin-top:2px;">what had to be true to launch</span></th>
+                        <th style="white-space:normal;font-weight:600;line-height:1.2;">Learning goals<span style="display:block;font-weight:400;font-size:12px;color:#8a8a90;margin-top:2px;">what we wanted to understand</span></th>
+                    </tr>
+                    <tr>
+                        <td style="width:50%;white-space:normal;border-right:1px solid rgba(67,67,67,0.1);"><ul style="margin:0;padding:0;list-style:none;font-size:11.5px;line-height:1.9;"><li>Guidance usage: 5%</li><li>Paid adoption: 2%</li><li>Revenue impact: &gt;0%</li></ul></td>
+                        <td style="white-space:normal;"><ul style="margin:0;padding:0;list-style:none;font-size:11.5px;line-height:1.9;"><li>Conversion by entry point (4 entry points)</li><li>Task completion rate</li><li>Turnaround time to complete tasks</li></ul></td>
+                    </tr>
+                </table>
+                <p>Validated with a <b>50/50 A/B test</b> (test vs. control) across entry points.</p>
+            </div>
+        </div>
+
+        <!-- Impact & Learning -->
+        <div class="part7" id="07">
+            <div class="part">
+                <div class="block"><div class="part-title">Impact &amp; Learning</div></div>
+                <h3>Impact &mdash; exceeded goals + funnel lift</h3>
+                <table>
+                    <tr><th>Metric</th><th>Result</th><th>Goal</th></tr>
+                    <tr><td>Guidance usage</td><td><b>40%</b></td><td>5%</td></tr>
+                    <tr><td>Revenue lift (A/B test)</td><td><b>+19.7%</b></td><td>&gt;0%</td></tr>
+                    <tr><td>Paid adoption</td><td><b>9%</b></td><td>&mdash;</td></tr>
+                    <tr><td>Meta incremental revenue</td><td><b>+0.015% (~$43M/yr)</b></td><td>&mdash;</td></tr>
+                </table>
+                <p>We launched to <b>100% of users</b> and continued to scale it.</p>
+                <h3>Learnings</h3>
+                <p><b>Correlation &ne; causation.</b> I used first principles to find the real driver: businesses convert when they <b>know the use cases and can run a quick test</b> &mdash; not simply because they use more tools. That&rsquo;s why 10+ launches in 2024 failed to move the needle.</p>
+                <p><b>Different growth strategies for different systems and funnel stages.</b> A Day-1 adoption guide lifts paid adoption <b>9&ndash;20%</b> for first-tool adoption and complex, third-party setups; targeted upsell + defaults drives <b>3&times; higher adoption (&gt;50%)</b> for retention and returning users on first-party tools.</p>
+                <p><b>A new bet needs cross-team alignment.</b> Building a journey map with 5 teams created shared empathy; answering competing hypotheses with a user study built conviction; and presenting at leadership forums and roadmap share-outs secured VP + eng-director backing and buy-in across teams.</p>
+            </div>
+
+        </div>
+        <!-- Scale -->
+        <div class="part8" id="08">
+            <div class="part">
+                <div class="block"><div class="part-title">Scale</div></div>
+                <p>With the framework validated on the guide, I scaled it across two more products &mdash; for partners and developers.</p>
+                <h3>Partner account tool &middot; 800+ partners</h3>
+                <div class="ba">
+                    <div class="ba-col">
+                        <a class="gallery" href="images/11/a3.jpg"><img src="images/11/a3.jpg"></a>
+                        <p class="ba-cap"><b>Before</b> &mdash; Partners could track only <b>1 task</b>. To fix onboarding issues, they had to get on a client call or escalate to Meta support.</p>
+                    </div>
+                    <div class="ba-col">
+                        <a class="gallery" href="images/11/a4.jpg"><img src="images/11/a4.jpg"></a>
+                        <p class="ba-cap"><b class="is-after">After</b> &mdash; Partners could <b>track and support all 4 tasks</b> &mdash; unblocking clients on their own, from onboarding to first spend.</p>
+                    </div>
+                </div>
+                <br>
+                <h3>Developer portal</h3>
+                <div class="ba">
+                    <div class="ba-col">
+                        <a class="gallery" href="images/11/a5.jpg"><img src="images/11/a5.jpg"></a>
+                        <p class="ba-cap"><b>Before</b> &mdash; Developers were confused and overloaded with information. Only <b>3.5%</b> completed API setup.</p>
+                    </div>
+                    <div class="ba-col">
+                        <a class="gallery" href="images/11/a6.jpg"><img src="images/11/a6.jpg"></a>
+                        <p class="ba-cap"><b class="is-after">After</b> &mdash; Developers had a clear setup path and knew what to do next. The Day 1 framework helped them focus on 4 tasks, and completion <b>tripled</b>.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="block"><div class="part-titleSub">END ###</div></div>
+        </div>
+
+    </div>
+
+<footer></footer>
+    </div><!-- /main-content -->
+
+<script>
+// Scroll spy for side nav
+(function() {
+  var navLinks = document.querySelectorAll('.side-nav a');
+  var sections = [];
+  navLinks.forEach(function(link) {
+    var id = link.getAttribute('href').replace('#', '');
+    var el = document.getElementById(id);
+    if (el) sections.push({ id: id, el: el, link: link });
+  });
+
+  function updateActive() {
+    var scrollPos = window.scrollY + 120;
+    var current = sections[0];
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= scrollPos) current = s;
+    });
+    navLinks.forEach(function(l) { l.classList.remove('active'); });
+    if (current) current.link.classList.add('active');
+  }
+
+  // Set first item active on load
+  if (navLinks.length) navLinks[0].classList.add('active');
+
+  window.addEventListener('scroll', updateActive);
+})();
+</script>
+<script>
+  (function(){
+    var imgs=document.querySelectorAll('#ctxShow img'); if(imgs.length<2) return;
+    var i=0; setInterval(function(){ imgs[i].classList.remove('on'); i=(i+1)%imgs.length; imgs[i].classList.add('on'); }, 2600);
+  })();
+</script>
+</body>
+</html>

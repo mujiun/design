@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="UTF-8">
-    <title>Day 1 Adoption for WhatsApp Business</title>
+    <title>Broadcast Tool &amp; Modular System</title>
 
     <!-- All -->
     <meta property="og:title" content="Mujiun | UX Designer" />
@@ -25,8 +25,8 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'UA-158583225-1', {
-          'page_title' : 'setupguide.html',
-          'page_path': '/setupguide.html'
+          'page_title' : 'broadcast-tool.html',
+          'page_path': '/broadcast-tool.html'
         });
     </script>
     <!-- All -->
@@ -466,6 +466,32 @@
 
       /* Responsive: mobile styles moved to css/mu.css */
 
+      /* ── auto-switching image slideshow (Context) ── */
+      .ss-wrap { position: relative; line-height: 0; }
+      .ss-wrap img { display: block; width: 100%; }
+      .ss-wrap img:not(:first-child) { position: absolute; top: 0; left: 0; }
+      .ss-wrap img { opacity: 0; transition: opacity 0.8s ease; }
+      .ss-wrap img.on { opacity: 1; }
+
+      /* ── before / after, side by side (full-bleed like .g-1w) ── */
+      body.new-layout.article .ba { display: flex; gap: 12px; width: 115%; max-width: none; margin: 10px 0 4px -4%; }
+      .ba-col { flex: 1; min-width: 0; }
+      .ba-col a { display: block; background: #F6F6F6; border-radius: 12px; padding: 34px; box-sizing: border-box; }
+      .ba-col img { width: 100%; display: block; border-radius: 6px; }
+      .ba-tag {
+        display: inline-block; font-family: 'IBM Plex Mono', monospace;
+        font-size: 11px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase;
+        color: #9a9a9a; margin-bottom: 10px;
+      }
+      .ba-tag.is-after { color: #006387; }
+      body.new-layout.article .ba-cap {
+        font-family: 'IBM Plex Mono', monospace;
+        font-size: 12px; font-weight: 400; line-height: 1.55; color: #35363A; margin: 12px 0 0;
+      }
+      body.new-layout.article .ba-cap b { font-weight: 600; color: #35363A; }
+      body.new-layout.article .ba-cap .is-after { color: #006387; }
+      @media (max-width: 640px) { .ba { flex-direction: column; gap: 24px; } }
+
     </style>
 </head>
 
@@ -476,11 +502,11 @@
     <nav class="side-nav">
         <a href="#01">Overview</a>
         <a href="#02">Context</a>
-        <a href="#03">Discover Problems</a>
-        <a href="#04">Clarify Ambiguity</a>
-        <a href="#05">Shape Solutions</a>
-        <a href="#06">Measurement</a>
-        <a href="#07">Impact &amp; Learning</a>
+        <a href="#03">User Flow</a>
+        <a href="#04">Build the Tool</a>
+        <a href="#05">Modular System</a>
+        <a href="#06">Impact</a>
+        <a href="#07">Guidelines</a>
     </nav>
 
     <!-- Hide old shortcut -->
@@ -490,11 +516,11 @@
     <div class="main-content">
     <div class="head">
         <div class="text">
-            <h1>Day 1 Adoption for WhatsApp Business</h1>
-            <h6>0-1 Product, Framework to Impact</h6>
+            <h1>Broadcast Tool &amp; Modular System</h1>
+            <h6>0&rarr;1 Product, Design System, WhatsApp Paid Messaging</h6>
         </div>
         <div class="block"><div class="part-title">Overview</div></div>
-        <div class="g-1w"><a class="gallery" href="images/10/1.jpg"><img src="images/10/1.jpg"></a></div>
+        <div class="g-1w"><video src="images/broadcast/hero.mp4" autoplay loop muted playsinline style="width:100%;border-radius:12px;display:block;"></video></div>
     </div>
 
 
@@ -506,134 +532,140 @@
                 <div class="block-box">
                 <div class="block-w1">
                     <span class="box-label">Problems</span>
-                    <div class="box-text">After signup, 60% of businesses fail to complete WhatsApp setup on partner platforms, leaving messaging unused and creating a $XM revenue gap.</div>
+                    <div class="box-text">Enterprises like <b>Emirates, DHL, and Wells Fargo</b> needed one tool to create and preview WhatsApp&rsquo;s paid messages &mdash; but the template types kept growing and were owned by <b>4 different teams</b> with no shared system.</div>
 
                     <span class="box-label">Solutions</span>
-                    <div class="box-text">Developed a unified setup guidance with step-by-step guidance to assist WhatsApp integration with partner platforms.</div>
+                    <div class="box-text">Designed a <b>0&rarr;1 broadcast tool</b> and a <b>modular card system</b> (12 requirements &rarr; 7 cards) to discover and build 7 message templates &mdash; and scale to more.</div>
                 </div>
                 <div class="block-w2">
                     <div class="box-label">My Role</div>
                     <div class="box-text">
                     <ul>
-                        <li>Secured funding from leadership</li>
-                        <li>Partnered closely with UXR and tech lead in full product cycle</li>
-                        <li>Drove alignment across 5 teams</li>
+                        <li>Led as PM &amp; designer with Eng across 4 teams</li>
+                        <li>Defined the user flow, tool layout, and shared components</li>
+                        <li>Wrote design guidelines for future scale</li>
                     </ul>
                   </div>
 
                     <span class="box-label">Impact</span>
                     <div class="box-text">
                       <ul>
-                        <li>40% user adoption rate</li> 
-                        <li>Scaled across 800+ partner platforms</li> 
-                        <li>+7–9% integration completion</li>
-                          <li>+19.7% revenue, est. $43M-$107M/yr growth </li>
+                        <li>96% submission rate (goal 60%)</li>
+                        <li>&minus;75% build cost (4 &rarr; 1 team)</li>
+                        <li>Scaled 7 &rarr; 10 template types</li>
                       </ul>
                     </div>
                 </div>
                 </div>
             </div>
         </div>
-        
+
         <!-- Context -->
         <div class="part2" id="02">
             <div class="part">
                 <div class="block"><div class="part-title">Context</div></div>
-                <p>Strategic partner plays a critical role for ecosystem growth. Over millions of businesses use WhatsApp on partner platforms like AiSensy, Twilio to manage their customers. However, after signup, <b>only 9% of businesses became the paid businesses</b>, indicating the adoption an <b>$XM revenue gap</b>.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/2.jpg"><img src="images/10/2.jpg"></a></div>
+                <h3>The opportunity</h3>
+                <p>WhatsApp paid messaging was growing fast &mdash; <b>3 categories</b> and <b>7 templates</b>, and counting. Enterprises like <b>Emirates, DHL, and Wells Fargo</b> needed one tool to create these paid messages and preview how they&rsquo;d look.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/5.jpg"><img src="images/broadcast/5.jpg"></a></div>
+                <br>
+                <h3>The solution</h3>
+                <p><b>One tool to discover and build 7 message templates.</b></p>
+                <p><b>Scope:</b> 3 categories &middot; 7 templates (growing) &middot; 4 owner teams. &nbsp;<b>Design goals:</b> learnability, consistency, scalability.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/6.jpg"><img src="images/broadcast/6.jpg"></a></div>
             </div>
         </div>
 
-        <!-- Discover Problems -->
+        <!-- User Flow -->
         <div class="part3" id="03">
             <div class="part">
-                <div class="block"><div class="part-title">Discover Problems</div></div>
-                <p>Integration with partner platforms requires multiple and sequential setup steps. Most users prefer <b>step-by-step guidance</b> to complete the setup. However, research shows that <b>90% of WhatsApp partners offer hub-and-spoke guide</b>, creating integration challenges.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/3.jpg"><img src="images/10/3.jpg"></a></div>
+                <div class="block"><div class="part-title">User Flow</div></div>
+                <h3>Placement &mdash; extended on WhatsApp Manager</h3>
+                <p>I defined placement first, so we could estimate the build effort, know which design system to leverage, and identify the dependencies to work with.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/7.jpg"><img src="images/broadcast/7.jpg"></a></div>
+                <br>
+                <h3>Mapped the end-to-end flow</h3>
+                <p>From discovery, to configuration, to submission, and back to the broadcast management list. This defined the <b>3 pages</b> to build.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/8.jpg"><img src="images/broadcast/8.jpg"></a></div>
             </div>
         </div>
 
-        <!-- Clarify Ambiguity -->
+        <!-- Build the Tool -->
         <div class="part4" id="04">
             <div class="part">
-                <div class="block"><div class="part-title">Clarify Ambiguity</div></div>
-                <p>To build the right solution, we needed to answer two questions:</p>
-                <ul>
-                    <li><b>What does the setup path look like?</b> Steps, sequence, and required tools.</li>
-                    <li><b>Who should build the guidance?</b> Meta or partner platforms?</li>
-                </ul>
-
-                <h3>Understanding Gap for Setup Path</h3>
-                <p>WhatsApp integration involves setup steps owned by <b>5+ product teams</b> and spread across multiple Meta and partner platforms. As a result, <b>no one had a clear view of the end-to-end setup journey</b>.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/4.jpg"><img src="images/10/4.jpg"></a></div>
-                <br><br>
-                <p>To drive clarity on setup steps, I <b>led cross-functional efforts</b> with internal and partner teams to map the <b>end-to-end setup journey</b>.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/5.jpg"><img src="images/10/5.jpg"></a></div>
-                <br><br>
-                <p>From research, I've identified 3 problem layers that drove adoption down, and one framework to solve it. 3 problems I found:</p>
-                <ul>
-                    <li><b>Friction shifted, not solved:</b> Teams optimized their own stage, pushing frictions to other stages.</li>
-                    <li><b>Scattered drop-offs:</b> Users dropped across many steps, so no single fix could lift conversion.</li>
-                    <li><b>Gap after onboarding:</b> Meta&rsquo;s support ended at onboarding, but adoption happened after.</li>
-                </ul>
-                <div class="g-1w"><a class="gallery" href="images/10/6.jpg"><img src="images/10/6.jpg"></a></div>
+                <div class="block"><div class="part-title">Build the Tool</div></div>
+                <h3>Page 1 &mdash; Message list</h3>
+                <p><b>Leveraged existing patterns.</b> Considerations: system consistency, build efficiency, and robust column control.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/message-list.png"><img src="images/broadcast/message-list.png" style="border:1px solid #E7E7E7;box-sizing:border-box;border-radius:12px;"></a></div>
+                <br>
+                <h3>Page 2 &mdash; Category selection</h3>
+                <p><b>New design for guiding and efficiency.</b> Considerations: echo the design goals to help users discover offers, and prioritize efficiency over strict system consistency.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/category.png"><img src="images/broadcast/category.png" style="border:1px solid #E7E7E7;box-sizing:border-box;border-radius:12px;"></a></div>
             </div>
         </div>
 
-        <!-- Shape Solutions -->
+        <!-- Modular System -->
         <div class="part5" id="05">
             <div class="part">
-                <div class="block"><div class="part-title">Shape Solutions</div></div>
-                <h3>Defined scope for MVP</h3>
-                <p>For 0&rarr;1 projects, I typically run <b>rapid concept ideation</b> to align leadership and scope the project with the team.</p>
+                <div class="block"><div class="part-title">Modular System</div></div>
+                <h3>Turned 12 requirements into 7 cards</h3>
+                <p>Through working sessions with 4 teams, I gathered current and future needs, then defined a card system and its sequence.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/matrix.png"><img src="images/broadcast/matrix.png"></a></div>
                 <br>
-                <h3>MVP Tasks</h3>
-                <p>Turned adoption framework into 6 tasks, focused on day 1 activation.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/18.jpg"><img src="images/10/18.jpg"></a></div>
+                <h3>Grouped by purpose, ordered by dependency</h3>
+                <p>The cards fell into <b>3 core groups</b>:</p>
+                <ul>
+                    <li><b>Template setting</b> &mdash; Category + Overview, Name + Language</li>
+                    <li><b>Format</b> &mdash; Conditional Setup, Content, Buttons</li>
+                    <li><b>Compliant</b> &mdash; Agreement</li>
+                </ul>
                 <br>
-                <h3>Page Design</h3>
-                <p>Guidance page designed for efficiency and to avoid overload.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/13.jpg"><img src="images/10/13.jpg"></a></div>
+                <h3>A modular system on a two-column grid</h3>
+                <p>Built on a two-column grid for <b>progressive disclosure</b>, <b>scalability</b>, and an <b>easy-to-orient</b> layout.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/config.png"><img src="images/broadcast/config.png" style="border:1px solid #E7E7E7;box-sizing:border-box;border-radius:12px;"></a></div>
                 <br>
-                <h3>Grouping and Content</h3>
-                <p>Design considerations to drive adoption goal.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/11.jpg"><img src="images/10/11.jpg"></a></div>
+                <h3>Components</h3>
+                <p>A shared set of cards, each reusable across templates. Five building blocks make up every message:</p>
+                <p><b>Template name</b> &mdash; name the template and set its language; the entry point shared by all templates.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/9b.jpg"><img src="images/broadcast/9b.jpg"></a></div>
                 <br>
-                <h3>Placement</h3>
-                <p>Built on Meta's surface to move fast.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/12.jpg"><img src="images/10/12.jpg"></a></div>
+                <p><b>Category</b> &mdash; choose the message category (Marketing, Utility, Authentication) that defines the template&rsquo;s purpose and rules.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/9c.jpg"><img src="images/broadcast/9c.jpg"></a></div>
                 <br>
-                <h3>Navigation</h3>
-                <p>Directed businesses from 800+ partner platforms and 3 communication channels to one guide</p>
-                <div class="g-1w"><a class="gallery" href="images/10/9.jpg"><img src="images/10/9.jpg"></a></div>
+                <p><b>Conditional setup</b> &mdash; template-specific options that surface only when relevant, so the form stays focused.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/9d.jpg"><img src="images/broadcast/9d.jpg"></a></div>
+                <br>
+                <p><b>Add media</b> &mdash; attach a header image, video, or document, with inline preview.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/9e.jpg"><img src="images/broadcast/9e.jpg"></a></div>
+                <br>
+                <p><b>Buttons</b> &mdash; add interactive buttons &mdash; quick replies, links, or calls &mdash; up to the per-template limit.</p>
+                <div class="g-1w"><a class="gallery" href="images/broadcast/9f.jpg"><img src="images/broadcast/9f.jpg"></a></div>
             </div>
         </div>
 
-        <!-- Measurement -->
+        <!-- Impact -->
         <div class="part6" id="06">
             <div class="part">
-                <div class="block"><div class="part-title">Measurement</div></div>
+                <div class="block"><div class="part-title">Impact</div></div>
                 <table>
-                    <tr><th style="width:50%;white-space:normal;border-right:1px solid rgba(67,67,67,0.1);">Ship goals (what had to be true to launch)</th><th>Learning goals (what we wanted to understand)</th></tr>
-                    <tr><td style="width:50%;white-space:normal;border-right:1px solid rgba(67,67,67,0.1);"><ul style="margin:0;padding-left:18px;"><li>Guidance page usage: 5%</li><li>Adoption rate: 2%</li><li>Revenue impact: &gt;0%</li></ul></td><td><ul style="margin:0;padding-left:18px;"><li>Conversion by entry point (5 entry points)</li><li>Task completion rate</li><li>Turnaround time to complete tasks</li></ul></td></tr>
+                    <tr><th>Metric</th><th>Result</th><th>Goal</th></tr>
+                    <tr><td>Submission rate</td><td><b>96%</b></td><td>60%</td></tr>
+                    <tr><td>Build cost</td><td><b>&minus;75%</b> (4 &rarr; 1 team)</td><td>&mdash;</td></tr>
                 </table>
             </div>
         </div>
 
-        <!-- Impact & Learning -->
+        <!-- Guidelines -->
         <div class="part7" id="07">
             <div class="part">
-                <div class="block"><div class="part-title">Impact &amp; Learning</div></div>
-                <h3>Impact</h3>
-                <p>Achieved exceeding goals and positive feedback to secure more resources in 2026+.</p>
-                <div class="g-1w"><a class="gallery" href="images/10/15.jpg"><img src="images/10/15.jpg"></a></div>
+                <div class="block"><div class="part-title">Guidelines</div></div>
+                <p>I documented the tool as a <b>design system</b> &mdash; principles, anatomy, components, page templates, and governance &mdash; so other teams could build new message types consistently.</p>
+                <a href="prototype/broadcast/ds/designsystem.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:500;color:#35363A;background:#fff;border:1px solid #E0E0E0;border-radius:999px;padding:6px 13px;text-decoration:none;margin:4px 0 14px;">Open design system &#8599;</a>
+                <div class="g-1w"><div style="height:640px;overflow:hidden;border:1px solid #E7E7E7;border-radius:12px;background:#fff;">
+                    <iframe src="prototype/broadcast/ds/designsystem.html#overview" title="Broadcast design system" scrolling="yes" style="width:125%;height:800px;border:0;transform:scale(0.8);transform-origin:top left;display:block;background:#fff;"></iframe>
+                </div></div>
                 <br>
-                <p>Drove knowledge alignment on end-to-end business journey</p>
-                <div class="g-1w"><a class="gallery" href="images/10/16.jpg"><img src="images/10/16.jpg"></a></div>
-                <br>
-                <h3>Learning</h3>
-                <p><b>Aligned and holistic understanding</b> is the key to drive multi-funnel growth</p>
-                <div class="g-1w"><a class="gallery" href="images/10/17.jpg"><img src="images/10/17.jpg"></a></div>
+                <h3>Governance</h3>
+                <p>To support future scale, I defined the rules for <b>when to add a new sub-category vs. add within an existing page</b>, and offered consultation to guide the build.</p>
             </div>
 
             <div class="block"><div class="part-titleSub">END ###</div></div>
@@ -669,6 +701,12 @@
 
   window.addEventListener('scroll', updateActive);
 })();
+</script>
+<script>
+  (function(){
+    var imgs=document.querySelectorAll('#ctxShow img'); if(imgs.length<2) return;
+    var i=0; setInterval(function(){ imgs[i].classList.remove('on'); i=(i+1)%imgs.length; imgs[i].classList.add('on'); }, 2600);
+  })();
 </script>
 </body>
 </html>

@@ -1,0 +1,559 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #FFFFFF;
+  --surface: #F6F6F6;
+  --ink: #35363A;
+  --ink2: #6e502e;
+  --ink3: #9A958E;
+  --ink4: rgba(53, 54, 58, 0.75);   /* --ink at 60% opacity */
+  --ink6: #512E08;
+  --accent: #006387;
+  --accent-light: #FDF3E8;
+  --border: rgba(67,67,67,0.1);
+  --border2: rgba(67,67,67,0.06);
+  --font: 'Commissioner', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+  --radius: 12px;
+  --nav-w: 200px;
+}
+
+/* Subtext label (XX: pattern) shared style */
+.desc-label { font-weight: 600; color: var(--ink4); }
+.desc-label-header { font-weight: 600; color: var(--ink4); display: block; margin-bottom: 6px; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+
+/* ── LAYOUT ── */
+.shell { display: flex; height: 100vh; }
+
+/* ── LEFT NAV ── */
+.side {
+  width: var(--nav-w);
+  flex-shrink: 0;
+  border-right: 1px solid var(--border2);
+  padding: 32px 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  z-index: 20;
+  background: var(--bg);
+}
+
+.side-section { padding: 0 16px; margin-bottom: 12px; }
+
+.side-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  padding: 0 8px;
+  margin-bottom: 8px;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-toggle {
+  width: 100%;
+  padding: 6px 8px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: #745839;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  outline: none;
+  padding-right: 24px;
+  position: relative;
+  user-select: none;
+}
+
+.dropdown-toggle::after {
+  content: '';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 6px;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239A958E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  transition: transform 0.15s ease;
+}
+
+.dropdown.open .dropdown-toggle::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-toggle:hover { border-color: var(--ink3); }
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: 4px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px;
+  z-index: 100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: none;
+}
+
+.dropdown.open .dropdown-menu {
+  display: block;
+}
+
+.dropdown-option {
+  display: block;
+  width: 100%;
+  padding: 6px 8px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--ink);
+  text-decoration: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.dropdown-option:hover { background: var(--surface); }
+
+.dropdown-option.current {
+  font-weight: 600;
+  color: #745839;
+}
+
+.nav-item {
+  display: block;
+  padding: 6px 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink3);
+  text-decoration: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.1;
+  margin-bottom: 1px;
+  opacity: 0.8;
+}
+
+.nav-item:hover { color: #745839; background: transparent; }
+
+.nav-item.active {
+  color: #745839;
+  font-weight: 600;
+}
+
+/* Hide parent background when sub-nav is open */
+.nav-item.active + .nav-sub.open {
+  /* parent loses background via next rule */
+}
+.side-section .nav-item.active:has(+ .nav-sub.open) {
+  background: transparent;
+}
+
+/* Sub-nav: hidden by default, revealed when parent is active */
+.nav-sub {
+  padding-left: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.25s ease, opacity 0.2s ease;
+  opacity: 0;
+}
+
+.nav-sub.open {
+  opacity: 1;
+}
+
+.nav-sub .nav-item {
+  font-size: 12px;
+  font-weight: 400;
+  padding: 6px 8px;
+  padding-left: 16px;
+  color: var(--ink3);
+}
+
+.nav-sub .nav-item.active {
+  color: #745839;
+  background: var(--surface);
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+.nav-sub .nav-item:hover { color: var(--ink2); background: transparent; }
+
+/* ── SCROLLBAR (hidden) ── */
+.main, .side { scrollbar-width: none; -ms-overflow-style: none; }
+.main::-webkit-scrollbar, .side::-webkit-scrollbar { width: 0; height: 0; display: none; }
+
+/* ── MOBILE: hide side-nav ── */
+@media (max-width: 768px) {
+  .side { display: none !important; }
+}
+
+/* ── TOP-ALIGNED SPLIT LAYOUTS (shared across project decks) ── */
+/* Title left, image right */
+.split-top {
+  display: grid;
+  grid-template-columns: 18fr 82fr;   /* content : image = 18 : 82 */
+  grid-template-rows: 1fr;
+  gap: 40px;
+  align-items: flex-start;
+  height: 92%;
+  margin: auto 0;
+  min-height: 0;
+  box-sizing: border-box;
+}
+/* Title on top, image below */
+.split-top-img {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 20px;
+  height: 92%;
+  margin: auto 0;
+  min-height: 0;
+  box-sizing: border-box;
+}
+.split-top .split-text { justify-content: flex-start; min-height: 0; padding-top: 16px; }
+.split-top-img .split-text { flex: 0 0 auto; min-height: 0; padding-top: 16px; }
+.split-top .split-text .content-title,
+.split-top-img .split-text .content-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  max-width: none;
+}
+.split-top .split-text .content-title { padding-bottom: 20px; }
+.split-top-img .split-text .content-title { padding-bottom: 0; }
+.split-top .content-desc,
+.split-top .content-subtitle { padding-top: 20px; }
+/* First element after the title sits flush — the title's padding-bottom gives the 20px gap */
+.split-top .split-text .content-title + *,
+.split-top-img .split-text .content-title + * { padding-top: 0 !important; margin-top: 0 !important; }
+.split-top .split-text ul li,
+.split-top-img .split-text ul li { padding-top: 0; }
+/* ── List & subtext spacing in split layouts (shared — keeps p/ul/li free of inline styles) ── */
+.split-text ul { list-style: none; }
+.split-text ul.bullets { list-style: disc; padding-left: 16px; margin: 2px 0 2px; }
+.split-text ul.gap-top { margin-top: 14px; }
+.split-text li { margin: 0 0 4px; }
+.split-text li.gap { margin-bottom: 8px; }
+.split-text li.gap-lg { margin-bottom: 16px; }
+.split-top .split-text .pt-sep,
+.split-top-img .split-text .pt-sep { padding-top: 16px; }
+.split-top-img .content-subtitle,
+.split-top-img .content-title + .content-subtitle { padding-top: 8px; }
+.split-top .content-subtitle,
+.split-top-img .content-subtitle {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink4);
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+.content-subtitle .desc-label,
+.content-subtitle b,
+.content-subtitle strong { font-weight: 600; color: var(--ink4); }
+.split-top .split-img {
+  align-items: stretch;
+  justify-content: center;
+  height: 100%;
+  min-height: 0;
+}
+.split-top-img .split-img {
+  flex: 1 1 auto;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  background: var(--surface);
+  border: 1px solid #E7E7E7;
+  border-radius: 20px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+/* Container provides the card, so reset the inner image's own frame */
+.split-top-img .slide-img {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+}
+/* .split-top: the .slide-img is the visible image container (f6f6f6 + border) */
+.split-top .slide-img {
+  background: var(--surface);
+  border: 1px solid #E7E7E7;
+  border-radius: 20px;
+}
+.split-top .slide-img,
+.split-top-img .slide-img {
+  max-width: 100%;
+  max-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+.split-top .slide-img img,
+.split-top-img .slide-img img,
+.split-top .slide-img video,
+.split-top-img .slide-img video { max-width: 100%; }
+
+/* ── Tabbed image variant of .split-top: right container switches examples ── */
+/* Use alongside .split-top, e.g. class="split-top split-top-tab" */
+.split-top-tab .split-img {
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  padding: 0;
+}
+.split-tab-bar {
+  display: flex;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
+}
+.split-tab-btn {
+  padding: 12px 24px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink2);
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.split-tab-btn.active {
+  color: var(--accent);
+  font-weight: 600;
+  border-bottom-color: var(--accent);
+}
+.split-tab-btn:hover { color: var(--ink); }
+.split-tab-pane {
+  display: none;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.split-tab-pane.active { display: flex; }
+.split-tab-pane img,
+.split-tab-pane video {
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* ── Subtext base (shared across project decks) ── */
+.content-desc {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--ink4);
+  line-height: 1.45;
+  padding-top: 8px;
+  letter-spacing: 0;
+}
+
+/* ── AI Workflow process diagram (shared across project decks) ── */
+.proc-wrap {
+  width: 100%;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 12px;
+}
+.proc-steps {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+.proc-step {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.proc-step-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+.proc-step-header.s1,
+.proc-step-header.s2,
+.proc-step-header.s3,
+.proc-step-header.s4 { background: #684722; }
+.proc-step-num { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: var(--accent); }
+.proc-step-name { font-size: 13px; font-weight: 600; color: #ffffff; }
+.proc-step-time { font-size: 12px; font-weight: 450; color: rgba(255,255,255,0.75); white-space: nowrap; }
+.proc-arrow {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  font-size: 16px;
+  color: var(--ink3);
+  flex-shrink: 0;
+}
+.proc-tasks { display: flex; flex-direction: column; gap: 6px; }
+.proc-task {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 6px;
+}
+.proc-task-text { font-size: 12.5px; font-weight: 500; color: var(--ink); line-height: 1.3; }
+.proc-tools { display: flex; flex-wrap: wrap; gap: 4px; }
+.proc-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  width: fit-content;
+}
+.proc-tool img { width: 11px; height: 11px; object-fit: contain; }
+.proc-fullbar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.proc-fullbar-main { display: flex; flex-direction: column; gap: 8px; }
+.proc-fullbar-label { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+.proc-fullbar-tools { display: flex; gap: 6px; flex-shrink: 0; }
+.proc-fullbar-demo {
+  flex-shrink: 0;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.proc-fullbar-demo:hover { text-decoration: underline; }
+
+
+/* ── Embeddable HTML prototype (shared: .embed-wrap > .embed-box > .embed-frame) ── */
+/* .embed-wrap  = grey container card (add to the .slide-img)                        */
+/* .embed-box   = framed window: 90% of container, 16px radius, soft shadow          */
+/* .embed-frame = the <iframe>; content is shown at 0.7 zoom (sized 1/0.7 = 142.857%) */
+.slide-img.embed-wrap { position: relative; height: 100%; padding: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.embed-box { position: relative; width: 95%; height: 90%; overflow: hidden; border-radius: 16px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); background: #fff; }
+.slide-img.embed-wrap::after { content: "Embedded HTML"; position: absolute; top: 16px; right: 16px; z-index: 3; font-family: var(--mono); font-size: 9px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink3); pointer-events: none; }
+.embed-frame { width: 142.857%; height: 142.857%; transform: scale(0.7); transform-origin: top left; border: none; }
+
+
+/* ── Card grid: 4 cards inside .split-top-img (image bg + overlaid label) ── */
+.split-top-img .split-img:has(.four-cards) { padding: 0; background: transparent; border: none; }
+.four-cards { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 12px; width: 100%; height: 100%; }
+.ex-card { position: relative; overflow: hidden; border: 1px solid #E7E7E7; border-radius: 20px; background: var(--surface); min-height: 0; }
+.ex-bg { position: absolute; inset: 0; }
+.ex-bg img { width: 100%; height: 100%; object-fit: cover; object-position: top right; display: block; margin-left: 20px; }
+.ex-text { position: absolute; top: 0; left: 0; z-index: 2; padding: 28px; max-width: 32%; }
+.ex-name { font-size: 18px; font-weight: 600; color: var(--ink); padding-bottom: 6px; padding-top: 12px; }
+.ex-sub { font-size: 14px; color: var(--ink4); line-height: 1.4; }
+
+/* Bottom-pinned measurement / results note (reusable) */
+.measure-note { margin-top: auto; font-size: 13px; color: var(--accent); padding-bottom: 20px; padding-top: 0; }
+.measure-note .desc-label { color: var(--accent); }
+.split-top .split-text:has(.measure-note) { align-self: stretch; }
+
+/* ── Metrics / results table (shared — goal vs. result) ── */
+.metrics { background: var(--surface); border: 1px solid #E7E7E7; border-radius: 20px; padding: 28px 40px; display: flex; flex-direction: column; justify-content: center; gap: 0; width: 100%; height: 100%; box-sizing: border-box; }
+.metrics-row { display: grid; grid-template-columns: 1.6fr 1fr 1fr; align-items: center; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.metrics-row.metrics-head { align-items: end; padding: 0 0 10px; }
+.metrics-row:last-of-type { border-bottom: none; }
+.metrics .m-label { font-size: 19px; color: var(--ink); margin: 0; }
+.metrics .m-goal, .metrics .m-result { font-size: 40px; font-weight: 600; margin: 0; text-align: right; letter-spacing: -0.02em; line-height: 1; }
+.metrics .m-goal { color: var(--ink3); }
+.metrics .m-result { color: var(--ink2); }
+.metrics-head .m-label, .metrics-head .m-goal, .metrics-head .m-result { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.6px; text-transform: uppercase; color: var(--ink3); }
+.metrics-head .m-result { color: var(--ink2); }
+.metrics-note { font-size: 13px; line-height: 1.4; color: var(--ink2); margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+/* ── Comparison table (shared — two-option compare) ── */
+.compare { display: grid; grid-template-columns: 0.8fr 1.2fr 1.2fr; width: 100%; height: 100%; align-content: center; background: var(--surface); border: 1px solid #E7E7E7; border-radius: 20px; overflow: hidden; box-sizing: border-box; }
+.compare > div { padding: 15px 20px; border-bottom: 1px solid var(--border); font-size: 13px; line-height: 1.4; color: var(--ink4); }
+.compare > div:nth-child(3n+2), .compare > div:nth-child(3n) { border-left: 1px solid var(--border); }
+.cmp-head { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink3); }
+.cmp-head.cmp-chosen { color: var(--accent); }
+.cmp-rowlabel { font-weight: 600; color: var(--ink); }
+.cmp-yes { color: var(--accent); font-weight: 600; }
+.cmp-no { color: var(--ink3); }
+.cmp-last { border-bottom: none; }
+
+/* ── Metric stat cards (goal vs result) ── */
+.mstat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; width: 100%; align-content: center; box-sizing: border-box; }
+.mstat { background: var(--surface); border: 1px solid #E7E7E7; border-radius: 16px; padding: 22px 24px; display: flex; flex-direction: column; justify-content: center; gap: 12px; min-height: 0; }
+.mstat-label { font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--ink3); }
+.mstat-row { display: flex; align-items: baseline; gap: 10px; }
+.mstat-result { font-size: 46px; font-weight: 600; letter-spacing: -0.02em; color: var(--accent); line-height: 1; }
+.mstat-delta { font-size: 14px; font-weight: 600; color: var(--accent); }
+.mstat-goal { font-size: 13.5px; color: var(--ink4); margin-top: -4px; }
+.mstat-track { position: relative; height: 6px; background: rgba(0,0,0,0.07); border-radius: 99px; margin-top: 2px; }
+.mstat-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); border-radius: 99px; }
+.mstat-goalmark { position: absolute; top: -3px; width: 2px; height: 12px; background: var(--ink2); border-radius: 2px; }
+.mstat-note { grid-column: 1 / -1; font-size: 13px; line-height: 1.4; color: var(--ink3); padding-top: 4px; }
+
+/* ── Embed fills its container, with the "Open HTML" link above it (right-aligned) — reusable: add class "embed-above" to the .split-img ── */
+.split-img.embed-above { display: flex; flex-direction: column; min-height: 0; }
+.split-img.embed-above .embed-open { position: static; align-self: flex-end; margin: 0 0 8px; text-decoration: none; }
+.split-img.embed-above .embed-wrap { flex: 1; min-height: 0; padding: 0; }
+.split-img.embed-above .embed-box { width: 100%; height: 100%; box-shadow: none; border-radius: 16px; }
+.split-img.embed-above .embed-wrap::after { content: none; }
+
+/* ── Embed fills its container edge-to-edge, no label — reusable: add class "embed-fill" to the .split-img ── */
+.split-img.embed-fill .embed-wrap { padding: 0; }
+.split-img.embed-fill .embed-box { width: 100%; height: 100%; box-shadow: none; border-radius: 16px; }
+.split-img.embed-fill .embed-wrap::after { content: none; }
+
+/* hide scrollbars when embedded */
+*{scrollbar-width:none;-ms-overflow-style:none;}
+*::-webkit-scrollbar{width:0;height:0;display:none;}

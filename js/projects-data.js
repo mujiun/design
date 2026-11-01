@@ -4,20 +4,20 @@
  */
 const PROJECTS = [
   {
-    url: 'projects/setupguide.html',
+    url: 'projects/adoption-framework.html',
     img: 'images/13.jpg',
-    company: 'Meta · Business Tool',
-    title: 'Day 1 Adoption Guide',
-    summary: 'Defined an adoption framework that drove +9% adoption and +19.7% revenue.',
-    filters: ['business', 'developer', 'framework', 'funnel'],
+    company: 'Meta · Growth Strategy',
+    title: 'Day-1 Adoption Framework',
+    summary: 'An adoption framework scaled across 3 products — +9% adoption, +19.7% revenue.',
+    filters: ['business', 'developer', 'framework', 'funnel', 'insight'],
   },
   {
-    url: 'projects/template-tool.html',
+    url: 'projects/broadcast-tool.html',
     img: 'images/2025_3.jpg',
     company: 'Meta · Design System',
-    title: 'Unified Setup Flows',
-    summary: 'Defined framework for 7+ creation flows with 1.6x completion rates.',
-    filters: ['business', 'developer'],
+    title: 'Broadcast Tool & Modular System',
+    summary: 'New tool with 7 configuration variants and a modular system for consistency and scale.',
+    filters: ['business', 'framework'],
   },
   {
     url: 'projects/insight-table.html',
