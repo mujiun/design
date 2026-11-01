@@ -214,13 +214,13 @@
     .scf-track {
       position: relative;
       width: 100%;
-      height: 646px;               /* hugs the 630px active card — minimal top/bottom gap */
+      height: 616px;               /* hugs the 600px active card — minimal top/bottom gap */
     }
     .scf-card {
       position: absolute;
       top: 50%;
       left: 50%;
-      height: 630px;               /* row height; width set per-media so aspect matches (no crop) */
+      height: 600px;               /* row height; width set per-media so aspect matches (no crop) → active = 600×600 */
       cursor: pointer;
       transition: transform .45s var(--mu-ease);
       -webkit-user-select: none; user-select: none;
@@ -1085,8 +1085,8 @@ document.addEventListener('keydown', (e) => {
     /* ── SIDE PROJECTS — coverflow of the 3 fun videos (active bigger; click a card to read its description) ── */
     const SIDE = [
       { media: 'assets/fun/fun_a.mp4', ratio: 1, title: 'Sticker Day', cap: 'App for journaling on a note-taking canvas' },
-      { media: 'assets/fun/fun_b.mp4', ratio: 1, title: 'Piano Day',   cap: 'App for classical music sheet reading & practice' },
-      { media: 'assets/fun/fun_c.mp4', ratio: 1, title: 'Animation & Gaming', cap: 'Path to green card' },
+      { media: 'assets/fun/fun_b.mp4', ratio: 1, title: 'Piano Day',   cap: 'App for classical music sheet reading & practice', link: 'https://apps.apple.com/us/app/piano-day-sheet-practice/id6812560461', linkText: 'Download now' },
+      { media: 'assets/fun/fun_c.mp4', ratio: 1, title: 'Animation & Gaming', cap: 'Path to green card', link: 'https://mujiun.github.io/quest/', linkText: 'Try now' },
     ];
     const sTrack = document.getElementById('scfTrack');
     const sCapEl = document.getElementById('scfCap');
@@ -1140,7 +1140,8 @@ document.addEventListener('keydown', (e) => {
     }
     function updateSCap() {
       const s = SIDE[sActive];
-      sCapEl.innerHTML = `<b>${s.title}</b> &mdash; ${s.cap}`;
+      const cta = s.link ? `. <a class="scf-link" href="${s.link}" target="_blank" rel="noopener">${s.linkText}</a>` : '';
+      sCapEl.innerHTML = `<b>${s.title}</b> &mdash; ${s.cap}${cta}`;
     }
     function onSClick(i) { stopSAuto(); if (i !== sActive) { sActive = i; renderS(); } }   /* click a side card → centre it + show its description */
     function sGo(d) { const n = sCards.length; sActive = ((sActive + d) % n + n) % n; renderS(); }
